@@ -812,7 +812,7 @@ function renderHome(container) {
     // Hoy
     const todaySched = getSchedule(today);
     if (todaySched && !todaySched.noData) {
-      html += `<div class="section-title" style="margin-top:14px">📅 ${formatDateShort(today)}
+      html += `<div class="section-title" style="margin-top:14px">📅 ${formatDateShort(today)}</div>`;
       html += renderDayCards(today, false);
     }
   }
