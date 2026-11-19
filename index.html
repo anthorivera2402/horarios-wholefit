@@ -131,6 +131,38 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
 .week-day-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
 .week-day-name{font-size:13px;font-weight:700;text-transform:capitalize}
 .week-day-date{font-size:11px;color:var(--text-sec)}
+/* EMP-CARDS CALENDAR (semana y mes) */
+.ec-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:4px}
+.ec-card{background:var(--white);border:1px solid var(--border);border-radius:14px;padding:12px;transition:box-shadow .2s}
+.ec-card:hover{box-shadow:var(--shadow-md)}
+.ec-header{display:flex;align-items:center;gap:9px;margin-bottom:10px}
+.ec-avatar{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:#fff;flex-shrink:0}
+.ec-name{font-size:13px;font-weight:700;line-height:1.2}
+.ec-role{font-size:10px;color:var(--text-sec);margin-top:1px}
+.ec-days-row{display:flex;gap:4px;flex-wrap:nowrap;overflow-x:auto}
+.ec-day-col{display:flex;flex-direction:column;align-items:center;gap:3px;min-width:30px}
+.ec-day-label{font-size:9px;font-weight:600;color:var(--text-sec);text-transform:uppercase;letter-spacing:.3px}
+.ec-day-chip{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;cursor:pointer;transition:transform .15s}
+.ec-day-chip:hover{transform:scale(1.12)}
+.ec-day-chip.chip-bc{background:#DBEAFE;color:#1D4ED8}
+.ec-day-chip.chip-pcv{background:#D1FAE5;color:#065F46}
+.ec-day-chip.chip-libre{background:#FEF9C3;color:#854D0E}
+.ec-day-chip.chip-holiday{background:#FEE2E2;color:#991B1B}
+.ec-day-chip.chip-nd{background:#F1F5F9;color:#94A3B8}
+.ec-day-chip.chip-today{box-shadow:0 0 0 2px var(--green)}
+/* Legend row */
+.ec-legend{display:flex;gap:10px;margin-bottom:10px;flex-wrap:wrap}
+.ec-legend-item{display:flex;align-items:center;gap:5px;font-size:10px;color:var(--text-sec);font-weight:600}
+.ec-legend-dot{width:14px;height:14px;border-radius:4px}
+/* Monthly emp grid */
+.ec-month-days{display:flex;flex-wrap:wrap;gap:3px;margin-top:6px}
+.ec-month-chip{width:24px;height:20px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:800;cursor:pointer}
+.ec-month-chip.chip-bc{background:#DBEAFE;color:#1D4ED8}
+.ec-month-chip.chip-pcv{background:#D1FAE5;color:#065F46}
+.ec-month-chip.chip-libre{background:#FEF9C3;color:#854D0E}
+.ec-month-chip.chip-holiday{background:#FEE2E2;color:#991B1B}
+.ec-month-chip.chip-nd{background:#F1F5F9;color:#94A3B8}
+.ec-month-chip.chip-today{box-shadow:0 0 0 2px var(--green)}
 /* DAILY */
 .daily-sede{border-radius:var(--radius);padding:14px;margin-bottom:10px;border:1px solid var(--border)}
 .daily-sede.pcv{border-left:4px solid var(--green)}
@@ -912,11 +944,8 @@ function setCalView(v) {
 }
 
 function renderMonthly(year, month, selEmp) {
-  const months = ['','Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
-  // Months available: Nov 2026 (11), Dec 2026 (12), Jan 2027 (1), Feb 2027 (2)
-  const MONTHS_ORDER = [
-    {y:2026,m:11}, {y:2026,m:12}, {y:2027,m:1}, {y:2027,m:2}
-  ];
+  const monthNames = ['','Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+  const MONTHS_ORDER = [{y:2026,m:11},{y:2026,m:12},{y:2027,m:1},{y:2027,m:2}];
   const curIdx = MONTHS_ORDER.findIndex(x => x.y === year && x.m === month);
   const prevEntry = curIdx > 0 ? MONTHS_ORDER[curIdx-1] : null;
   const nextEntry = curIdx < MONTHS_ORDER.length-1 ? MONTHS_ORDER[curIdx+1] : null;
@@ -930,87 +959,85 @@ function renderMonthly(year, month, selEmp) {
 
   let html = `<div class="cal-nav">
     ${html_prev}
-    <h2>${months[month]} ${year}</h2>
+    <div style="text-align:center">
+      <h2 style="font-size:16px;font-weight:700">${monthNames[month]} ${year}</h2>
+    </div>
     ${html_next}
   </div>`;
 
-  // Legend
-  const legendEmpDots = Object.entries(EMPLOYEES).map(([code, emp]) =>
-    `<span class="legend-item"><span class="cal-dot" style="background:${emp.color};display:inline-block"></span> ${emp.name}</span>`
-  ).join('');
-  html += `<div class="legend">
-    ${selEmp ? `
-      <span class="legend-item"><span class="cal-dot" style="background:${empColor(selEmp)};display:inline-block"></span> Trabaja</span>
-      <span class="legend-item"><span class="cal-dot dot-off" style="display:inline-block"></span> Libre</span>
-      <span class="legend-item"><span class="cal-dot dot-conflict" style="display:inline-block"></span> Conflicto</span>
-    ` : `
-      ${legendEmpDots}
-      <span class="legend-item"><span class="cal-dot dot-event" style="display:inline-block"></span> Evento</span>
-      <span class="legend-item"><span class="cal-dot dot-conflict" style="display:inline-block"></span> Conflicto</span>
-    `}
-  </div>`;
-
-  html += `<div class="cal-grid">`;
-  ['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'].forEach(d => {
-    html += `<div class="cal-header">${d}</div>`;
-  });
-
-  const firstDay = new Date(year, month-1, 1).getDay();
-  const startOffset = firstDay === 0 ? 6 : firstDay - 1;
   const daysInMonth = new Date(year, month, 0).getDate();
 
-  for (let i = 0; i < startOffset; i++) html += `<div class="cal-day empty"></div>`;
-
-  for (let day = 1; day <= daysInMonth; day++) {
-    const ds = isoDate(year, month, day);
-    const isToday = ds === REF_TODAY;
-    const isSel = ds === state.calSelectedDate;
+  // Helper chip for monthly view
+  function monthDayChip(code, ds) {
     const sched = getSchedule(ds);
+    const isToday = ds === REF_TODAY;
+    const todayCls = isToday ? ' chip-today' : '';
+    if (!sched || sched.noData) return { cls:'chip-nd'+todayCls, lbl:'?' };
+    if (sched.holiday) return { cls:'chip-holiday'+todayCls, lbl:'🎄' };
+    const st = getEmployeeStatusOnDate(code, ds);
+    if (st.status === 'off') return { cls:'chip-libre'+todayCls, lbl:String(new Date(ds+'T12:00:00').getDate()) };
+    if (st.status === 'work') {
+      const isBC = st.sede && st.sede.includes('Bello');
+      const lbl = String(new Date(ds+'T12:00:00').getDate());
+      return { cls:(isBC ? 'chip-bc' : 'chip-pcv')+todayCls, lbl };
+    }
+    return { cls:'chip-nd'+todayCls, lbl:String(new Date(ds+'T12:00:00').getDate()) };
+  }
 
-    let dots = '';
-    let classes = 'cal-day';
-    if (isToday) classes += ' today';
-    if (isSel) classes += ' selected';
+  // Legend
+  html += `<div class="ec-legend">
+    <span class="ec-legend-item"><span class="ec-legend-dot" style="background:#DBEAFE"></span>Bello Campo</span>
+    <span class="ec-legend-item"><span class="ec-legend-dot" style="background:#D1FAE5"></span>PCV</span>
+    <span class="ec-legend-item"><span class="ec-legend-dot" style="background:#FEF9C3"></span>Libre</span>
+  </div>`;
 
-    if (sched && !sched.noData) {
-      if (sched.holiday) {
-        dots += `<div class="cal-dot dot-holiday"></div>`;
-      } else if (selEmp) {
-        const st = getEmployeeStatusOnDate(selEmp, ds);
-        if (st.status === 'work') {
-          const empC = empColor(selEmp);
-          dots += `<div class="cal-dot" style="background:${empC}"></div>`;
-        } else if (st.status === 'off') dots += `<div class="cal-dot dot-off"></div>`;
-        else if (st.status === 'conflict') dots += `<div class="cal-dot dot-conflict"></div>`;
-      } else {
-        // Un punto por cada empleado que trabaja ese día, con su color individual
-        const working = [
-          sched.pcvC, ...(sched.bcCArr || (sched.bcC ? [sched.bcC] : [])),
-          ...(sched.pcvB||[]), ...(sched.bcB||[])
-        ].filter(Boolean);
-        const seen = new Set();
-        working.forEach(code => {
-          if (!seen.has(code)) {
-            seen.add(code);
-            dots += `<div class="cal-dot" style="background:${empColor(code)}"></div>`;
-          }
-        });
-        if (SPECIAL_HOURS[ds]?.event) dots += `<div class="cal-dot dot-event"></div>`;
-        if ((sched.conflicts||[]).length) dots += `<div class="cal-dot dot-conflict"></div>`;
+  const empList = selEmp ? [[selEmp, EMPLOYEES[selEmp]]] : Object.entries(EMPLOYEES);
+
+  html += `<div class="ec-grid">`;
+  empList.forEach(([code, emp]) => {
+    const initials = emp.name.substring(0,2).toUpperCase();
+    const isFija = code === 'C1';
+    // Count work days this month
+    let bcCount = 0, pcvCount = 0, libreCount = 0;
+    for (let d = 1; d <= daysInMonth; d++) {
+      const ds = isoDate(year, month, d);
+      const sched = getSchedule(ds);
+      if (!sched || sched.noData || sched.holiday) continue;
+      const st = getEmployeeStatusOnDate(code, ds);
+      if (st.status === 'off') libreCount++;
+      else if (st.status === 'work') {
+        if (st.sede && st.sede.includes('Bello')) bcCount++;
+        else pcvCount++;
       }
     }
 
-    html += `<div class="${classes}" onclick="openDayDetail('${ds}')">
-      <div class="cal-num">${day}</div>
-      <div class="cal-dots">${dots}</div>
-    </div>`;
-  }
+    html += `<div class="ec-card">
+      <div class="ec-header">
+        <div class="ec-avatar" style="background:${emp.color}">${initials}</div>
+        <div>
+          <div class="ec-name">${emp.name}</div>
+          <div class="ec-role">${emp.role}${isFija ? ' · fija BC' : ' · rota'}</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:6px;margin-bottom:8px">
+        <span style="font-size:9px;background:#DBEAFE;color:#1D4ED8;padding:2px 6px;border-radius:6px;font-weight:700">BC ${bcCount}</span>
+        <span style="font-size:9px;background:#D1FAE5;color:#065F46;padding:2px 6px;border-radius:6px;font-weight:700">PCV ${pcvCount}</span>
+        <span style="font-size:9px;background:#FEF9C3;color:#854D0E;padding:2px 6px;border-radius:6px;font-weight:700">L ${libreCount}</span>
+      </div>
+      <div class="ec-month-days">`;
 
+    for (let day = 1; day <= daysInMonth; day++) {
+      const ds = isoDate(year, month, day);
+      const { cls, lbl } = monthDayChip(code, ds);
+      html += `<div class="ec-month-chip ${cls}" onclick="openDayDetail('${ds}')" title="${ds}">${lbl}</div>`;
+    }
+    html += `</div></div>`;
+  });
   html += `</div>`;
 
-  // Show selected day detail below
-  if (state.calSelectedDate) {
-    html += `<div style="margin-top:12px"><div class="section-title">📅 ${formatDate(state.calSelectedDate)}</div>`;
+  // Selected day detail
+  if (state.calSelectedDate && state.calSelectedDate.startsWith(`${year}-${String(month).padStart(2,'0')}`)) {
+    html += `<div style="margin-top:14px"><div class="section-title">📅 ${formatDate(state.calSelectedDate)}</div>`;
     html += renderDayCards(state.calSelectedDate, true);
     html += `</div>`;
   }
@@ -1038,7 +1065,6 @@ function renderWeekly(fromDate, selEmp) {
   const dow = d.getDay();
   const weekStart = new Date(d);
   weekStart.setDate(d.getDate() - (dow === 0 ? 6 : dow - 1));
-
   const weekEnd = new Date(weekStart);
   weekEnd.setDate(weekStart.getDate() + 6);
 
@@ -1047,62 +1073,82 @@ function renderWeekly(fromDate, selEmp) {
     return `${dt.getDate()} ${months[dt.getMonth()]}`;
   };
 
-  let html = `<div class="cal-nav">
-    <button onclick="shiftWeek(-1)">‹</button>
-    <h2 style="font-size:14px">${fmtShort(weekStart)} – ${fmtShort(weekEnd)}</h2>
-    <button onclick="shiftWeek(1)">›</button>
-  </div>`;
-
-  const dayNames = ['Lunes','Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'];
+  // Collect the 7 dates of this week
+  const weekDates = [];
   for (let i = 0; i < 7; i++) {
     const cur = new Date(weekStart);
     cur.setDate(weekStart.getDate() + i);
-    const ds = isoDate(cur.getFullYear(), cur.getMonth()+1, cur.getDate());
+    weekDates.push(isoDate(cur.getFullYear(), cur.getMonth()+1, cur.getDate()));
+  }
+
+  const dayLabels = ['J','V','S','D','L','M','X'];
+
+  let html = `<div class="cal-nav">
+    <button onclick="shiftWeek(-1)">‹</button>
+    <div style="text-align:center">
+      <h2 style="font-size:14px;font-weight:700">${fmtShort(weekStart)} – ${fmtShort(weekEnd)}</h2>
+      <div style="font-size:10px;color:var(--text-sec)">Ciclo activo</div>
+    </div>
+    <button onclick="shiftWeek(1)">›</button>
+  </div>`;
+
+  // Legend
+  html += `<div class="ec-legend">
+    <span class="ec-legend-item"><span class="ec-legend-dot" style="background:#DBEAFE"></span>Bello Campo</span>
+    <span class="ec-legend-item"><span class="ec-legend-dot" style="background:#D1FAE5"></span>PCV</span>
+    <span class="ec-legend-item"><span class="ec-legend-dot" style="background:#FEF9C3"></span>Libre</span>
+  </div>`;
+
+  // Helper: get chip class and label for a date+employee
+  function empDayChip(code, ds) {
     const sched = getSchedule(ds);
     const isToday = ds === REF_TODAY;
-    const special = SPECIAL_HOURS[ds];
-
-    html += `<div class="week-day ${isToday?'':''}">
-      <div class="week-day-header">
-        <span class="week-day-name" style="${isToday?'color:var(--green)':''}">${dayNames[i]}</span>
-        <span class="week-day-date">${cur.getDate()}/${cur.getMonth()+1}</span>
-        ${special?.event ? `<span class="chip chip-orange">${special.event}</span>` : ''}
-      </div>`;
-
-    if (!sched || sched.noData) {
-      html += `<div style="font-size:11px;color:var(--text-sec)">Sin planificación registrada</div>`;
-    } else if (sched.holiday) {
-      html += `<div class="chip chip-red">🎄 No laborable</div>`;
-    } else {
-      if (selEmp) {
-        const st = getEmployeeStatusOnDate(selEmp, ds);
-        let badge = '';
-        if (st.status === 'work') badge = `<span class="chip chip-green">${st.sede}</span>`;
-        else if (st.status === 'off') badge = `<span class="chip chip-blue">Libre</span>`;
-        else if (st.status === 'conflict') badge = `<span class="chip chip-red">Conflicto</span>`;
-        else badge = `<span class="chip chip-gray">Sin info</span>`;
-        html += `<div>${badge}</div>`;
-      } else {
-        const pcvHours = getPCVHours(ds);
-        const bcHours = getBCHours(ds);
-        html += `<div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:4px">`;
-        if (sched.pcvC || (sched.pcvB||[]).length) {
-          html += `<div style="font-size:11px"><span style="color:var(--green);font-weight:700">PCV</span> ${pcvHours||'—'}<br>
-            👤 ${nameList([sched.pcvC])} | ${nameList(sched.pcvB||[])}</div>`;
-        }
-        if (sched.bcC || (sched.bcB||[]).length) {
-          html += `<div style="font-size:11px"><span style="color:var(--blue);font-weight:700">BC</span> ${bcHours||'—'}<br>
-            👤 ${nameList(sched.bcCArr || (sched.bcC ? [sched.bcC] : []))} | ${nameList(sched.bcB||[])}</div>`;
-        }
-        html += `</div>`;
-      }
-      const conflicts = sched.conflicts || [];
-      if (conflicts.length) {
-        html += `<div class="alert alert-red" style="margin-top:6px;margin-bottom:0"><span class="alert-icon">⚠️</span><p>${conflicts[0].msg}</p></div>`;
-      }
+    const todayCls = isToday ? ' chip-today' : '';
+    if (!sched || sched.noData) return { cls:'chip-nd'+todayCls, lbl:'?' };
+    if (sched.holiday) return { cls:'chip-holiday'+todayCls, lbl:'🎄' };
+    const st = getEmployeeStatusOnDate(code, ds);
+    if (st.status === 'off') return { cls:'chip-libre'+todayCls, lbl:'L' };
+    if (st.status === 'work') {
+      const isBC = st.sede && st.sede.includes('Bello');
+      return { cls:(isBC ? 'chip-bc' : 'chip-pcv')+todayCls, lbl: isBC ? 'BC' : 'PCV' };
     }
+    return { cls:'chip-nd'+todayCls, lbl:'?' };
+  }
+
+  // Filter: if selEmp show only that employee, else all
+  const empList = selEmp ? [[selEmp, EMPLOYEES[selEmp]]] : Object.entries(EMPLOYEES);
+
+  html += `<div class="ec-grid">`;
+  empList.forEach(([code, emp]) => {
+    const initials = emp.name.substring(0,2).toUpperCase();
+    const isFija = code === 'C1';
+    html += `<div class="ec-card">
+      <div class="ec-header">
+        <div class="ec-avatar" style="background:${emp.color}">${initials}</div>
+        <div>
+          <div class="ec-name">${emp.name}</div>
+          <div class="ec-role">${emp.role}${isFija ? ' · fija BC' : ' · rota'}</div>
+        </div>
+      </div>
+      <div class="ec-days-row">`;
+    weekDates.forEach((ds, i) => {
+      const { cls, lbl } = empDayChip(code, ds);
+      html += `<div class="ec-day-col">
+        <span class="ec-day-label">${dayLabels[i]}</span>
+        <div class="ec-day-chip ${cls}" onclick="openDayDetail('${ds}')" title="${ds}">${lbl}</div>
+      </div>`;
+    });
+    html += `</div></div>`;
+  });
+  html += `</div>`;
+
+  // If a day is selected, show detail below
+  if (state.calSelectedDate && weekDates.includes(state.calSelectedDate)) {
+    html += `<div style="margin-top:14px"><div class="section-title">📅 ${formatDate(state.calSelectedDate)}</div>`;
+    html += renderDayCards(state.calSelectedDate, true);
     html += `</div>`;
   }
+
   return html;
 }
 
