@@ -155,8 +155,11 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
 .ec-legend-item{display:flex;align-items:center;gap:5px;font-size:10px;color:var(--text-sec);font-weight:600}
 .ec-legend-dot{width:14px;height:14px;border-radius:4px}
 /* Monthly emp grid */
-.ec-month-days{display:flex;flex-wrap:wrap;gap:3px;margin-top:6px}
-.ec-month-chip{width:24px;height:20px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:800;cursor:pointer}
+.ec-month-days{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-top:4px}
+.ec-month-dow{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-bottom:2px}
+.ec-month-dow-label{font-size:8px;font-weight:700;color:var(--text-sec);text-align:center;padding:1px 0}
+.ec-month-chip{height:20px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:800;cursor:pointer}
+.ec-month-empty{height:20px}
 .ec-month-chip.chip-bc{background:#DBEAFE;color:#1D4ED8}
 .ec-month-chip.chip-pcv{background:#D1FAE5;color:#065F46}
 .ec-month-chip.chip-libre{background:#FEF9C3;color:#854D0E}
@@ -383,112 +386,112 @@ function getBCHours(dateStr) {
 // Formato: { pcvC, pcvB[], bcC, bcB[], freeC[], freeB[], conflicts[], notes }
 // ═══════════════════════════════════════════════
 const RAW_SCHEDULE = {
-  '2026-11-13': { pcvC:'C2', pcvB:['B1','B2'], bcCArr:['C1','C3'], bcC:'C1', bcB:['B3','B4'], freeC:[], freeB:[] },
+  '2026-11-13': { pcvC:'C2', pcvB:['B1','B2'], bcCArr:['C1'], bcC:'C1', bcB:['B3','B4'], freeC:['C3'], freeB:[] },
   '2026-11-14': { pcvC:'C2', pcvB:['B1','B4'], bcCArr:[], bcC:null, bcB:[], freeC:['C1','C3'], freeB:['B2','B3'] },
   '2026-11-15': { pcvC:'C3', pcvB:['B3','B4'], bcCArr:[], bcC:null, bcB:[], freeC:['C1','C2'], freeB:['B1','B2'] },
-  '2026-11-16': { pcvC:'C3', pcvB:['B4'], bcCArr:['C1','C2'], bcC:'C1', bcB:['B1','B2','B3'], freeC:[], freeB:[] },
-  '2026-11-17': { pcvC:'C2', pcvB:['B1','B2'], bcCArr:['C1','C3'], bcC:'C1', bcB:['B3','B4'], freeC:[], freeB:[] },
-  '2026-11-18': { pcvC:'C3', pcvB:['B3'], bcCArr:['C1','C2'], bcC:'C1', bcB:['B1','B2'], freeC:[], freeB:['B4'] },
+  '2026-11-16': { pcvC:'C3', pcvB:['B4'], bcCArr:['C1'], bcC:'C1', bcB:['B1','B2','B3'], freeC:['C2'], freeB:[] },
+  '2026-11-17': { pcvC:'C2', pcvB:['B1','B2'], bcCArr:['C1'], bcC:'C1', bcB:['B3','B4'], freeC:['C3'], freeB:[] },
+  '2026-11-18': { pcvC:'C3', pcvB:['B3'], bcCArr:['C1'], bcC:'C1', bcB:['B1','B2'], freeC:['C2'], freeB:['B4'] },
   '2026-11-19': { pcvC:'C2', pcvB:['B1'], bcCArr:['C1'], bcC:'C1', bcB:['B4'], freeC:['C3'], freeB:['B2','B3'] },
-  '2026-11-20': { pcvC:'C2', pcvB:['B1','B2'], bcCArr:['C1','C3'], bcC:'C1', bcB:['B3','B4'], freeC:[], freeB:[] },
+  '2026-11-20': { pcvC:'C2', pcvB:['B1','B2'], bcCArr:['C1'], bcC:'C1', bcB:['B3','B4'], freeC:['C3'], freeB:[] },
   '2026-11-21': { pcvC:'C2', pcvB:['B1','B4'], bcCArr:[], bcC:null, bcB:[], freeC:['C1','C3'], freeB:['B2','B3'] },
   '2026-11-22': { pcvC:'C3', pcvB:['B3','B4'], bcCArr:[], bcC:null, bcB:[], freeC:['C1','C2'], freeB:['B1','B2'] },
-  '2026-11-23': { pcvC:'C3', pcvB:['B4'], bcCArr:['C1','C2'], bcC:'C1', bcB:['B1','B2','B3'], freeC:[], freeB:[] },
-  '2026-11-24': { pcvC:'C2', pcvB:['B1','B2'], bcCArr:['C1','C3'], bcC:'C1', bcB:['B3','B4'], freeC:[], freeB:[] },
-  '2026-11-25': { pcvC:'C3', pcvB:['B3'], bcCArr:['C1','C2'], bcC:'C1', bcB:['B1','B2'], freeC:[], freeB:['B4'] },
+  '2026-11-23': { pcvC:'C3', pcvB:['B4'], bcCArr:['C1'], bcC:'C1', bcB:['B1','B2','B3'], freeC:['C2'], freeB:[] },
+  '2026-11-24': { pcvC:'C2', pcvB:['B1','B2'], bcCArr:['C1'], bcC:'C1', bcB:['B3','B4'], freeC:['C3'], freeB:[] },
+  '2026-11-25': { pcvC:'C3', pcvB:['B3'], bcCArr:['C1'], bcC:'C1', bcB:['B1','B2'], freeC:['C2'], freeB:['B4'] },
   '2026-11-26': { pcvC:'C2', pcvB:['B1'], bcCArr:['C1'], bcC:'C1', bcB:['B4'], freeC:['C3'], freeB:['B2','B3'] },
-  '2026-11-27': { pcvC:'C2', pcvB:['B1','B2'], bcCArr:['C1','C3'], bcC:'C1', bcB:['B3','B4'], freeC:[], freeB:[] },
+  '2026-11-27': { pcvC:'C2', pcvB:['B1','B2'], bcCArr:['C1'], bcC:'C1', bcB:['B3','B4'], freeC:['C3'], freeB:[] },
   '2026-11-28': { pcvC:'C2', pcvB:['B1','B4'], bcCArr:[], bcC:null, bcB:[], freeC:['C1','C3'], freeB:['B2','B3'] },
   '2026-11-29': { pcvC:'C3', pcvB:['B3','B4'], bcCArr:[], bcC:null, bcB:[], freeC:['C1','C2'], freeB:['B1','B2'] },
-  '2026-11-30': { pcvC:'C3', pcvB:['B4'], bcCArr:['C1','C2'], bcC:'C1', bcB:['B1','B2','B3'], freeC:[], freeB:[] },
-  '2026-12-01': { pcvC:'C2', pcvB:['B1','B2'], bcCArr:['C1','C3'], bcC:'C1', bcB:['B3','B4'], freeC:[], freeB:[] },
-  '2026-12-02': { pcvC:'C3', pcvB:['B3'], bcCArr:['C1','C2'], bcC:'C1', bcB:['B1','B2'], freeC:[], freeB:['B4'] },
+  '2026-11-30': { pcvC:'C3', pcvB:['B4'], bcCArr:['C1'], bcC:'C1', bcB:['B1','B2','B3'], freeC:['C2'], freeB:[] },
+  '2026-12-01': { pcvC:'C2', pcvB:['B1','B2'], bcCArr:['C1'], bcC:'C1', bcB:['B3','B4'], freeC:['C3'], freeB:[] },
+  '2026-12-02': { pcvC:'C3', pcvB:['B3'], bcCArr:['C1'], bcC:'C1', bcB:['B1','B2'], freeC:['C2'], freeB:['B4'] },
   '2026-12-03': { pcvC:'C2', pcvB:['B1'], bcCArr:['C1'], bcC:'C1', bcB:['B4'], freeC:['C3'], freeB:['B2','B3'] },
-  '2026-12-04': { pcvC:'C2', pcvB:['B1','B2'], bcCArr:['C1','C3'], bcC:'C1', bcB:['B3','B4'], freeC:[], freeB:[] },
+  '2026-12-04': { pcvC:'C2', pcvB:['B1','B2'], bcCArr:['C1'], bcC:'C1', bcB:['B3','B4'], freeC:['C3'], freeB:[] },
   '2026-12-05': { pcvC:'C2', pcvB:['B1','B4'], bcCArr:[], bcC:null, bcB:[], freeC:['C1','C3'], freeB:['B2','B3'] },
   '2026-12-06': { pcvC:'C3', pcvB:['B3','B4'], bcCArr:[], bcC:null, bcB:[], freeC:['C1','C2'], freeB:['B1','B2'] },
-  '2026-12-07': { pcvC:'C3', pcvB:['B4'], bcCArr:['C1','C2'], bcC:'C1', bcB:['B1','B2','B3'], freeC:[], freeB:[] },
-  '2026-12-08': { pcvC:'C2', pcvB:['B1','B2'], bcCArr:['C1','C3'], bcC:'C1', bcB:['B3','B4'], freeC:[], freeB:[] },
-  '2026-12-09': { pcvC:'C3', pcvB:['B3'], bcCArr:['C1','C2'], bcC:'C1', bcB:['B1','B2'], freeC:[], freeB:['B4'] },
+  '2026-12-07': { pcvC:'C3', pcvB:['B4'], bcCArr:['C1'], bcC:'C1', bcB:['B1','B2','B3'], freeC:['C2'], freeB:[] },
+  '2026-12-08': { pcvC:'C2', pcvB:['B1','B2'], bcCArr:['C1'], bcC:'C1', bcB:['B3','B4'], freeC:['C3'], freeB:[] },
+  '2026-12-09': { pcvC:'C3', pcvB:['B3'], bcCArr:['C1'], bcC:'C1', bcB:['B1','B2'], freeC:['C2'], freeB:['B4'] },
   '2026-12-10': { pcvC:'C2', pcvB:['B1'], bcCArr:['C1'], bcC:'C1', bcB:['B4'], freeC:['C3'], freeB:['B2','B3'] },
-  '2026-12-11': { pcvC:'C2', pcvB:['B1','B2'], bcCArr:['C1','C3'], bcC:'C1', bcB:['B3','B4'], freeC:[], freeB:[] },
+  '2026-12-11': { pcvC:'C2', pcvB:['B1','B2'], bcCArr:['C1'], bcC:'C1', bcB:['B3','B4'], freeC:['C3'], freeB:[] },
   '2026-12-12': { pcvC:'C2', pcvB:['B1','B4'], bcCArr:[], bcC:null, bcB:[], freeC:['C1','C3'], freeB:['B2','B3'] },
   '2026-12-13': { pcvC:'C3', pcvB:['B3','B4'], bcCArr:[], bcC:null, bcB:[], freeC:['C1','C2'], freeB:['B1','B2'] },
-  '2026-12-14': { pcvC:'C3', pcvB:['B4'], bcCArr:['C1','C2'], bcC:'C1', bcB:['B1','B2','B3'], freeC:[], freeB:[] },
-  '2026-12-15': { pcvC:'C2', pcvB:['B1','B2'], bcCArr:['C1','C3'], bcC:'C1', bcB:['B3','B4'], freeC:[], freeB:[] },
-  '2026-12-16': { pcvC:'C3', pcvB:['B3'], bcCArr:['C1','C2'], bcC:'C1', bcB:['B1','B2'], freeC:[], freeB:['B4'] },
+  '2026-12-14': { pcvC:'C3', pcvB:['B4'], bcCArr:['C1'], bcC:'C1', bcB:['B1','B2','B3'], freeC:['C2'], freeB:[] },
+  '2026-12-15': { pcvC:'C2', pcvB:['B1','B2'], bcCArr:['C1'], bcC:'C1', bcB:['B3','B4'], freeC:['C3'], freeB:[] },
+  '2026-12-16': { pcvC:'C3', pcvB:['B3'], bcCArr:['C1'], bcC:'C1', bcB:['B1','B2'], freeC:['C2'], freeB:['B4'] },
   '2026-12-17': { pcvC:'C2', pcvB:['B1'], bcCArr:['C1'], bcC:'C1', bcB:['B4'], freeC:['C3'], freeB:['B2','B3'] },
-  '2026-12-18': { pcvC:'C2', pcvB:['B1','B2'], bcCArr:['C1','C3'], bcC:'C1', bcB:['B3','B4'], freeC:[], freeB:[] },
+  '2026-12-18': { pcvC:'C2', pcvB:['B1','B2'], bcCArr:['C1'], bcC:'C1', bcB:['B3','B4'], freeC:['C3'], freeB:[] },
   '2026-12-19': { pcvC:'C2', pcvB:['B1','B4'], bcCArr:[], bcC:null, bcB:[], freeC:['C1','C3'], freeB:['B2','B3'] },
   '2026-12-20': { pcvC:'C3', pcvB:['B3','B4'], bcCArr:[], bcC:null, bcB:[], freeC:['C1','C2'], freeB:['B1','B2'] },
-  '2026-12-21': { pcvC:'C3', pcvB:['B4'], bcCArr:['C1','C2'], bcC:'C1', bcB:['B1','B2','B3'], freeC:[], freeB:[] },
-  '2026-12-22': { pcvC:'C2', pcvB:['B1','B2'], bcCArr:['C1','C3'], bcC:'C1', bcB:['B3','B4'], freeC:[], freeB:[] },
-  '2026-12-23': { pcvC:'C3', pcvB:['B3'], bcCArr:['C1','C2'], bcC:'C1', bcB:['B1','B2'], freeC:[], freeB:['B4'] },
+  '2026-12-21': { pcvC:'C3', pcvB:['B4'], bcCArr:['C1'], bcC:'C1', bcB:['B1','B2','B3'], freeC:['C2'], freeB:[] },
+  '2026-12-22': { pcvC:'C2', pcvB:['B1','B2'], bcCArr:['C1'], bcC:'C1', bcB:['B3','B4'], freeC:['C3'], freeB:[] },
+  '2026-12-23': { pcvC:'C3', pcvB:['B3'], bcCArr:['C1'], bcC:'C1', bcB:['B1','B2'], freeC:['C2'], freeB:['B4'] },
   '2026-12-24': { holiday: true },
   '2026-12-25': { holiday: true },
   '2026-12-26': { pcvC:'C2', pcvB:['B1','B4'], bcCArr:[], bcC:null, bcB:[], freeC:['C1','C3'], freeB:['B2','B3'] },
   '2026-12-27': { pcvC:'C3', pcvB:['B3','B4'], bcCArr:[], bcC:null, bcB:[], freeC:['C1','C2'], freeB:['B1','B2'] },
-  '2026-12-28': { pcvC:'C3', pcvB:['B4'], bcCArr:['C1','C2'], bcC:'C1', bcB:['B1','B2','B3'], freeC:[], freeB:[] },
-  '2026-12-29': { pcvC:'C2', pcvB:['B1','B2'], bcCArr:['C1','C3'], bcC:'C1', bcB:['B3','B4'], freeC:[], freeB:[] },
-  '2026-12-30': { pcvC:'C3', pcvB:['B3'], bcCArr:['C1','C2'], bcC:'C1', bcB:['B1','B2'], freeC:[], freeB:['B4'] },
+  '2026-12-28': { pcvC:'C3', pcvB:['B4'], bcCArr:['C1'], bcC:'C1', bcB:['B1','B2','B3'], freeC:['C2'], freeB:[] },
+  '2026-12-29': { pcvC:'C2', pcvB:['B1','B2'], bcCArr:['C1'], bcC:'C1', bcB:['B3','B4'], freeC:['C3'], freeB:[] },
+  '2026-12-30': { pcvC:'C3', pcvB:['B3'], bcCArr:['C1'], bcC:'C1', bcB:['B1','B2'], freeC:['C2'], freeB:['B4'] },
   '2026-12-31': { holiday: true },
   '2027-01-01': { holiday: true },
   '2027-01-02': { pcvC:'C2', pcvB:['B1','B4'], bcCArr:[], bcC:null, bcB:[], freeC:['C1','C3'], freeB:['B2','B3'] },
   '2027-01-03': { pcvC:'C3', pcvB:['B3','B4'], bcCArr:[], bcC:null, bcB:[], freeC:['C1','C2'], freeB:['B1','B2'] },
-  '2027-01-04': { pcvC:'C3', pcvB:['B4'], bcCArr:['C1','C2'], bcC:'C1', bcB:['B1','B2','B3'], freeC:[], freeB:[] },
-  '2027-01-05': { pcvC:'C2', pcvB:['B1','B2'], bcCArr:['C1','C3'], bcC:'C1', bcB:['B3','B4'], freeC:[], freeB:[] },
-  '2027-01-06': { pcvC:'C3', pcvB:['B3'], bcCArr:['C1','C2'], bcC:'C1', bcB:['B1','B2'], freeC:[], freeB:['B4'] },
+  '2027-01-04': { pcvC:'C3', pcvB:['B4'], bcCArr:['C1'], bcC:'C1', bcB:['B1','B2','B3'], freeC:['C2'], freeB:[] },
+  '2027-01-05': { pcvC:'C2', pcvB:['B1','B2'], bcCArr:['C1'], bcC:'C1', bcB:['B3','B4'], freeC:['C3'], freeB:[] },
+  '2027-01-06': { pcvC:'C3', pcvB:['B3'], bcCArr:['C1'], bcC:'C1', bcB:['B1','B2'], freeC:['C2'], freeB:['B4'] },
   '2027-01-07': { pcvC:'C2', pcvB:['B1'], bcCArr:['C1'], bcC:'C1', bcB:['B4'], freeC:['C3'], freeB:['B2','B3'] },
-  '2027-01-08': { pcvC:'C2', pcvB:['B1','B2'], bcCArr:['C1','C3'], bcC:'C1', bcB:['B3','B4'], freeC:[], freeB:[] },
+  '2027-01-08': { pcvC:'C2', pcvB:['B1','B2'], bcCArr:['C1'], bcC:'C1', bcB:['B3','B4'], freeC:['C3'], freeB:[] },
   '2027-01-09': { pcvC:'C2', pcvB:['B1','B4'], bcCArr:[], bcC:null, bcB:[], freeC:['C1','C3'], freeB:['B2','B3'] },
   '2027-01-10': { pcvC:'C3', pcvB:['B3','B4'], bcCArr:[], bcC:null, bcB:[], freeC:['C1','C2'], freeB:['B1','B2'] },
-  '2027-01-11': { pcvC:'C3', pcvB:['B4'], bcCArr:['C1','C2'], bcC:'C1', bcB:['B1','B2','B3'], freeC:[], freeB:[] },
-  '2027-01-12': { pcvC:'C2', pcvB:['B1','B2'], bcCArr:['C1','C3'], bcC:'C1', bcB:['B3','B4'], freeC:[], freeB:[] },
-  '2027-01-13': { pcvC:'C3', pcvB:['B3'], bcCArr:['C1','C2'], bcC:'C1', bcB:['B1','B2'], freeC:[], freeB:['B4'] },
+  '2027-01-11': { pcvC:'C3', pcvB:['B4'], bcCArr:['C1'], bcC:'C1', bcB:['B1','B2','B3'], freeC:['C2'], freeB:[] },
+  '2027-01-12': { pcvC:'C2', pcvB:['B1','B2'], bcCArr:['C1'], bcC:'C1', bcB:['B3','B4'], freeC:['C3'], freeB:[] },
+  '2027-01-13': { pcvC:'C3', pcvB:['B3'], bcCArr:['C1'], bcC:'C1', bcB:['B1','B2'], freeC:['C2'], freeB:['B4'] },
   '2027-01-14': { pcvC:'C2', pcvB:['B1'], bcCArr:['C1'], bcC:'C1', bcB:['B4'], freeC:['C3'], freeB:['B2','B3'] },
-  '2027-01-15': { pcvC:'C2', pcvB:['B1','B2'], bcCArr:['C1','C3'], bcC:'C1', bcB:['B3','B4'], freeC:[], freeB:[] },
+  '2027-01-15': { pcvC:'C2', pcvB:['B1','B2'], bcCArr:['C1'], bcC:'C1', bcB:['B3','B4'], freeC:['C3'], freeB:[] },
   '2027-01-16': { pcvC:'C2', pcvB:['B1','B4'], bcCArr:[], bcC:null, bcB:[], freeC:['C1','C3'], freeB:['B2','B3'] },
   '2027-01-17': { pcvC:'C3', pcvB:['B3','B4'], bcCArr:[], bcC:null, bcB:[], freeC:['C1','C2'], freeB:['B1','B2'] },
-  '2027-01-18': { pcvC:'C3', pcvB:['B4'], bcCArr:['C1','C2'], bcC:'C1', bcB:['B1','B2','B3'], freeC:[], freeB:[] },
-  '2027-01-19': { pcvC:'C2', pcvB:['B1','B2'], bcCArr:['C1','C3'], bcC:'C1', bcB:['B3','B4'], freeC:[], freeB:[] },
-  '2027-01-20': { pcvC:'C3', pcvB:['B3'], bcCArr:['C1','C2'], bcC:'C1', bcB:['B1','B2'], freeC:[], freeB:['B4'] },
+  '2027-01-18': { pcvC:'C3', pcvB:['B4'], bcCArr:['C1'], bcC:'C1', bcB:['B1','B2','B3'], freeC:['C2'], freeB:[] },
+  '2027-01-19': { pcvC:'C2', pcvB:['B1','B2'], bcCArr:['C1'], bcC:'C1', bcB:['B3','B4'], freeC:['C3'], freeB:[] },
+  '2027-01-20': { pcvC:'C3', pcvB:['B3'], bcCArr:['C1'], bcC:'C1', bcB:['B1','B2'], freeC:['C2'], freeB:['B4'] },
   '2027-01-21': { pcvC:'C2', pcvB:['B1'], bcCArr:['C1'], bcC:'C1', bcB:['B4'], freeC:['C3'], freeB:['B2','B3'] },
-  '2027-01-22': { pcvC:'C2', pcvB:['B1','B2'], bcCArr:['C1','C3'], bcC:'C1', bcB:['B3','B4'], freeC:[], freeB:[] },
+  '2027-01-22': { pcvC:'C2', pcvB:['B1','B2'], bcCArr:['C1'], bcC:'C1', bcB:['B3','B4'], freeC:['C3'], freeB:[] },
   '2027-01-23': { pcvC:'C2', pcvB:['B1','B4'], bcCArr:[], bcC:null, bcB:[], freeC:['C1','C3'], freeB:['B2','B3'] },
   '2027-01-24': { pcvC:'C3', pcvB:['B3','B4'], bcCArr:[], bcC:null, bcB:[], freeC:['C1','C2'], freeB:['B1','B2'] },
-  '2027-01-25': { pcvC:'C3', pcvB:['B4'], bcCArr:['C1','C2'], bcC:'C1', bcB:['B1','B2','B3'], freeC:[], freeB:[] },
-  '2027-01-26': { pcvC:'C2', pcvB:['B1','B2'], bcCArr:['C1','C3'], bcC:'C1', bcB:['B3','B4'], freeC:[], freeB:[] },
-  '2027-01-27': { pcvC:'C3', pcvB:['B3'], bcCArr:['C1','C2'], bcC:'C1', bcB:['B1','B2'], freeC:[], freeB:['B4'] },
+  '2027-01-25': { pcvC:'C3', pcvB:['B4'], bcCArr:['C1'], bcC:'C1', bcB:['B1','B2','B3'], freeC:['C2'], freeB:[] },
+  '2027-01-26': { pcvC:'C2', pcvB:['B1','B2'], bcCArr:['C1'], bcC:'C1', bcB:['B3','B4'], freeC:['C3'], freeB:[] },
+  '2027-01-27': { pcvC:'C3', pcvB:['B3'], bcCArr:['C1'], bcC:'C1', bcB:['B1','B2'], freeC:['C2'], freeB:['B4'] },
   '2027-01-28': { pcvC:'C2', pcvB:['B1'], bcCArr:['C1'], bcC:'C1', bcB:['B4'], freeC:['C3'], freeB:['B2','B3'] },
-  '2027-01-29': { pcvC:'C2', pcvB:['B1','B2'], bcCArr:['C1','C3'], bcC:'C1', bcB:['B3','B4'], freeC:[], freeB:[] },
+  '2027-01-29': { pcvC:'C2', pcvB:['B1','B2'], bcCArr:['C1'], bcC:'C1', bcB:['B3','B4'], freeC:['C3'], freeB:[] },
   '2027-01-30': { pcvC:'C2', pcvB:['B1','B4'], bcCArr:[], bcC:null, bcB:[], freeC:['C1','C3'], freeB:['B2','B3'] },
   '2027-01-31': { pcvC:'C3', pcvB:['B3','B4'], bcCArr:[], bcC:null, bcB:[], freeC:['C1','C2'], freeB:['B1','B2'] },
-  '2027-02-01': { pcvC:'C3', pcvB:['B4'], bcCArr:['C1','C2'], bcC:'C1', bcB:['B1','B2','B3'], freeC:[], freeB:[] },
-  '2027-02-02': { pcvC:'C2', pcvB:['B1','B2'], bcCArr:['C1','C3'], bcC:'C1', bcB:['B3','B4'], freeC:[], freeB:[] },
-  '2027-02-03': { pcvC:'C3', pcvB:['B3'], bcCArr:['C1','C2'], bcC:'C1', bcB:['B1','B2'], freeC:[], freeB:['B4'] },
+  '2027-02-01': { pcvC:'C3', pcvB:['B4'], bcCArr:['C1'], bcC:'C1', bcB:['B1','B2','B3'], freeC:['C2'], freeB:[] },
+  '2027-02-02': { pcvC:'C2', pcvB:['B1','B2'], bcCArr:['C1'], bcC:'C1', bcB:['B3','B4'], freeC:['C3'], freeB:[] },
+  '2027-02-03': { pcvC:'C3', pcvB:['B3'], bcCArr:['C1'], bcC:'C1', bcB:['B1','B2'], freeC:['C2'], freeB:['B4'] },
   '2027-02-04': { pcvC:'C2', pcvB:['B1'], bcCArr:['C1'], bcC:'C1', bcB:['B4'], freeC:['C3'], freeB:['B2','B3'] },
-  '2027-02-05': { pcvC:'C2', pcvB:['B1','B2'], bcCArr:['C1','C3'], bcC:'C1', bcB:['B3','B4'], freeC:[], freeB:[] },
+  '2027-02-05': { pcvC:'C2', pcvB:['B1','B2'], bcCArr:['C1'], bcC:'C1', bcB:['B3','B4'], freeC:['C3'], freeB:[] },
   '2027-02-06': { pcvC:'C2', pcvB:['B1','B4'], bcCArr:[], bcC:null, bcB:[], freeC:['C1','C3'], freeB:['B2','B3'] },
   '2027-02-07': { pcvC:'C3', pcvB:['B3','B4'], bcCArr:[], bcC:null, bcB:[], freeC:['C1','C2'], freeB:['B1','B2'] },
-  '2027-02-08': { pcvC:'C3', pcvB:['B4'], bcCArr:['C1','C2'], bcC:'C1', bcB:['B1','B2','B3'], freeC:[], freeB:[] },
-  '2027-02-09': { pcvC:'C2', pcvB:['B1','B2'], bcCArr:['C1','C3'], bcC:'C1', bcB:['B3','B4'], freeC:[], freeB:[] },
-  '2027-02-10': { pcvC:'C3', pcvB:['B3'], bcCArr:['C1','C2'], bcC:'C1', bcB:['B1','B2'], freeC:[], freeB:['B4'] },
+  '2027-02-08': { pcvC:'C3', pcvB:['B4'], bcCArr:['C1'], bcC:'C1', bcB:['B1','B2','B3'], freeC:['C2'], freeB:[] },
+  '2027-02-09': { pcvC:'C2', pcvB:['B1','B2'], bcCArr:['C1'], bcC:'C1', bcB:['B3','B4'], freeC:['C3'], freeB:[] },
+  '2027-02-10': { pcvC:'C3', pcvB:['B3'], bcCArr:['C1'], bcC:'C1', bcB:['B1','B2'], freeC:['C2'], freeB:['B4'] },
   '2027-02-11': { pcvC:'C2', pcvB:['B1'], bcCArr:['C1'], bcC:'C1', bcB:['B4'], freeC:['C3'], freeB:['B2','B3'] },
-  '2027-02-12': { pcvC:'C2', pcvB:['B1','B2'], bcCArr:['C1','C3'], bcC:'C1', bcB:['B3','B4'], freeC:[], freeB:[] },
+  '2027-02-12': { pcvC:'C2', pcvB:['B1','B2'], bcCArr:['C1'], bcC:'C1', bcB:['B3','B4'], freeC:['C3'], freeB:[] },
   '2027-02-13': { pcvC:'C2', pcvB:['B1','B4'], bcCArr:[], bcC:null, bcB:[], freeC:['C1','C3'], freeB:['B2','B3'] },
   '2027-02-14': { pcvC:'C3', pcvB:['B3','B4'], bcCArr:[], bcC:null, bcB:[], freeC:['C1','C2'], freeB:['B1','B2'] },
-  '2027-02-15': { pcvC:'C3', pcvB:['B4'], bcCArr:['C1','C2'], bcC:'C1', bcB:['B1','B2','B3'], freeC:[], freeB:[] },
-  '2027-02-16': { pcvC:'C2', pcvB:['B1','B2'], bcCArr:['C1','C3'], bcC:'C1', bcB:['B3','B4'], freeC:[], freeB:[] },
-  '2027-02-17': { pcvC:'C3', pcvB:['B3'], bcCArr:['C1','C2'], bcC:'C1', bcB:['B1','B2'], freeC:[], freeB:['B4'] },
+  '2027-02-15': { pcvC:'C3', pcvB:['B4'], bcCArr:['C1'], bcC:'C1', bcB:['B1','B2','B3'], freeC:['C2'], freeB:[] },
+  '2027-02-16': { pcvC:'C2', pcvB:['B1','B2'], bcCArr:['C1'], bcC:'C1', bcB:['B3','B4'], freeC:['C3'], freeB:[] },
+  '2027-02-17': { pcvC:'C3', pcvB:['B3'], bcCArr:['C1'], bcC:'C1', bcB:['B1','B2'], freeC:['C2'], freeB:['B4'] },
   '2027-02-18': { pcvC:'C2', pcvB:['B1'], bcCArr:['C1'], bcC:'C1', bcB:['B4'], freeC:['C3'], freeB:['B2','B3'] },
-  '2027-02-19': { pcvC:'C2', pcvB:['B1','B2'], bcCArr:['C1','C3'], bcC:'C1', bcB:['B3','B4'], freeC:[], freeB:[] },
+  '2027-02-19': { pcvC:'C2', pcvB:['B1','B2'], bcCArr:['C1'], bcC:'C1', bcB:['B3','B4'], freeC:['C3'], freeB:[] },
   '2027-02-20': { pcvC:'C2', pcvB:['B1','B4'], bcCArr:[], bcC:null, bcB:[], freeC:['C1','C3'], freeB:['B2','B3'] },
   '2027-02-21': { pcvC:'C3', pcvB:['B3','B4'], bcCArr:[], bcC:null, bcB:[], freeC:['C1','C2'], freeB:['B1','B2'] },
-  '2027-02-22': { pcvC:'C3', pcvB:['B4'], bcCArr:['C1','C2'], bcC:'C1', bcB:['B1','B2','B3'], freeC:[], freeB:[] },
-  '2027-02-23': { pcvC:'C2', pcvB:['B1','B2'], bcCArr:['C1','C3'], bcC:'C1', bcB:['B3','B4'], freeC:[], freeB:[] },
-  '2027-02-24': { pcvC:'C3', pcvB:['B3'], bcCArr:['C1','C2'], bcC:'C1', bcB:['B1','B2'], freeC:[], freeB:['B4'] },
+  '2027-02-22': { pcvC:'C3', pcvB:['B4'], bcCArr:['C1'], bcC:'C1', bcB:['B1','B2','B3'], freeC:['C2'], freeB:[] },
+  '2027-02-23': { pcvC:'C2', pcvB:['B1','B2'], bcCArr:['C1'], bcC:'C1', bcB:['B3','B4'], freeC:['C3'], freeB:[] },
+  '2027-02-24': { pcvC:'C3', pcvB:['B3'], bcCArr:['C1'], bcC:'C1', bcB:['B1','B2'], freeC:['C2'], freeB:['B4'] },
   '2027-02-25': { pcvC:'C2', pcvB:['B1'], bcCArr:['C1'], bcC:'C1', bcB:['B4'], freeC:['C3'], freeB:['B2','B3'] },
-  '2027-02-26': { pcvC:'C2', pcvB:['B1','B2'], bcCArr:['C1','C3'], bcC:'C1', bcB:['B3','B4'], freeC:[], freeB:[] },
+  '2027-02-26': { pcvC:'C2', pcvB:['B1','B2'], bcCArr:['C1'], bcC:'C1', bcB:['B3','B4'], freeC:['C3'], freeB:[] },
   '2027-02-27': { pcvC:'C2', pcvB:['B1','B4'], bcCArr:[], bcC:null, bcB:[], freeC:['C1','C3'], freeB:['B2','B3'] },
   '2027-02-28': { pcvC:'C3', pcvB:['B3','B4'], bcCArr:[], bcC:null, bcB:[], freeC:['C1','C2'], freeB:['B1','B2'] },
 };
@@ -1024,8 +1027,22 @@ function renderMonthly(year, month, selEmp) {
         <span style="font-size:9px;background:#D1FAE5;color:#065F46;padding:2px 6px;border-radius:6px;font-weight:700">PCV ${pcvCount}</span>
         <span style="font-size:9px;background:#FEF9C3;color:#854D0E;padding:2px 6px;border-radius:6px;font-weight:700">L ${libreCount}</span>
       </div>
+      <div class="ec-month-dow">
+        <div class="ec-month-dow-label">L</div>
+        <div class="ec-month-dow-label">M</div>
+        <div class="ec-month-dow-label">X</div>
+        <div class="ec-month-dow-label">J</div>
+        <div class="ec-month-dow-label">V</div>
+        <div class="ec-month-dow-label">S</div>
+        <div class="ec-month-dow-label">D</div>
+      </div>
       <div class="ec-month-days">`;
 
+    // Calculate day of week for first of month (0=Mon...6=Sun)
+    const firstDow = (new Date(year, month-1, 1).getDay() + 6) % 7; // convert Sun=0 to Mon=0
+    for (let pad = 0; pad < firstDow; pad++) {
+      html += `<div class="ec-month-empty"></div>`;
+    }
     for (let day = 1; day <= daysInMonth; day++) {
       const ds = isoDate(year, month, day);
       const { cls, lbl } = monthDayChip(code, ds);
