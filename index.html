@@ -190,6 +190,42 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
 .empty-state{text-align:center;padding:32px 20px;color:var(--text-sec)}
 .empty-state .es-icon{font-size:40px;margin-bottom:10px}
 .empty-state p{font-size:14px}
+
+/* ══════════════════════════════════════
+   BUBBLES & CHIPS — diseño diario premium
+   ══════════════════════════════════════ */
+.bc-day-wrap{background:linear-gradient(135deg,#FFF7ED 0%,#ECFDF5 100%);border-radius:16px;padding:14px;margin-bottom:12px}
+.bc-status-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.bc-date-label{font-size:13px;font-weight:700;color:var(--text);text-transform:capitalize}
+.bc-status-chip{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:700}
+.bc-status-ok{background:#D1FAE5;color:#065F46}
+.bc-status-warn{background:#FEE2E2;color:#991B1B}
+.bc-venues-row{display:flex;gap:8px}
+.bc-venue-col{flex:1;min-width:0;background:#FFFFFF;border-radius:14px;padding:12px;box-shadow:0 1px 4px rgba(0,0,0,.07)}
+.bc-venue-col.bc-venue-pcv{border-top:3px solid #16A34A}
+.bc-venue-col.bc-venue-bc{border-top:3px solid #2563EB}
+.bc-venue-col.bc-venue-closed{opacity:.55;background:#F8FAFC}
+.bc-venue-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.bc-venue-tag{font-size:10px;font-weight:800;padding:2px 7px;border-radius:12px;letter-spacing:.5px}
+.bc-venue-tag.tag-pcv{background:#D1FAE5;color:#065F46}
+.bc-venue-tag.tag-bc{background:#DBEAFE;color:#1D4ED8}
+.bc-venue-hours{font-size:10px;color:var(--text-sec);font-weight:500}
+.bc-section-label{font-size:10px;font-weight:600;color:var(--text-sec);letter-spacing:.3px;text-transform:uppercase;margin:8px 0 4px}
+.bc-bubbles{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.bc-bubble{display:flex;align-items:center;gap:5px;background:#F8FAFC;border-radius:20px;padding:4px 8px 4px 4px}
+.bc-avatar{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:#fff;flex-shrink:0}
+.bc-bubble-name{font-size:11px;font-weight:600;color:var(--text)}
+.bc-role-chip{display:inline-block;padding:2px 7px;border-radius:10px;font-size:9px;font-weight:700;letter-spacing:.2px}
+.bc-role-cajera{background:#EDE9FE;color:#5B21B6}
+.bc-role-barista{background:#FEF3C7;color:#92400E}
+.bc-badge-fija{display:inline-block;background:#FEF3C7;color:#92400E;border-radius:8px;font-size:8px;font-weight:700;padding:1px 5px;margin-left:2px;vertical-align:middle}
+.bc-badge-rota{display:inline-block;background:#E0F2FE;color:#0369A1;border-radius:8px;font-size:8px;font-weight:700;padding:1px 5px;margin-left:2px;vertical-align:middle}
+.bc-rest-section{margin-top:10px;padding-top:10px;border-top:1px solid rgba(0,0,0,.07)}
+.bc-rest-label{font-size:10px;font-weight:600;color:var(--text-sec);text-transform:uppercase;letter-spacing:.3px;margin-bottom:6px}
+.bc-rest-bubbles{display:flex;flex-wrap:wrap;gap:5px}
+.bc-rest-avatar{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:800;color:#fff;opacity:.8;cursor:default}
+.bc-rest-name{font-size:10px;color:var(--text-sec);font-weight:500;margin-left:3px}
+.bc-rest-item{display:flex;align-items:center}
 </style>
 </head>
 <body>
@@ -315,123 +351,114 @@ function getBCHours(dateStr) {
 // Formato: { pcvC, pcvB[], bcC, bcB[], freeC[], freeB[], conflicts[], notes }
 // ═══════════════════════════════════════════════
 const RAW_SCHEDULE = {
-  // NOVIEMBRE — 1-12 sin asignaciones
-  ...Object.fromEntries(
-    ['2026-11-01','2026-11-02','2026-11-03','2026-11-04','2026-11-05',
-     '2026-11-06','2026-11-07','2026-11-08','2026-11-09','2026-11-10',
-     '2026-11-11','2026-11-12'].map(d => [d, { noData: true }])
-  ),
-  '2026-11-13': { pcvC:'C2', pcvB:['B2'], bcC:'C1', bcB:['B3','B4'], freeC:[], freeB:['B1'] },
-  '2026-11-14': { pcvC:'C2', pcvB:['B2'], bcC:null, bcB:[], freeC:['C1','C3'], freeB:['B1','B3','B4'] }, // sábado — BC cerrado
-  '2026-11-15': { pcvC:'C3', pcvB:['B1'], bcC:null, bcB:[], freeC:['C1','C2'], freeB:['B2','B3','B4'] }, // domingo — Encendido de Navidad
-  '2026-11-16': { pcvC:'C2', pcvB:['B3','B4'], bcC:'C1', bcB:['B1','B2'], freeC:['C3'], freeB:[] },
-  '2026-11-17': { pcvC:'C3', pcvB:['B2'], bcC:'C1', bcB:['B3','B4'], freeC:['C2'], freeB:['B1'] },
-  '2026-11-18': { pcvC:'C3', pcvB:['B1'], bcC:'C1', bcB:['B3'], freeC:['C2'], freeB:['B2','B4'] },
-  '2026-11-19': { pcvC:'C2', pcvB:['B1'], bcC:'C1', bcB:['B4'], freeC:['C3'], freeB:['B2','B3'] },
-  '2026-11-20': { pcvC:'C2', pcvB:['B2'], bcC:'C1', bcB:['B3','B4'], freeC:[], freeB:['B1'] },
-  '2026-11-21': { pcvC:'C2', pcvB:['B2'], bcC:null, bcB:[], freeC:['C1','C3'], freeB:['B1','B3','B4'] }, // sábado — BC cerrado
-  '2026-11-22': { pcvC:'C3', pcvB:['B1'], bcC:null, bcB:[], freeC:['C1','C2'], freeB:['B2','B3','B4'] }, // domingo — BC cerrado
-  '2026-11-23': { pcvC:'C2', pcvB:['B3','B4'], bcC:'C1', bcB:['B1','B2'], freeC:['C3'], freeB:[] },
-  '2026-11-24': { pcvC:'C3', pcvB:['B2'], bcC:'C1', bcB:['B3','B4'], freeC:['C2'], freeB:['B1'] },
-  '2026-11-25': { pcvC:'C3', pcvB:['B1'], bcC:'C1', bcB:['B3'], freeC:['C2'], freeB:['B2','B4'] },
-  '2026-11-26': { pcvC:'C2', pcvB:['B1'], bcC:'C1', bcB:['B4'], freeC:['C3'], freeB:['B2','B3'] },
-  '2026-11-27': { pcvC:'C2', pcvB:['B2'], bcC:'C1', bcB:['B3','B4'], freeC:[], freeB:['B1'] }, // Black Friday
-  '2026-11-28': { pcvC:'C2', pcvB:['B2'], bcC:null, bcB:[], freeC:['C1','C3'], freeB:['B1','B3','B4'] }, // sábado — BC cerrado
-  '2026-11-29': { pcvC:'C3', pcvB:['B1'], bcC:null, bcB:[], freeC:['C1','C2'], freeB:['B2','B3','B4'] }, // domingo — BC cerrado
-  '2026-11-30': { pcvC:'C2', pcvB:['B3','B4'], bcC:'C1', bcB:['B1','B2'], freeC:['C3'], freeB:[] },
-  // DICIEMBRE
-  '2026-12-01': { pcvC:'C3', pcvB:['B2'], bcC:'C1', bcB:['B3','B4'], freeC:['C2'], freeB:['B1'] },
-  '2026-12-02': { pcvC:'C3', pcvB:['B1'], bcC:'C1', bcB:['B3'], freeC:['C2'], freeB:['B2','B4'] },
-  '2026-12-03': { pcvC:'C2', pcvB:['B1'], bcC:'C1', bcB:['B4'], freeC:['C3'], freeB:['B2','B3'] },
-  '2026-12-04': { pcvC:'C2', pcvB:['B2'], bcC:'C1', bcB:['B3','B4'], freeC:[], freeB:['B1'] },
-  '2026-12-05': { pcvC:'C2', pcvB:['B2'], bcC:null, bcB:[], freeC:['C1','C3'], freeB:['B1','B3','B4'] }, // sábado — BC cerrado
-  '2026-12-06': { pcvC:'C3', pcvB:['B1'], bcC:null, bcB:[], freeC:['C1','C2'], freeB:['B2','B3','B4'] }, // domingo — BC cerrado
-  '2026-12-07': { pcvC:'C2', pcvB:['B3','B4'], bcC:'C1', bcB:['B1','B2'], freeC:['C3'], freeB:[] },
-  '2026-12-08': { pcvC:'C3', pcvB:['B2'], bcC:'C1', bcB:['B3','B4'], freeC:['C2'], freeB:['B1'] },
-  '2026-12-09': { pcvC:'C3', pcvB:['B1'], bcC:'C1', bcB:['B3'], freeC:['C2'], freeB:['B2','B4'] },
-  '2026-12-10': { pcvC:'C2', pcvB:['B1'], bcC:'C1', bcB:['B4'], freeC:['C3'], freeB:['B2','B3'] },
-  '2026-12-11': { pcvC:'C2', pcvB:['B2'], bcC:'C1', bcB:['B3','B4'], freeC:[], freeB:['B1'] },
-  '2026-12-12': { pcvC:'C2', pcvB:['B2'], bcC:null, bcB:[], freeC:['C1','C3'], freeB:['B1','B3','B4'] }, // sábado — BC cerrado
-  '2026-12-13': { pcvC:'C3', pcvB:['B1'], bcC:null, bcB:[], freeC:['C1','C2'], freeB:['B2','B3','B4'] }, // domingo — BC cerrado
-  '2026-12-14': { pcvC:'C2', pcvB:['B3','B4'], bcC:'C1', bcB:['B1','B2'], freeC:['C3'], freeB:[] },
-  '2026-12-15': { pcvC:'C3', pcvB:['B2'], bcC:'C1', bcB:['B3','B4'], freeC:['C2'], freeB:['B1'] },
-  '2026-12-16': { pcvC:'C3', pcvB:['B1'], bcC:'C1', bcB:['B3'], freeC:['C2'], freeB:['B2','B4'] },
-  '2026-12-17': { pcvC:'C2', pcvB:['B1'], bcC:'C1', bcB:['B4'], freeC:['C3'], freeB:['B2','B3'] },
-  '2026-12-18': { pcvC:'C2', pcvB:['B2'], bcC:'C1', bcB:['B3','B4'], freeC:[], freeB:['B1'] },
-  '2026-12-19': { pcvC:'C2', pcvB:['B2'], bcC:null, bcB:[], freeC:['C1','C3'], freeB:['B1','B3','B4'] }, // sábado — BC cerrado
-  '2026-12-20': { pcvC:'C3', pcvB:['B1'], bcC:null, bcB:[], freeC:['C1','C2'], freeB:['B2','B3','B4'] }, // domingo — BC cerrado
-  '2026-12-21': { pcvC:'C2', pcvB:['B3','B4'], bcC:'C1', bcB:['B1','B2'], freeC:['C3'], freeB:[] },
-  '2026-12-22': { pcvC:'C3', pcvB:['B2'], bcC:'C1', bcB:['B3','B4'], freeC:['C2'], freeB:['B1'] },
-  '2026-12-23': { pcvC:'C3', pcvB:['B1'], bcC:'C1', bcB:['B3'], freeC:['C2'], freeB:['B2','B4'] },
-  '2026-12-24': { pcvC:'C2', pcvB:['B1'], bcC:'C1', bcB:['B4'], freeC:['C3'], freeB:['B2','B3'] },
-  '2026-12-25': { holiday: true, pcvC:null, pcvB:[], bcC:null, bcB:[], freeC:[], freeB:[] },
-  '2026-12-26': { pcvC:'C2', pcvB:['B2'], bcC:null, bcB:[], freeC:['C1','C3'], freeB:['B1','B3','B4'] }, // sábado — BC cerrado
-  '2026-12-27': { pcvC:'C3', pcvB:['B1'], bcC:null, bcB:[], freeC:['C1','C2'], freeB:['B2','B3','B4'] }, // domingo — BC cerrado
-  '2026-12-28': { pcvC:'C2', pcvB:['B3','B4'], bcC:'C1', bcB:['B1','B2'], freeC:['C3'], freeB:[] },
-  '2026-12-29': { pcvC:'C3', pcvB:['B2'], bcC:'C1', bcB:['B3','B4'], freeC:['C2'], freeB:['B1'] },
-  '2026-12-30': { pcvC:'C3', pcvB:['B1'], bcC:'C1', bcB:['B3'], freeC:['C2'], freeB:['B2','B4'] },
-  '2026-12-31': { pcvC:'C2', pcvB:['B1'], bcC:'C1', bcB:['B4'], freeC:['C3'], freeB:['B2','B3'] },
-  // ENERO 2027
-  '2027-01-01': { pcvC:'C2', pcvB:['B1','B2'], bcC:'C1', bcB:['B3','B4'], freeC:['C3'], freeB:[] },
-  '2027-01-02': { pcvC:'C2', pcvB:['B1','B2'], bcC:null, bcB:[], freeC:['C1','C3'], freeB:['B3','B4'] },
-  '2027-01-03': { pcvC:'C2', pcvB:['B1'], bcC:null, bcB:[], freeC:['C1','C3'], freeB:['B3','B2','B4'] },
-  '2027-01-04': { pcvC:'C2', pcvB:['B1'], bcC:'C1', bcB:['B4'], freeC:['C3'], freeB:['B3','B2'] },
-  '2027-01-05': { pcvC:'C3', pcvB:['B3','B2'], bcC:'C1', bcB:[], freeC:['C2'], freeB:['B1','B4'] },
-  '2027-01-06': { pcvC:'C3', pcvB:['B3'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B1','B2'] },
-  '2027-01-07': { pcvC:'C3', pcvB:['B2'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B1','B3'] },
-  '2027-01-08': { pcvC:'C2', pcvB:['B1','B2'], bcC:'C1', bcB:['B3','B4'], freeC:['C3'], freeB:[] },
-  '2027-01-09': { pcvC:'C2', pcvB:['B1','B2'], bcC:null, bcB:[], freeC:['C1','C3'], freeB:['B3','B4'] },
-  '2027-01-10': { pcvC:'C2', pcvB:['B1'], bcC:null, bcB:[], freeC:['C1','C3'], freeB:['B3','B2','B4'] },
-  '2027-01-11': { pcvC:'C2', pcvB:['B1'], bcC:'C1', bcB:['B4'], freeC:['C3'], freeB:['B3','B2'] },
-  '2027-01-12': { pcvC:'C3', pcvB:['B3','B2'], bcC:'C1', bcB:[], freeC:['C2'], freeB:['B1','B4'] },
-  '2027-01-13': { pcvC:'C3', pcvB:['B3'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B1','B2'] },
-  '2027-01-14': { pcvC:'C3', pcvB:['B2'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B1','B3'] },
-  '2027-01-15': { pcvC:'C2', pcvB:['B1','B2'], bcC:'C1', bcB:['B3','B4'], freeC:['C3'], freeB:[] },
-  '2027-01-16': { pcvC:'C2', pcvB:['B1','B2'], bcC:null, bcB:[], freeC:['C1','C3'], freeB:['B3','B4'] },
-  '2027-01-17': { pcvC:'C2', pcvB:['B1'], bcC:null, bcB:[], freeC:['C1','C3'], freeB:['B3','B2','B4'] },
-  '2027-01-18': { pcvC:'C2', pcvB:['B1'], bcC:'C1', bcB:['B4'], freeC:['C3'], freeB:['B3','B2'] },
-  '2027-01-19': { pcvC:'C3', pcvB:['B3','B2'], bcC:'C1', bcB:[], freeC:['C2'], freeB:['B1','B4'] },
-  '2027-01-20': { pcvC:'C3', pcvB:['B3'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B1','B2'] },
-  '2027-01-21': { pcvC:'C3', pcvB:['B2'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B1','B3'] },
-  '2027-01-22': { pcvC:'C2', pcvB:['B1','B2'], bcC:'C1', bcB:['B3','B4'], freeC:['C3'], freeB:[] },
-  '2027-01-23': { pcvC:'C2', pcvB:['B1','B2'], bcC:null, bcB:[], freeC:['C1','C3'], freeB:['B3','B4'] },
-  '2027-01-24': { pcvC:'C2', pcvB:['B1'], bcC:null, bcB:[], freeC:['C1','C3'], freeB:['B3','B2','B4'] },
-  '2027-01-25': { pcvC:'C2', pcvB:['B1'], bcC:'C1', bcB:['B4'], freeC:['C3'], freeB:['B3','B2'] },
-  '2027-01-26': { pcvC:'C3', pcvB:['B3','B2'], bcC:'C1', bcB:[], freeC:['C2'], freeB:['B1','B4'] },
-  '2027-01-27': { pcvC:'C3', pcvB:['B3'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B1','B2'] },
-  '2027-01-28': { pcvC:'C3', pcvB:['B2'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B1','B3'] },
-  '2027-01-29': { pcvC:'C2', pcvB:['B1','B2'], bcC:'C1', bcB:['B3','B4'], freeC:['C3'], freeB:[] },
-  '2027-01-30': { pcvC:'C2', pcvB:['B1','B2'], bcC:null, bcB:[], freeC:['C1','C3'], freeB:['B3','B4'] },
-  '2027-01-31': { pcvC:'C2', pcvB:['B1'], bcC:null, bcB:[], freeC:['C1','C3'], freeB:['B3','B2','B4'] },
-  // FEBRERO 2027
-  '2027-02-01': { pcvC:'C2', pcvB:['B1'], bcC:'C1', bcB:['B4'], freeC:['C3'], freeB:['B3','B2'] },
-  '2027-02-02': { pcvC:'C3', pcvB:['B3','B2'], bcC:'C1', bcB:[], freeC:['C2'], freeB:['B1','B4'] },
-  '2027-02-03': { pcvC:'C3', pcvB:['B3'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B1','B2'] },
-  '2027-02-04': { pcvC:'C3', pcvB:['B2'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B1','B3'] },
-  '2027-02-05': { pcvC:'C2', pcvB:['B1','B2'], bcC:'C1', bcB:['B3','B4'], freeC:['C3'], freeB:[] },
-  '2027-02-06': { pcvC:'C2', pcvB:['B1','B2'], bcC:null, bcB:[], freeC:['C1','C3'], freeB:['B3','B4'] },
-  '2027-02-07': { pcvC:'C2', pcvB:['B1'], bcC:null, bcB:[], freeC:['C1','C3'], freeB:['B3','B2','B4'] },
-  '2027-02-08': { pcvC:'C2', pcvB:['B1'], bcC:'C1', bcB:['B4'], freeC:['C3'], freeB:['B3','B2'] },
-  '2027-02-09': { pcvC:'C3', pcvB:['B3','B2'], bcC:'C1', bcB:[], freeC:['C2'], freeB:['B1','B4'] },
-  '2027-02-10': { pcvC:'C3', pcvB:['B3'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B1','B2'] },
-  '2027-02-11': { pcvC:'C3', pcvB:['B2'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B1','B3'] },
-  '2027-02-12': { pcvC:'C2', pcvB:['B1','B2'], bcC:'C1', bcB:['B3','B4'], freeC:['C3'], freeB:[] },
-  '2027-02-13': { pcvC:'C2', pcvB:['B1','B2'], bcC:null, bcB:[], freeC:['C1','C3'], freeB:['B3','B4'] },
-  '2027-02-14': { pcvC:'C2', pcvB:['B1'], bcC:null, bcB:[], freeC:['C1','C3'], freeB:['B3','B2','B4'] },
-  '2027-02-15': { pcvC:'C2', pcvB:['B1'], bcC:'C1', bcB:['B4'], freeC:['C3'], freeB:['B3','B2'] },
-  '2027-02-16': { pcvC:'C3', pcvB:['B3','B2'], bcC:'C1', bcB:[], freeC:['C2'], freeB:['B1','B4'] },
-  '2027-02-17': { pcvC:'C3', pcvB:['B3'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B1','B2'] },
-  '2027-02-18': { pcvC:'C3', pcvB:['B2'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B1','B3'] },
-  '2027-02-19': { pcvC:'C2', pcvB:['B1','B2'], bcC:'C1', bcB:['B3','B4'], freeC:['C3'], freeB:[] },
-  '2027-02-20': { pcvC:'C2', pcvB:['B1','B2'], bcC:null, bcB:[], freeC:['C1','C3'], freeB:['B3','B4'] },
-  '2027-02-21': { pcvC:'C2', pcvB:['B1'], bcC:null, bcB:[], freeC:['C1','C3'], freeB:['B3','B2','B4'] },
-  '2027-02-22': { pcvC:'C2', pcvB:['B1'], bcC:'C1', bcB:['B4'], freeC:['C3'], freeB:['B3','B2'] },
-  '2027-02-23': { pcvC:'C3', pcvB:['B3','B2'], bcC:'C1', bcB:[], freeC:['C2'], freeB:['B1','B4'] },
-  '2027-02-24': { pcvC:'C3', pcvB:['B3'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B1','B2'] },
-  '2027-02-25': { pcvC:'C3', pcvB:['B2'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B1','B3'] },
-  '2027-02-26': { pcvC:'C2', pcvB:['B1','B2'], bcC:'C1', bcB:['B3','B4'], freeC:['C3'], freeB:[] },
-  '2027-02-27': { pcvC:'C2', pcvB:['B1','B2'], bcC:null, bcB:[], freeC:['C1','C3'], freeB:['B3','B4'] },
-  '2027-02-28': { pcvC:'C2', pcvB:['B1'], bcC:null, bcB:[], freeC:['C1','C3'], freeB:['B3','B2','B4'] },
+  '2026-11-13': { pcvC:'C2', pcvB:['B1','B2'], bcCArr:['C1','C3'], bcC:'C1', bcB:['B3','B4'], freeC:[], freeB:[] }, — Vie
+  '2026-11-14': { pcvC:'C2', pcvB:['B1','B4'], bcCArr:[], bcC:null, bcB:[], freeC:['C1','C3'], freeB:['B2','B3'] }, — Sáb, BC cerrado
+  '2026-11-15': { pcvC:'C3', pcvB:['B3','B4'], bcCArr:[], bcC:null, bcB:[], freeC:['C1','C2'], freeB:['B1','B2'] }, — Dom, BC cerrado
+  '2026-11-16': { pcvC:'C3', pcvB:['B4'], bcCArr:['C1','C2'], bcC:'C1', bcB:['B1','B2','B3'], freeC:[], freeB:[] }, — Lun
+  '2026-11-17': { pcvC:'C2', pcvB:['B1','B2'], bcCArr:['C1','C3'], bcC:'C1', bcB:['B3','B4'], freeC:[], freeB:[] }, — Mar
+  '2026-11-18': { pcvC:'C3', pcvB:['B3'], bcCArr:['C1','C2'], bcC:'C1', bcB:['B1','B2'], freeC:[], freeB:['B4'] }, — Mié
+  '2026-11-19': { pcvC:'C2', pcvB:['B1'], bcCArr:['C1'], bcC:'C1', bcB:['B4'], freeC:['C3'], freeB:['B2','B3'] }, — Jue
+  '2026-11-20': { pcvC:'C2', pcvB:['B1','B2'], bcCArr:['C1','C3'], bcC:'C1', bcB:['B3','B4'], freeC:[], freeB:[] }, — Vie
+  '2026-11-21': { pcvC:'C2', pcvB:['B1','B4'], bcCArr:[], bcC:null, bcB:[], freeC:['C1','C3'], freeB:['B2','B3'] }, — Sáb, BC cerrado
+  '2026-11-22': { pcvC:'C3', pcvB:['B3','B4'], bcCArr:[], bcC:null, bcB:[], freeC:['C1','C2'], freeB:['B1','B2'] }, — Dom, BC cerrado
+  '2026-11-23': { pcvC:'C3', pcvB:['B4'], bcCArr:['C1','C2'], bcC:'C1', bcB:['B1','B2','B3'], freeC:[], freeB:[] }, — Lun
+  '2026-11-24': { pcvC:'C2', pcvB:['B1','B2'], bcCArr:['C1','C3'], bcC:'C1', bcB:['B3','B4'], freeC:[], freeB:[] }, — Mar
+  '2026-11-25': { pcvC:'C3', pcvB:['B3'], bcCArr:['C1','C2'], bcC:'C1', bcB:['B1','B2'], freeC:[], freeB:['B4'] }, — Mié
+  '2026-11-26': { pcvC:'C2', pcvB:['B1'], bcCArr:['C1'], bcC:'C1', bcB:['B4'], freeC:['C3'], freeB:['B2','B3'] }, — Jue
+  '2026-11-27': { pcvC:'C2', pcvB:['B1','B2'], bcCArr:['C1','C3'], bcC:'C1', bcB:['B3','B4'], freeC:[], freeB:[] }, — Vie
+  '2026-11-28': { pcvC:'C2', pcvB:['B1','B4'], bcCArr:[], bcC:null, bcB:[], freeC:['C1','C3'], freeB:['B2','B3'] }, — Sáb, BC cerrado
+  '2026-11-29': { pcvC:'C3', pcvB:['B3','B4'], bcCArr:[], bcC:null, bcB:[], freeC:['C1','C2'], freeB:['B1','B2'] }, — Dom, BC cerrado
+  '2026-11-30': { pcvC:'C3', pcvB:['B4'], bcCArr:['C1','C2'], bcC:'C1', bcB:['B1','B2','B3'], freeC:[], freeB:[] }, — Lun
+  '2026-12-01': { pcvC:'C2', pcvB:['B1','B2'], bcCArr:['C1','C3'], bcC:'C1', bcB:['B3','B4'], freeC:[], freeB:[] }, — Mar
+  '2026-12-02': { pcvC:'C3', pcvB:['B3'], bcCArr:['C1','C2'], bcC:'C1', bcB:['B1','B2'], freeC:[], freeB:['B4'] }, — Mié
+  '2026-12-03': { pcvC:'C2', pcvB:['B1'], bcCArr:['C1'], bcC:'C1', bcB:['B4'], freeC:['C3'], freeB:['B2','B3'] }, — Jue
+  '2026-12-04': { pcvC:'C2', pcvB:['B1','B2'], bcCArr:['C1','C3'], bcC:'C1', bcB:['B3','B4'], freeC:[], freeB:[] }, — Vie
+  '2026-12-05': { pcvC:'C2', pcvB:['B1','B4'], bcCArr:[], bcC:null, bcB:[], freeC:['C1','C3'], freeB:['B2','B3'] }, — Sáb, BC cerrado
+  '2026-12-06': { pcvC:'C3', pcvB:['B3','B4'], bcCArr:[], bcC:null, bcB:[], freeC:['C1','C2'], freeB:['B1','B2'] }, — Dom, BC cerrado
+  '2026-12-07': { pcvC:'C3', pcvB:['B4'], bcCArr:['C1','C2'], bcC:'C1', bcB:['B1','B2','B3'], freeC:[], freeB:[] }, — Lun
+  '2026-12-08': { pcvC:'C2', pcvB:['B1','B2'], bcCArr:['C1','C3'], bcC:'C1', bcB:['B3','B4'], freeC:[], freeB:[] }, — Mar
+  '2026-12-09': { pcvC:'C3', pcvB:['B3'], bcCArr:['C1','C2'], bcC:'C1', bcB:['B1','B2'], freeC:[], freeB:['B4'] }, — Mié
+  '2026-12-10': { pcvC:'C2', pcvB:['B1'], bcCArr:['C1'], bcC:'C1', bcB:['B4'], freeC:['C3'], freeB:['B2','B3'] }, — Jue
+  '2026-12-11': { pcvC:'C2', pcvB:['B1','B2'], bcCArr:['C1','C3'], bcC:'C1', bcB:['B3','B4'], freeC:[], freeB:[] }, — Vie
+  '2026-12-12': { pcvC:'C2', pcvB:['B1','B4'], bcCArr:[], bcC:null, bcB:[], freeC:['C1','C3'], freeB:['B2','B3'] }, — Sáb, BC cerrado
+  '2026-12-13': { pcvC:'C3', pcvB:['B3','B4'], bcCArr:[], bcC:null, bcB:[], freeC:['C1','C2'], freeB:['B1','B2'] }, — Dom, BC cerrado
+  '2026-12-14': { pcvC:'C3', pcvB:['B4'], bcCArr:['C1','C2'], bcC:'C1', bcB:['B1','B2','B3'], freeC:[], freeB:[] }, — Lun
+  '2026-12-15': { pcvC:'C2', pcvB:['B1','B2'], bcCArr:['C1','C3'], bcC:'C1', bcB:['B3','B4'], freeC:[], freeB:[] }, — Mar
+  '2026-12-16': { pcvC:'C3', pcvB:['B3'], bcCArr:['C1','C2'], bcC:'C1', bcB:['B1','B2'], freeC:[], freeB:['B4'] }, — Mié
+  '2026-12-17': { pcvC:'C2', pcvB:['B1'], bcCArr:['C1'], bcC:'C1', bcB:['B4'], freeC:['C3'], freeB:['B2','B3'] }, — Jue
+  '2026-12-18': { pcvC:'C2', pcvB:['B1','B2'], bcCArr:['C1','C3'], bcC:'C1', bcB:['B3','B4'], freeC:[], freeB:[] }, — Vie
+  '2026-12-19': { pcvC:'C2', pcvB:['B1','B4'], bcCArr:[], bcC:null, bcB:[], freeC:['C1','C3'], freeB:['B2','B3'] }, — Sáb, BC cerrado
+  '2026-12-20': { pcvC:'C3', pcvB:['B3','B4'], bcCArr:[], bcC:null, bcB:[], freeC:['C1','C2'], freeB:['B1','B2'] }, — Dom, BC cerrado
+  '2026-12-21': { pcvC:'C3', pcvB:['B4'], bcCArr:['C1','C2'], bcC:'C1', bcB:['B1','B2','B3'], freeC:[], freeB:[] }, — Lun
+  '2026-12-22': { pcvC:'C2', pcvB:['B1','B2'], bcCArr:['C1','C3'], bcC:'C1', bcB:['B3','B4'], freeC:[], freeB:[] }, — Mar
+  '2026-12-23': { pcvC:'C3', pcvB:['B3'], bcCArr:['C1','C2'], bcC:'C1', bcB:['B1','B2'], freeC:[], freeB:['B4'] }, — Mié
+  '2026-12-24': { holiday: true },
+  '2026-12-25': { holiday: true },
+  '2026-12-26': { pcvC:'C2', pcvB:['B1','B4'], bcCArr:[], bcC:null, bcB:[], freeC:['C1','C3'], freeB:['B2','B3'] }, — Sáb, BC cerrado
+  '2026-12-27': { pcvC:'C3', pcvB:['B3','B4'], bcCArr:[], bcC:null, bcB:[], freeC:['C1','C2'], freeB:['B1','B2'] }, — Dom, BC cerrado
+  '2026-12-28': { pcvC:'C3', pcvB:['B4'], bcCArr:['C1','C2'], bcC:'C1', bcB:['B1','B2','B3'], freeC:[], freeB:[] }, — Lun
+  '2026-12-29': { pcvC:'C2', pcvB:['B1','B2'], bcCArr:['C1','C3'], bcC:'C1', bcB:['B3','B4'], freeC:[], freeB:[] }, — Mar
+  '2026-12-30': { pcvC:'C3', pcvB:['B3'], bcCArr:['C1','C2'], bcC:'C1', bcB:['B1','B2'], freeC:[], freeB:['B4'] }, — Mié
+  '2026-12-31': { holiday: true },
+  '2027-01-01': { holiday: true },
+  '2027-01-02': { pcvC:'C2', pcvB:['B1','B4'], bcCArr:[], bcC:null, bcB:[], freeC:['C1','C3'], freeB:['B2','B3'] }, — Sáb, BC cerrado
+  '2027-01-03': { pcvC:'C3', pcvB:['B3','B4'], bcCArr:[], bcC:null, bcB:[], freeC:['C1','C2'], freeB:['B1','B2'] }, — Dom, BC cerrado
+  '2027-01-04': { pcvC:'C3', pcvB:['B4'], bcCArr:['C1','C2'], bcC:'C1', bcB:['B1','B2','B3'], freeC:[], freeB:[] }, — Lun
+  '2027-01-05': { pcvC:'C2', pcvB:['B1','B2'], bcCArr:['C1','C3'], bcC:'C1', bcB:['B3','B4'], freeC:[], freeB:[] }, — Mar
+  '2027-01-06': { pcvC:'C3', pcvB:['B3'], bcCArr:['C1','C2'], bcC:'C1', bcB:['B1','B2'], freeC:[], freeB:['B4'] }, — Mié
+  '2027-01-07': { pcvC:'C2', pcvB:['B1'], bcCArr:['C1'], bcC:'C1', bcB:['B4'], freeC:['C3'], freeB:['B2','B3'] }, — Jue
+  '2027-01-08': { pcvC:'C2', pcvB:['B1','B2'], bcCArr:['C1','C3'], bcC:'C1', bcB:['B3','B4'], freeC:[], freeB:[] }, — Vie
+  '2027-01-09': { pcvC:'C2', pcvB:['B1','B4'], bcCArr:[], bcC:null, bcB:[], freeC:['C1','C3'], freeB:['B2','B3'] }, — Sáb, BC cerrado
+  '2027-01-10': { pcvC:'C3', pcvB:['B3','B4'], bcCArr:[], bcC:null, bcB:[], freeC:['C1','C2'], freeB:['B1','B2'] }, — Dom, BC cerrado
+  '2027-01-11': { pcvC:'C3', pcvB:['B4'], bcCArr:['C1','C2'], bcC:'C1', bcB:['B1','B2','B3'], freeC:[], freeB:[] }, — Lun
+  '2027-01-12': { pcvC:'C2', pcvB:['B1','B2'], bcCArr:['C1','C3'], bcC:'C1', bcB:['B3','B4'], freeC:[], freeB:[] }, — Mar
+  '2027-01-13': { pcvC:'C3', pcvB:['B3'], bcCArr:['C1','C2'], bcC:'C1', bcB:['B1','B2'], freeC:[], freeB:['B4'] }, — Mié
+  '2027-01-14': { pcvC:'C2', pcvB:['B1'], bcCArr:['C1'], bcC:'C1', bcB:['B4'], freeC:['C3'], freeB:['B2','B3'] }, — Jue
+  '2027-01-15': { pcvC:'C2', pcvB:['B1','B2'], bcCArr:['C1','C3'], bcC:'C1', bcB:['B3','B4'], freeC:[], freeB:[] }, — Vie
+  '2027-01-16': { pcvC:'C2', pcvB:['B1','B4'], bcCArr:[], bcC:null, bcB:[], freeC:['C1','C3'], freeB:['B2','B3'] }, — Sáb, BC cerrado
+  '2027-01-17': { pcvC:'C3', pcvB:['B3','B4'], bcCArr:[], bcC:null, bcB:[], freeC:['C1','C2'], freeB:['B1','B2'] }, — Dom, BC cerrado
+  '2027-01-18': { pcvC:'C3', pcvB:['B4'], bcCArr:['C1','C2'], bcC:'C1', bcB:['B1','B2','B3'], freeC:[], freeB:[] }, — Lun
+  '2027-01-19': { pcvC:'C2', pcvB:['B1','B2'], bcCArr:['C1','C3'], bcC:'C1', bcB:['B3','B4'], freeC:[], freeB:[] }, — Mar
+  '2027-01-20': { pcvC:'C3', pcvB:['B3'], bcCArr:['C1','C2'], bcC:'C1', bcB:['B1','B2'], freeC:[], freeB:['B4'] }, — Mié
+  '2027-01-21': { pcvC:'C2', pcvB:['B1'], bcCArr:['C1'], bcC:'C1', bcB:['B4'], freeC:['C3'], freeB:['B2','B3'] }, — Jue
+  '2027-01-22': { pcvC:'C2', pcvB:['B1','B2'], bcCArr:['C1','C3'], bcC:'C1', bcB:['B3','B4'], freeC:[], freeB:[] }, — Vie
+  '2027-01-23': { pcvC:'C2', pcvB:['B1','B4'], bcCArr:[], bcC:null, bcB:[], freeC:['C1','C3'], freeB:['B2','B3'] }, — Sáb, BC cerrado
+  '2027-01-24': { pcvC:'C3', pcvB:['B3','B4'], bcCArr:[], bcC:null, bcB:[], freeC:['C1','C2'], freeB:['B1','B2'] }, — Dom, BC cerrado
+  '2027-01-25': { pcvC:'C3', pcvB:['B4'], bcCArr:['C1','C2'], bcC:'C1', bcB:['B1','B2','B3'], freeC:[], freeB:[] }, — Lun
+  '2027-01-26': { pcvC:'C2', pcvB:['B1','B2'], bcCArr:['C1','C3'], bcC:'C1', bcB:['B3','B4'], freeC:[], freeB:[] }, — Mar
+  '2027-01-27': { pcvC:'C3', pcvB:['B3'], bcCArr:['C1','C2'], bcC:'C1', bcB:['B1','B2'], freeC:[], freeB:['B4'] }, — Mié
+  '2027-01-28': { pcvC:'C2', pcvB:['B1'], bcCArr:['C1'], bcC:'C1', bcB:['B4'], freeC:['C3'], freeB:['B2','B3'] }, — Jue
+  '2027-01-29': { pcvC:'C2', pcvB:['B1','B2'], bcCArr:['C1','C3'], bcC:'C1', bcB:['B3','B4'], freeC:[], freeB:[] }, — Vie
+  '2027-01-30': { pcvC:'C2', pcvB:['B1','B4'], bcCArr:[], bcC:null, bcB:[], freeC:['C1','C3'], freeB:['B2','B3'] }, — Sáb, BC cerrado
+  '2027-01-31': { pcvC:'C3', pcvB:['B3','B4'], bcCArr:[], bcC:null, bcB:[], freeC:['C1','C2'], freeB:['B1','B2'] }, — Dom, BC cerrado
+  '2027-02-01': { pcvC:'C3', pcvB:['B4'], bcCArr:['C1','C2'], bcC:'C1', bcB:['B1','B2','B3'], freeC:[], freeB:[] }, — Lun
+  '2027-02-02': { pcvC:'C2', pcvB:['B1','B2'], bcCArr:['C1','C3'], bcC:'C1', bcB:['B3','B4'], freeC:[], freeB:[] }, — Mar
+  '2027-02-03': { pcvC:'C3', pcvB:['B3'], bcCArr:['C1','C2'], bcC:'C1', bcB:['B1','B2'], freeC:[], freeB:['B4'] }, — Mié
+  '2027-02-04': { pcvC:'C2', pcvB:['B1'], bcCArr:['C1'], bcC:'C1', bcB:['B4'], freeC:['C3'], freeB:['B2','B3'] }, — Jue
+  '2027-02-05': { pcvC:'C2', pcvB:['B1','B2'], bcCArr:['C1','C3'], bcC:'C1', bcB:['B3','B4'], freeC:[], freeB:[] }, — Vie
+  '2027-02-06': { pcvC:'C2', pcvB:['B1','B4'], bcCArr:[], bcC:null, bcB:[], freeC:['C1','C3'], freeB:['B2','B3'] }, — Sáb, BC cerrado
+  '2027-02-07': { pcvC:'C3', pcvB:['B3','B4'], bcCArr:[], bcC:null, bcB:[], freeC:['C1','C2'], freeB:['B1','B2'] }, — Dom, BC cerrado
+  '2027-02-08': { pcvC:'C3', pcvB:['B4'], bcCArr:['C1','C2'], bcC:'C1', bcB:['B1','B2','B3'], freeC:[], freeB:[] }, — Lun
+  '2027-02-09': { pcvC:'C2', pcvB:['B1','B2'], bcCArr:['C1','C3'], bcC:'C1', bcB:['B3','B4'], freeC:[], freeB:[] }, — Mar
+  '2027-02-10': { pcvC:'C3', pcvB:['B3'], bcCArr:['C1','C2'], bcC:'C1', bcB:['B1','B2'], freeC:[], freeB:['B4'] }, — Mié
+  '2027-02-11': { pcvC:'C2', pcvB:['B1'], bcCArr:['C1'], bcC:'C1', bcB:['B4'], freeC:['C3'], freeB:['B2','B3'] }, — Jue
+  '2027-02-12': { pcvC:'C2', pcvB:['B1','B2'], bcCArr:['C1','C3'], bcC:'C1', bcB:['B3','B4'], freeC:[], freeB:[] }, — Vie
+  '2027-02-13': { pcvC:'C2', pcvB:['B1','B4'], bcCArr:[], bcC:null, bcB:[], freeC:['C1','C3'], freeB:['B2','B3'] }, — Sáb, BC cerrado
+  '2027-02-14': { pcvC:'C3', pcvB:['B3','B4'], bcCArr:[], bcC:null, bcB:[], freeC:['C1','C2'], freeB:['B1','B2'] }, — Dom, BC cerrado
+  '2027-02-15': { pcvC:'C3', pcvB:['B4'], bcCArr:['C1','C2'], bcC:'C1', bcB:['B1','B2','B3'], freeC:[], freeB:[] }, — Lun
+  '2027-02-16': { pcvC:'C2', pcvB:['B1','B2'], bcCArr:['C1','C3'], bcC:'C1', bcB:['B3','B4'], freeC:[], freeB:[] }, — Mar
+  '2027-02-17': { pcvC:'C3', pcvB:['B3'], bcCArr:['C1','C2'], bcC:'C1', bcB:['B1','B2'], freeC:[], freeB:['B4'] }, — Mié
+  '2027-02-18': { pcvC:'C2', pcvB:['B1'], bcCArr:['C1'], bcC:'C1', bcB:['B4'], freeC:['C3'], freeB:['B2','B3'] }, — Jue
+  '2027-02-19': { pcvC:'C2', pcvB:['B1','B2'], bcCArr:['C1','C3'], bcC:'C1', bcB:['B3','B4'], freeC:[], freeB:[] }, — Vie
+  '2027-02-20': { pcvC:'C2', pcvB:['B1','B4'], bcCArr:[], bcC:null, bcB:[], freeC:['C1','C3'], freeB:['B2','B3'] }, — Sáb, BC cerrado
+  '2027-02-21': { pcvC:'C3', pcvB:['B3','B4'], bcCArr:[], bcC:null, bcB:[], freeC:['C1','C2'], freeB:['B1','B2'] }, — Dom, BC cerrado
+  '2027-02-22': { pcvC:'C3', pcvB:['B4'], bcCArr:['C1','C2'], bcC:'C1', bcB:['B1','B2','B3'], freeC:[], freeB:[] }, — Lun
+  '2027-02-23': { pcvC:'C2', pcvB:['B1','B2'], bcCArr:['C1','C3'], bcC:'C1', bcB:['B3','B4'], freeC:[], freeB:[] }, — Mar
+  '2027-02-24': { pcvC:'C3', pcvB:['B3'], bcCArr:['C1','C2'], bcC:'C1', bcB:['B1','B2'], freeC:[], freeB:['B4'] }, — Mié
+  '2027-02-25': { pcvC:'C2', pcvB:['B1'], bcCArr:['C1'], bcC:'C1', bcB:['B4'], freeC:['C3'], freeB:['B2','B3'] }, — Jue
+  '2027-02-26': { pcvC:'C2', pcvB:['B1','B2'], bcCArr:['C1','C3'], bcC:'C1', bcB:['B3','B4'], freeC:[], freeB:[] }, — Vie
+  '2027-02-27': { pcvC:'C2', pcvB:['B1','B4'], bcCArr:[], bcC:null, bcB:[], freeC:['C1','C3'], freeB:['B2','B3'] }, — Sáb, BC cerrado
+  '2027-02-28': { pcvC:'C3', pcvB:['B3','B4'], bcCArr:[], bcC:null, bcB:[], freeC:['C1','C2'], freeB:['B1','B2'] }, — Dom, BC cerrado
 };
 
 // ═══════════════════════════════════════════════
@@ -511,7 +538,8 @@ function getEmployeeStatusOnDate(empCode, dateStr) {
   if (sched.holiday) return { status: 'holiday', label: 'Día no laborable', sede: null };
 
   const inPCV = sched.pcvC === empCode || (sched.pcvB || []).includes(empCode);
-  const inBC  = sched.bcC === empCode  || (sched.bcB  || []).includes(empCode);
+  const bcCArr = sched.bcCArr || (sched.bcC ? [sched.bcC] : []);
+  const inBC  = bcCArr.includes(empCode) || (sched.bcB  || []).includes(empCode);
   const isFree = (sched.freeC || []).includes(empCode) || (sched.freeB || []).includes(empCode);
 
   if (inPCV && inBC) return { status: 'conflict', label: 'Doble asignación', sede: 'PCV y BC' };
@@ -530,7 +558,8 @@ function getConflicts(dateStr) {
   if (sched && !sched.noData && !sched.holiday && dateStr >= '2026-11-14') {
     const d = new Date(dateStr + 'T12:00:00');
     if (d.getDay() === 6) {
-      const hasBC = sched.bcC || (sched.bcB && sched.bcB.length > 0);
+      const bcCArrChk = sched.bcCArr || (sched.bcC ? [sched.bcC] : []);
+      const hasBC = bcCArrChk.length > 0 || (sched.bcB && sched.bcB.length > 0);
       const alreadyFlagged = base.some(c => c.type === 'DIA_NO_LABORABLE');
       if (hasBC && !alreadyFlagged) {
         base.push({ type:'DIA_NO_LABORABLE', severity:'critical',
@@ -733,7 +762,8 @@ function renderHome(container) {
         const comps = [...(sched.pcvB||[]).filter(c=>c!==selEmp), sched.pcvC !== selEmp ? sched.pcvC : null].filter(Boolean);
         if (comps.length) html += `<div class="detail-row"><span class="detail-label">Compañeros</span><span class="detail-value">${nameList(comps)}</span></div>`;
       } else if (sched && st.sede.includes('Bello')) {
-        const comps = [...(sched.bcB||[]).filter(c=>c!==selEmp), sched.bcC !== selEmp ? sched.bcC : null].filter(Boolean);
+        const bcCArrComp = sched.bcCArr || (sched.bcC ? [sched.bcC] : []);
+        const comps = [...(sched.bcB||[]).filter(c=>c!==selEmp), ...bcCArrComp.filter(c=>c!==selEmp)];
         if (comps.length) html += `<div class="detail-row"><span class="detail-label">Compañeros</span><span class="detail-value">${nameList(comps)}</span></div>`;
       }
     } else if (st.status === 'conflict') {
@@ -955,7 +985,7 @@ function renderMonthly(year, month, selEmp) {
       } else {
         // Un punto por cada empleado que trabaja ese día, con su color individual
         const working = [
-          sched.pcvC, sched.bcC,
+          sched.pcvC, ...(sched.bcCArr || (sched.bcC ? [sched.bcC] : [])),
           ...(sched.pcvB||[]), ...(sched.bcB||[])
         ].filter(Boolean);
         const seen = new Set();
@@ -1062,7 +1092,7 @@ function renderWeekly(fromDate, selEmp) {
         }
         if (sched.bcC || (sched.bcB||[]).length) {
           html += `<div style="font-size:11px"><span style="color:var(--blue);font-weight:700">BC</span> ${bcHours||'—'}<br>
-            👤 ${nameList([sched.bcC])} | ${nameList(sched.bcB||[])}</div>`;
+            👤 ${nameList(sched.bcCArr || (sched.bcC ? [sched.bcC] : []))} | ${nameList(sched.bcB||[])}</div>`;
         }
         html += `</div>`;
       }
@@ -1108,46 +1138,135 @@ function renderDayCards(dateStr, showConflicts) {
   const sched = getSchedule(dateStr);
   if (!sched) return `<div class="card-sm"><p style="color:var(--text-sec);font-size:13px">Sin datos para esta fecha.</p></div>`;
   if (sched.noData) return `<div class="card-sm"><p style="color:var(--text-sec);font-size:13px">Sin planificación registrada (1-12 noviembre).</p></div>`;
-  if (sched.holiday) return `<div class="card-sm" style="text-align:center;padding:20px"><div style="font-size:32px;margin-bottom:8px">🎄</div><p style="font-weight:600;color:var(--red)">Día no laborable</p></div>`;
+  if (sched.holiday) return `<div class="bc-day-wrap" style="text-align:center;padding:24px 16px"><div style="font-size:40px;margin-bottom:10px">🎄</div><p style="font-weight:700;color:var(--red);font-size:15px">Día no laborable</p></div>`;
 
   const pcvH = getPCVHours(dateStr);
   const bcH = getBCHours(dateStr);
   const special = SPECIAL_HOURS[dateStr];
+  const bcCArrDisp = sched.bcCArr || (sched.bcC ? [sched.bcC] : []);
+  const bcClosed = bcH === null;
 
-  let html = '';
+  // Recopilar todos los que descansan
+  const freeAll = [...(sched.freeC||[]), ...(sched.freeB||[])];
 
-  // PCV Card
-  html += `<div class="daily-sede pcv">
-    <div class="daily-sede-title">
-      <span style="background:var(--green);color:#fff;border-radius:6px;padding:2px 7px;font-size:11px">PCV</span>
-      Parque Cerro Verde
-    </div>
-    <div class="daily-row"><span class="daily-row-label">Horario operativo</span><span class="daily-row-value">${pcvH || '—'}</span></div>`;
-  if (special?.event) html += `<div class="daily-row"><span class="daily-row-label">🎉 Evento</span><span class="daily-row-value">${special.event}</span></div>`;
-  html += `<div class="daily-row"><span class="daily-row-label">Cajera</span><span class="daily-row-value">${sched.pcvC ? empName(sched.pcvC) : '—'}</span></div>`;
-  html += `<div class="daily-row"><span class="daily-row-label">Baristas</span><span class="daily-row-value">${nameList(sched.pcvB||[])}</span></div>`;
-  const pcvFree = [...(sched.freeC||[]).filter(c=>c!=='C1'||!sched.bcC), ...(sched.freeB||[])];
-  // show libres PCV from freeB_pcv if available
-  const freePcvB = sched.freeB_pcv || sched.freeB || [];
-  html += `<div class="daily-row"><span class="daily-row-label">Libres registrados</span><span class="daily-row-value">${nameList([...(sched.freeC||[]), ...freePcvB])}</span></div>`;
-  html += `</div>`;
+  // Verificar cobertura
+  const conflicts = showConflicts ? (sched.conflicts || []) : [];
+  const hasCritical = conflicts.some(c => c.severity === 'critical');
+  const hasWarn = conflicts.length > 0 && !hasCritical;
+  const statusChip = hasCritical
+    ? `<span class="bc-status-chip bc-status-warn">⚠️ Revisar</span>`
+    : hasWarn
+    ? `<span class="bc-status-chip" style="background:#FEF3C7;color:#92400E">⚡ Aviso</span>`
+    : `<span class="bc-status-chip bc-status-ok">✓ Cubierto</span>`;
 
-  // BC Card
-  html += `<div class="daily-sede bc">
-    <div class="daily-sede-title">
-      <span style="background:var(--blue);color:#fff;border-radius:6px;padding:2px 7px;font-size:11px">BC</span>
-      Bello Campo
-    </div>
-    <div class="daily-row"><span class="daily-row-label">Horario operativo</span><span class="daily-row-value">${bcH !== null ? (bcH || 'Sin asignación') : 'No opera (fin de semana)'}</span></div>`;
-  if (special?.bc && special.bc !== null) html += `<div class="daily-row"><span class="daily-row-label">ℹ️ Nota</span><span class="daily-row-value">${special.bc}</span></div>`;
-  html += `<div class="daily-row"><span class="daily-row-label">Cajera</span><span class="daily-row-value">${sched.bcC ? empName(sched.bcC) : '—'}</span></div>`;
-  html += `<div class="daily-row"><span class="daily-row-label">Barista</span><span class="daily-row-value">${nameList(sched.bcB||[])}</span></div>`;
-  const freeBcB = sched.freeB_bc || [];
-  if (freeBcB.length) html += `<div class="daily-row"><span class="daily-row-label">Libres (BC)</span><span class="daily-row-value">${nameList(freeBcB)}</span></div>`;
-  html += `</div>`;
+  // Helper: render una burbuja de empleado
+  function empBubble(code, roleOverride) {
+    const emp = EMPLOYEES[code];
+    if (!emp) return '';
+    const initials = emp.name.substring(0,2).toUpperCase();
+    const role = roleOverride || emp.role;
+    const roleChip = role === 'Cajera'
+      ? `<span class="bc-role-chip bc-role-cajera">Cajera</span>`
+      : `<span class="bc-role-chip bc-role-barista">Barista</span>`;
+    const badge = code === 'C1'
+      ? `<span class="bc-badge-fija">Fija</span>`
+      : `<span class="bc-badge-rota">Rota</span>`;
+    return `<div class="bc-bubble">
+      <div class="bc-avatar" style="background:${emp.color}">${initials}</div>
+      <div>
+        <div class="bc-bubble-name">${emp.name}${badge}</div>
+        <div>${roleChip}</div>
+      </div>
+    </div>`;
+  }
 
+  // Helper: render burbuja pequeña de descanso
+  function restBubble(code) {
+    const emp = EMPLOYEES[code];
+    if (!emp) return '';
+    const initials = emp.name.substring(0,2).toUpperCase();
+    return `<div class="bc-rest-item">
+      <div class="bc-rest-avatar" style="background:${emp.color}" title="${emp.name}">${initials}</div>
+      <span class="bc-rest-name">${emp.name}</span>
+    </div>`;
+  }
+
+  let html = `<div class="bc-day-wrap">`;
+
+  // Fila superior: estado
+  const dayLabel = formatDateShort(dateStr);
+  html += `<div class="bc-status-row">
+    <span class="bc-date-label">📅 ${dayLabel}</span>
+    ${statusChip}
+  </div>`;
+
+  if (special?.event) {
+    html += `<div style="text-align:center;margin-bottom:10px;padding:6px;background:#FEF3C7;border-radius:10px;font-size:12px;font-weight:600;color:#92400E">🎉 ${special.event}</div>`;
+  }
+
+  // Dos columnas de sedes
+  html += `<div class="bc-venues-row">`;
+
+  // ── Columna PCV ──
+  html += `<div class="bc-venue-col bc-venue-pcv">
+    <div class="bc-venue-header">
+      <span class="bc-venue-tag tag-pcv">PCV</span>
+      <span class="bc-venue-hours">${pcvH || '—'}</span>
+    </div>`;
+
+  if (sched.pcvC) {
+    html += `<div class="bc-section-label">Cajera</div><div class="bc-bubbles">${empBubble(sched.pcvC)}</div>`;
+  }
+  if ((sched.pcvB||[]).length) {
+    html += `<div class="bc-section-label">Baristas</div><div class="bc-bubbles">`;
+    (sched.pcvB||[]).forEach(c => { html += empBubble(c); });
+    html += `</div>`;
+  }
+  if (!sched.pcvC && !(sched.pcvB||[]).length) {
+    html += `<p style="font-size:11px;color:var(--text-sec);margin-top:8px">Sin asignación</p>`;
+  }
+  html += `</div>`; // end pcv col
+
+  // ── Columna BC ──
+  html += `<div class="bc-venue-col ${bcClosed ? 'bc-venue-closed' : 'bc-venue-bc'}">
+    <div class="bc-venue-header">
+      <span class="bc-venue-tag tag-bc">BC</span>
+      <span class="bc-venue-hours">${bcClosed ? 'Cerrado' : (bcH || '—')}</span>
+    </div>`;
+
+  if (bcClosed) {
+    html += `<p style="font-size:11px;color:var(--text-sec);margin-top:8px;text-align:center">🔒 No opera hoy</p>`;
+  } else {
+    if (bcCArrDisp.length) {
+      html += `<div class="bc-section-label">Cajera${bcCArrDisp.length>1?'s':''}</div><div class="bc-bubbles">`;
+      bcCArrDisp.forEach(c => { html += empBubble(c); });
+      html += `</div>`;
+    }
+    if ((sched.bcB||[]).length) {
+      html += `<div class="bc-section-label">Barista${(sched.bcB||[]).length>1?'s':''}</div><div class="bc-bubbles">`;
+      (sched.bcB||[]).forEach(c => { html += empBubble(c); });
+      html += `</div>`;
+    }
+    if (!bcCArrDisp.length && !(sched.bcB||[]).length) {
+      html += `<p style="font-size:11px;color:var(--text-sec);margin-top:8px">Sin asignación</p>`;
+    }
+  }
+  html += `</div>`; // end bc col
+  html += `</div>`; // end venues-row
+
+  // ── Descansan hoy ──
+  if (freeAll.length) {
+    html += `<div class="bc-rest-section">
+      <div class="bc-rest-label">😴 Descansan hoy</div>
+      <div class="bc-rest-bubbles">`;
+    freeAll.forEach(c => { html += restBubble(c); });
+    html += `</div></div>`;
+  }
+
+  html += `</div>`; // end bc-day-wrap
+
+  // ── Alertas ──
   if (showConflicts) {
-    const conflicts = sched.conflicts || [];
     conflicts.forEach(c => {
       const cls = c.severity === 'critical' ? 'alert-red' : 'alert-orange';
       html += `<div class="alert ${cls}"><span class="alert-icon">${c.severity==='critical'?'🔴':'🟡'}</span>
@@ -1337,7 +1456,7 @@ function renderAdminSchedule() {
       <tbody>
         <tr><td>PCV – Cajera</td><td>${sched.pcvC ? `${empName(sched.pcvC)} (${sched.pcvC})` : '—'}</td><td>${sched._modified?'✏️ Modificado':'Documento'}</td></tr>
         <tr><td>PCV – Baristas</td><td>${(sched.pcvB||[]).map(c=>`${empName(c)} (${c})`).join(', ')||'—'}</td><td>Documento</td></tr>
-        <tr><td>BC – Cajera</td><td>${sched.bcC ? `${empName(sched.bcC)} (${sched.bcC})` : '—'}</td><td>Documento</td></tr>
+        <tr><td>BC – Cajera(s)</td><td>${(sched.bcCArr||(sched.bcC?[sched.bcC]:[])).map(c=>`${empName(c)} (${c})`).join(', ')||'—'}</td><td>Documento</td></tr>
         <tr><td>BC – Barista</td><td>${(sched.bcB||[]).map(c=>`${empName(c)} (${c})`).join(', ')||'—'}</td><td>Documento</td></tr>
         <tr><td>Libres (C)</td><td>${(sched.freeC||[]).map(c=>empName(c)).join(', ')||'—'}</td><td>Documento</td></tr>
         <tr><td>Libres (B)</td><td>${(sched.freeB||[]).map(c=>empName(c)).join(', ')||'—'}</td><td>Documento</td></tr>
