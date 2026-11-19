@@ -336,23 +336,23 @@ let EMPLOYEES = Object.fromEntries(
 
 // Horarios especiales PCV
 const SPECIAL_HOURS = {
-  '2026-11-15': { pcvC:'', pcvB:['B1','B4'], bcCArr:[], bcC:null, bcB:[], freeC:[], freeB:['B2'] },
-  '2026-11-27': {  pcv: '10:00 a.m. – 10:00 p.m.', event: 'Black Friday', bc: null, pcvB:['B2'], bcB:[], freeB:['B1','B4'] },
-  '2026-12-04': {  pcv: '10:00 a.m. – 10:00 p.m.', bc: null, pcvB:['B2'], bcB:[], freeB:['B1','B4'] },
-  '2026-12-05': { pcvC:'', pcvB:['B2'], bcCArr:[], bcC:null, bcB:[], freeC:[], freeB:['B1','B4'] },
-  '2026-12-06': { pcvC:'', pcvB:['B1','B2'], bcCArr:[], bcC:null, bcB:[], freeC:[], freeB:['B4'] },
-  '2026-12-11': {  pcv: '10:00 a.m. – 10:00 p.m.', bc: null, pcvB:['B2'], bcB:[], freeB:['B1','B4'] },
-  '2026-12-12': { pcvC:'', pcvB:['B4'], bcCArr:[], bcC:null, bcB:[], freeC:[], freeB:['B1','B2'] },
-  '2026-12-13': { pcvC:'', pcvB:['B1','B4'], bcCArr:[], bcC:null, bcB:[], freeC:[], freeB:['B2'] },
-  '2026-12-18': {  pcv: '10:00 a.m. – 10:00 p.m.', bc: null, pcvB:['B2'], bcB:[], freeB:['B1','B4'] },
-  '2026-12-19': { pcvC:'', pcvB:['B2'], bcCArr:[], bcC:null, bcB:[], freeC:[], freeB:['B1','B4'] },
-  '2026-12-20': { pcvC:'', pcvB:['B1','B2'], bcCArr:[], bcC:null, bcB:[], freeC:[], freeB:['B4'] },
-  '2026-12-21': {  pcv: '10:00 a.m. – 10:00 p.m.', bc: null, pcvB:['B4'], bcB:[], freeB:['B1','B2'] },
-  '2026-12-22': {  pcv: '10:00 a.m. – 10:00 p.m.', bc: null, pcvB:['B2'], bcB:[], freeB:['B1','B4'] },
-  '2026-12-23': {  pcv: '10:00 a.m. – 10:00 p.m.', bc: null, pcvB:['B1'], bcB:[], freeB:['B2','B4'] },
-  '2026-12-24': {  pcv: '10:00 a.m. – 5:00 p.m.', bc: 'Horario especial (horas pendientes de confirmación)', pcvB:['B1'], bcB:['B4'], freeB:['B2'] },
+  '2026-11-15': { pcv: '10:00 a.m. – 10:00 p.m.', event: 'Encendido de Navidad', bc: null },
+  '2026-11-27': { pcv: '10:00 a.m. – 10:00 p.m.', event: 'Black Friday', bc: null },
+  '2026-12-04': { pcv: '10:00 a.m. – 10:00 p.m.', bc: null },
+  '2026-12-05': { pcv: '10:00 a.m. – 10:00 p.m.', bc: null },
+  '2026-12-06': { pcv: '10:00 a.m. – 10:00 p.m.', bc: null },
+  '2026-12-11': { pcv: '10:00 a.m. – 10:00 p.m.', bc: null },
+  '2026-12-12': { pcv: '10:00 a.m. – 10:00 p.m.', bc: null },
+  '2026-12-13': { pcv: '10:00 a.m. – 10:00 p.m.', bc: null },
+  '2026-12-18': { pcv: '10:00 a.m. – 10:00 p.m.', bc: null },
+  '2026-12-19': { pcv: '10:00 a.m. – 10:00 p.m.', bc: null },
+  '2026-12-20': { pcv: '10:00 a.m. – 10:00 p.m.', bc: null },
+  '2026-12-21': { pcv: '10:00 a.m. – 10:00 p.m.', bc: null },
+  '2026-12-22': { pcv: '10:00 a.m. – 10:00 p.m.', bc: null },
+  '2026-12-23': { pcv: '10:00 a.m. – 10:00 p.m.', bc: null },
+  '2026-12-24': { pcv: '10:00 a.m. – 5:00 p.m.', bc: 'Horario especial (horas pendientes de confirmación)' },
   '2026-12-25': { pcv: null, bc: null, holiday: true },
-  '2026-12-31': {  pcv: '10:00 a.m. – 5:00 p.m.', bc: 'Horario especial (horas pendientes de confirmación)', pcvB:['B1'], bcB:['B4'], freeB:['B2'] }
+  '2026-12-31': { pcv: '10:00 a.m. – 5:00 p.m.', bc: 'Horario especial (horas pendientes de confirmación)' }
 };
 
 // Horarios habituales PCV
@@ -386,122 +386,130 @@ function getBCHours(dateStr) {
 // Formato: { pcvC, pcvB[], bcC, bcB[], freeC[], freeB[], conflicts[], notes }
 // ═══════════════════════════════════════════════
 const RAW_SCHEDULE = {
-  '2026-11-13': { pcvC:'C2', pcvB:['B1','B2'], bcCArr:['C1'], bcC:'C1', bcB:['B3','B4'], freeC:['C3'], freeB:[] },
-  '2026-11-14': { pcvC:'C2', pcvB:['B1','B4'], bcCArr:[], bcC:null, bcB:[], freeC:['C1','C3'], freeB:['B2','B3'] },
-  '2026-11-15': { pcvC:'C3', pcvB:['B3','B4'], bcCArr:[], bcC:null, bcB:[], freeC:['C1','C2'], freeB:['B1','B2'] },
-  '2026-11-16': { pcvC:'C3', pcvB:['B4'], bcCArr:['C1'], bcC:'C1', bcB:['B1','B2','B3'], freeC:['C2'], freeB:[] },
-  '2026-11-17': { pcvC:'C2', pcvB:['B1','B2'], bcCArr:['C1'], bcC:'C1', bcB:['B3','B4'], freeC:['C3'], freeB:[] },
-  '2026-11-18': { pcvC:'C3', pcvB:['B3'], bcCArr:['C1'], bcC:'C1', bcB:['B1','B2'], freeC:['C2'], freeB:['B4'] },
-  // B1(Susana) off=0, B2(Samuel) off=1, B3(Argenis) off=2, C2(Wendy) off=0, C3(Nathaly) off=2. B4(Maikol) bloqueado. C1(Dayana) fija BC lun-vie.
-      '2026-11-19': { pcvC: 'C2', pcvCArr: ['C2','C3'], pcvB: ['B1','B2'], bcB: ['B4','B3'], bcCArr: ['C1','B4','B3'], freeC: [] },
-      '2026-11-20': { pcvC: 'C2', pcvCArr: ['C2','C3'], pcvB: ['B1','B2'], bcB: ['B3'], bcCArr: ['C1','B3'], freeC: [], freeB: ['B4'] },
-      '2026-11-21': { pcvC: 'C2', pcvB: ['B4','B1','B2'], freeC: ['C1','C3'], freeB: ['B3'] },
-      '2026-11-22': { pcvC: 'C2', pcvB: ['B4','B1'], freeC: ['C1','C3'], freeB: ['B2','B3'] },
-      '2026-11-23': { pcvC: 'C3', pcvB: ['B3'], bcCArr: ['C1'], freeC: ['C2'], freeB: ['B4','B1','B2'] },
-      '2026-11-24': { pcvC: 'C3', pcvB: ['B2','B3'], bcCArr: ['C1'], freeC: ['C2'], freeB: ['B4','B1'] },
-      '2026-11-25': { pcvC: 'C2', pcvCArr: ['C2','C3'], pcvB: ['B4'], bcB: ['B1','B2','B3'], bcCArr: ['C1','B1','B2','B3'], freeC: [] },
-      '2026-11-26': { pcvC: 'C2', pcvCArr: ['C2','C3'], pcvB: ['B1','B2'], bcB: ['B4','B3'], bcCArr: ['C1','B4','B3'], freeC: [] },
-      '2026-11-27': { pcvC: 'C2', pcvB: ['B1','B2'], bcB: ['B4'], bcCArr: ['C1','B4'], freeC: ['C3'], freeB: ['B3'] },
-      '2026-11-28': { pcvC: 'C2', pcvB: ['B4','B1'], freeC: ['C1','C3'], freeB: ['B2','B3'] },
-      '2026-11-29': { pcvC: 'C3', pcvB: ['B3'], freeC: ['C1','C2'], freeB: ['B4','B1','B2'] },
-      '2026-11-30': { pcvC: 'C3', pcvB: ['B2','B3'], bcCArr: ['C1'], freeC: ['C2'], freeB: ['B4','B1'] },
-      '2026-12-01': { pcvC: 'C2', pcvCArr: ['C2','C3'], pcvB: ['B1','B2'], bcB: ['B4','B3'], bcCArr: ['C1','B4','B3'], freeC: [] },
-      '2026-12-02': { pcvC: 'C2', pcvCArr: ['C2','C3'], pcvB: ['B1','B2'], bcB: ['B3'], bcCArr: ['C1','B3'], freeC: [], freeB: ['B4'] },
-      '2026-12-03': { pcvC: 'C2', pcvB: ['B1','B2'], bcB: ['B4'], bcCArr: ['C1','B4'], freeC: ['C3'], freeB: ['B3'] },
-      '2026-12-04': { pcvC: 'C2', pcvB: ['B1'], bcB: ['B4'], bcCArr: ['C1','B4'], freeC: ['C3'], freeB: ['B2','B3'] },
-      '2026-12-05': { pcvC: 'C3', pcvB: ['B3'], freeC: ['C1','C2'], freeB: ['B4','B1','B2'] },
-      '2026-12-06': { pcvC: 'C3', pcvB: ['B2','B3'], freeC: ['C1','C2'], freeB: ['B4','B1'] },
-      '2026-12-07': { pcvC: 'C2', pcvCArr: ['C2','C3'], pcvB: ['B4'], bcB: ['B1','B2','B3'], bcCArr: ['C1','B1','B2','B3'], freeC: [] },
-      '2026-12-08': { pcvC: 'C2', pcvCArr: ['C2','C3'], pcvB: ['B1','B2'], bcB: ['B4','B3'], bcCArr: ['C1','B4','B3'], freeC: [] },
-      '2026-12-09': { pcvC: 'C2', pcvB: ['B1','B2'], bcCArr: ['C1'], freeC: ['C3'], freeB: ['B4','B3'] },
-      '2026-12-10': { pcvC: 'C2', pcvB: ['B1'], bcB: ['B4'], bcCArr: ['C1','B4'], freeC: ['C3'], freeB: ['B2','B3'] },
-      '2026-12-11': { pcvC: 'C3', pcvB: ['B3'], bcB: ['B4'], bcCArr: ['C1','B4'], freeC: ['C2'], freeB: ['B1','B2'] },
-      '2026-12-12': { pcvC: 'C3', pcvB: ['B4','B2','B3'], freeC: ['C1','C2'], freeB: ['B1'] },
-      '2026-12-13': { pcvC: 'C2', pcvCArr: ['C2','C3'], pcvB: ['B4','B1','B2','B3'], freeC: ['C1'] },
-      '2026-12-14': { pcvC: 'C2', pcvCArr: ['C2','C3'], pcvB: ['B4'], bcB: ['B1','B2','B3'], bcCArr: ['C1','B1','B2','B3'], freeC: [] },
-      '2026-12-15': { pcvC: 'C2', pcvB: ['B1','B2'], bcB: ['B4'], bcCArr: ['C1','B4'], freeC: ['C3'], freeB: ['B3'] },
-      '2026-12-16': { pcvC: 'C2', pcvB: ['B1'], bcCArr: ['C1'], freeC: ['C3'], freeB: ['B4','B2','B3'] },
-      '2026-12-17': { pcvC: 'C3', pcvB: ['B3'], bcB: ['B4'], bcCArr: ['C1','B4'], freeC: ['C2'], freeB: ['B1','B2'] },
-      '2026-12-18': { pcvC: 'C3', pcvB: ['B2','B3'], bcB: ['B4'], bcCArr: ['C1','B4'], freeC: ['C2'], freeB: ['B1'] },
-      '2026-12-19': { pcvC: 'C2', pcvCArr: ['C2','C3'], pcvB: ['B1','B2','B3'], freeC: ['C1'], freeB: ['B4'] },
-      '2026-12-20': { pcvC: 'C2', pcvCArr: ['C2','C3'], pcvB: ['B1','B2','B3'], freeC: ['C1'], freeB: ['B4'] },
-      '2026-12-21': { pcvC: 'C2', pcvB: ['B4'], bcB: ['B1','B2'], bcCArr: ['C1','B1','B2'], freeC: ['C3'], freeB: ['B3'] },
-      '2026-12-22': { pcvC: 'C2', pcvB: ['B1'], bcB: ['B4'], bcCArr: ['C1','B4'], freeC: ['C3'], freeB: ['B2','B3'] },
-      '2026-12-23': { pcvC: 'C3', pcvB: ['B3'], bcCArr: ['C1'], freeC: ['C2'], freeB: ['B4','B1','B2'] },
-      '2026-12-24': { pcvC: 'C3', pcvB: ['B2','B3'], bcCArr: ['C1'], freeC: ['C2'], freeB: ['B4','B1'] },
-      '2026-12-25': { holiday: true },
-      '2026-12-26': { pcvC: 'C2', pcvCArr: ['C2','C3'], pcvB: ['B4','B1','B2','B3'], freeC: ['C1'] },
-      '2026-12-27': { pcvC: 'C2', pcvCArr: ['C2','C3'], pcvB: ['B4','B1','B2','B3'], freeC: ['C1'] },
-      '2026-12-28': { pcvC: 'C2', pcvB: ['B4'], bcB: ['B1','B2'], bcCArr: ['C1','B1','B2'], freeC: ['C3'], freeB: ['B3'] },
-      '2026-12-29': { pcvC: 'C2', pcvB: ['B1'], bcB: ['B4'], bcCArr: ['C1','B4'], freeC: ['C3'], freeB: ['B2','B3'] },
-      '2026-12-30': { pcvC: 'C3', pcvB: ['B3'], bcCArr: ['C1'], freeC: ['C2'], freeB: ['B4','B1','B2'] },
-      '2026-12-31': { holiday: true },
-      '2027-01-01': { holiday: true },
-      '2027-01-02': { pcvC: 'C3', pcvB: ['B2','B3'], freeC: ['C1','C2'], freeB: ['B4','B1'] },
-      '2027-01-03': { pcvC: 'C2', pcvCArr: ['C2','C3'], pcvB: ['B1','B2','B3'], freeC: ['C1'], freeB: ['B4'] },
-      '2027-01-04': { pcvC: 'C2', pcvCArr: ['C2','C3'], pcvB: ['B4'], bcB: ['B1','B2','B3'], bcCArr: ['C1','B1','B2','B3'], freeC: [] },
-      '2027-01-05': { pcvC: 'C2', pcvB: ['B1','B2'], bcB: ['B4'], bcCArr: ['C1','B4'], freeC: ['C3'], freeB: ['B3'] },
-      '2027-01-06': { pcvC: 'C2', pcvB: ['B1'], bcCArr: ['C1'], freeC: ['C3'], freeB: ['B4','B2','B3'] },
-      '2027-01-07': { pcvC: 'C3', pcvB: ['B3'], bcB: ['B4'], bcCArr: ['C1','B4'], freeC: ['C2'], freeB: ['B1','B2'] },
-      '2027-01-08': { pcvC: 'C3', pcvB: ['B2','B3'], bcB: ['B4'], bcCArr: ['C1','B4'], freeC: ['C2'], freeB: ['B1'] },
-      '2027-01-09': { pcvC: 'C2', pcvCArr: ['C2','C3'], pcvB: ['B4','B1','B2','B3'], freeC: ['C1'] },
-      '2027-01-10': { pcvC: 'C2', pcvCArr: ['C2','C3'], pcvB: ['B4','B1','B2','B3'], freeC: ['C1'] },
-      '2027-01-11': { pcvC: 'C2', pcvB: ['B4'], bcB: ['B1','B2'], bcCArr: ['C1','B1','B2'], freeC: ['C3'], freeB: ['B3'] },
-      '2027-01-12': { pcvC: 'C2', pcvB: ['B1'], bcB: ['B4'], bcCArr: ['C1','B4'], freeC: ['C3'], freeB: ['B2','B3'] },
-      '2027-01-13': { pcvC: 'C3', pcvB: ['B3'], bcCArr: ['C1'], freeC: ['C2'], freeB: ['B4','B1','B2'] },
-      '2027-01-14': { pcvC: 'C3', pcvB: ['B2','B3'], bcB: ['B4'], bcCArr: ['C1','B4'], freeC: ['C2'], freeB: ['B1'] },
-      '2027-01-15': { pcvC: 'C2', pcvCArr: ['C2','C3'], pcvB: ['B1','B2'], bcB: ['B4','B3'], bcCArr: ['C1','B4','B3'], freeC: [] },
-      '2027-01-16': { pcvC: 'C2', pcvCArr: ['C2','C3'], pcvB: ['B1','B2','B3'], freeC: ['C1'], freeB: ['B4'] },
-      '2027-01-17': { pcvC: 'C2', pcvB: ['B1','B2'], freeC: ['C1','C3'], freeB: ['B4','B3'] },
-      '2027-01-18': { pcvC: 'C2', pcvB: ['B4'], bcB: ['B1'], bcCArr: ['C1','B1'], freeC: ['C3'], freeB: ['B2','B3'] },
-      '2027-01-19': { pcvC: 'C3', pcvB: ['B3'], bcB: ['B4'], bcCArr: ['C1','B4'], freeC: ['C2'], freeB: ['B1','B2'] },
-      '2027-01-20': { pcvC: 'C3', pcvB: ['B2','B3'], bcCArr: ['C1'], freeC: ['C2'], freeB: ['B4','B1'] },
-      '2027-01-21': { pcvC: 'C2', pcvCArr: ['C2','C3'], pcvB: ['B1','B2'], bcB: ['B4','B3'], bcCArr: ['C1','B4','B3'], freeC: [] },
-      '2027-01-22': { pcvC: 'C2', pcvCArr: ['C2','C3'], pcvB: ['B1','B2'], bcB: ['B4','B3'], bcCArr: ['C1','B4','B3'], freeC: [] },
-      '2027-01-23': { pcvC: 'C2', pcvB: ['B4','B1','B2'], freeC: ['C1','C3'], freeB: ['B3'] },
-      '2027-01-24': { pcvC: 'C2', pcvB: ['B4','B1'], freeC: ['C1','C3'], freeB: ['B2','B3'] },
-      '2027-01-25': { pcvC: 'C3', pcvB: ['B4'], bcB: ['B3'], bcCArr: ['C1','B3'], freeC: ['C2'], freeB: ['B1','B2'] },
-      '2027-01-26': { pcvC: 'C3', pcvB: ['B2','B3'], bcB: ['B4'], bcCArr: ['C1','B4'], freeC: ['C2'], freeB: ['B1'] },
-      '2027-01-27': { pcvC: 'C2', pcvCArr: ['C2','C3'], pcvB: ['B1','B2'], bcB: ['B3'], bcCArr: ['C1','B3'], freeC: [], freeB: ['B4'] },
-      '2027-01-28': { pcvC: 'C2', pcvCArr: ['C2','C3'], pcvB: ['B1','B2'], bcB: ['B4','B3'], bcCArr: ['C1','B4','B3'], freeC: [] },
-      '2027-01-29': { pcvC: 'C2', pcvB: ['B1','B2'], bcB: ['B4'], bcCArr: ['C1','B4'], freeC: ['C3'], freeB: ['B3'] },
-      '2027-01-30': { pcvC: 'C2', pcvB: ['B1'], freeC: ['C1','C3'], freeB: ['B4','B2','B3'] },
-      '2027-01-31': { pcvC: 'C3', pcvB: ['B3'], freeC: ['C1','C2'], freeB: ['B4','B1','B2'] },
-      '2027-02-01': { pcvC: 'C3', pcvB: ['B4'], bcB: ['B2','B3'], bcCArr: ['C1','B2','B3'], freeC: ['C2'], freeB: ['B1'] },
-      '2027-02-02': { pcvC: 'C2', pcvCArr: ['C2','C3'], pcvB: ['B1','B2'], bcB: ['B4','B3'], bcCArr: ['C1','B4','B3'], freeC: [] },
-      '2027-02-03': { pcvC: 'C2', pcvCArr: ['C2','C3'], pcvB: ['B1','B2'], bcB: ['B3'], bcCArr: ['C1','B3'], freeC: [], freeB: ['B4'] },
-      '2027-02-04': { pcvC: 'C2', pcvB: ['B1','B2'], bcB: ['B4'], bcCArr: ['C1','B4'], freeC: ['C3'], freeB: ['B3'] },
-      '2027-02-05': { pcvC: 'C2', pcvB: ['B1'], bcB: ['B4'], bcCArr: ['C1','B4'], freeC: ['C3'], freeB: ['B2','B3'] },
-      '2027-02-06': { pcvC: 'C3', pcvB: ['B4','B3'], freeC: ['C1','C2'], freeB: ['B1','B2'] },
-      '2027-02-07': { pcvC: 'C3', pcvB: ['B4','B2','B3'], freeC: ['C1','C2'], freeB: ['B1'] },
-      '2027-02-08': { pcvC: 'C2', pcvCArr: ['C2','C3'], pcvB: ['B4'], bcB: ['B1','B2','B3'], bcCArr: ['C1','B1','B2','B3'], freeC: [] },
-      '2027-02-09': { pcvC: 'C2', pcvCArr: ['C2','C3'], pcvB: ['B1','B2'], bcB: ['B4','B3'], bcCArr: ['C1','B4','B3'], freeC: [] },
-      '2027-02-10': { pcvC: 'C2', pcvB: ['B1','B2'], bcCArr: ['C1'], freeC: ['C3'], freeB: ['B4','B3'] },
-      '2027-02-11': { pcvC: 'C2', pcvB: ['B1'], bcB: ['B4'], bcCArr: ['C1','B4'], freeC: ['C3'], freeB: ['B2','B3'] },
-      '2027-02-12': { pcvC: 'C3', pcvB: ['B3'], bcB: ['B4'], bcCArr: ['C1','B4'], freeC: ['C2'], freeB: ['B1','B2'] },
-      '2027-02-13': { pcvC: 'C3', pcvB: ['B2','B3'], freeC: ['C1','C2'], freeB: ['B4','B1'] },
-      '2027-02-14': { pcvC: 'C2', pcvCArr: ['C2','C3'], pcvB: ['B1','B2','B3'], freeC: ['C1'], freeB: ['B4'] },
-      '2027-02-15': { pcvC: 'C2', pcvCArr: ['C2','C3'], pcvB: ['B4'], bcB: ['B1','B2','B3'], bcCArr: ['C1','B1','B2','B3'], freeC: [] },
-      '2027-02-16': { pcvC: 'C2', pcvB: ['B1','B2'], bcB: ['B4'], bcCArr: ['C1','B4'], freeC: ['C3'], freeB: ['B3'] },
-      '2027-02-17': { pcvC: 'C2', pcvB: ['B1'], bcCArr: ['C1'], freeC: ['C3'], freeB: ['B4','B2','B3'] },
-      '2027-02-18': { pcvC: 'C3', pcvB: ['B3'], bcB: ['B4'], bcCArr: ['C1','B4'], freeC: ['C2'], freeB: ['B1','B2'] },
-      '2027-02-19': { pcvC: 'C3', pcvB: ['B2','B3'], bcB: ['B4'], bcCArr: ['C1','B4'], freeC: ['C2'], freeB: ['B1'] },
-      '2027-02-20': { pcvC: 'C2', pcvCArr: ['C2','C3'], pcvB: ['B4','B1','B2','B3'], freeC: ['C1'] },
-      '2027-02-21': { pcvC: 'C2', pcvCArr: ['C2','C3'], pcvB: ['B4','B1','B2','B3'], freeC: ['C1'] },
-      '2027-02-22': { pcvC: 'C2', pcvB: ['B4'], bcB: ['B1','B2'], bcCArr: ['C1','B1','B2'], freeC: ['C3'], freeB: ['B3'] },
-      '2027-02-23': { pcvC: 'C2', pcvB: ['B1'], bcB: ['B4'], bcCArr: ['C1','B4'], freeC: ['C3'], freeB: ['B2','B3'] },
-      '2027-02-24': { pcvC: 'C3', pcvB: ['B3'], bcCArr: ['C1'], freeC: ['C2'], freeB: ['B4','B1','B2'] },
-      '2027-02-25': { pcvC: 'C3', pcvB: ['B2','B3'], bcB: ['B4'], bcCArr: ['C1','B4'], freeC: ['C2'], freeB: ['B1'] },
-      '2027-02-26': { pcvC: 'C2', pcvCArr: ['C2','C3'], pcvB: ['B1','B2'], bcB: ['B4','B3'], bcCArr: ['C1','B4','B3'], freeC: [] },
-      '2027-02-27': { pcvC: 'C2', pcvCArr: ['C2','C3'], pcvB: ['B1','B2','B3'], freeC: ['C1'], freeB: ['B4'] },
-      '2027-02-28': { pcvC: 'C2', pcvB: ['B1','B2'], freeC: ['C1','C3'], freeB: ['B4','B3'] },
+  // NOVIEMBRE — 1-12 sin asignaciones
+  ...Object.fromEntries(
+    ['2026-11-01','2026-11-02','2026-11-03','2026-11-04','2026-11-05',
+     '2026-11-06','2026-11-07','2026-11-08','2026-11-09','2026-11-10',
+     '2026-11-11','2026-11-12'].map(d => [d, { noData: true }])
+  ),
+  '2026-11-13': { pcvC:'C2', pcvB:['B2','B1'], bcC:'C1', bcB:['B3'], freeC:['C3'], freeB:['B4'] },
+  '2026-11-14': { pcvC:'C3', pcvB:['B2','B1'], bcC:null, bcB:[], freeC:['C1','C2'], freeB:['B3','B4'] }, // FDS par0 — C3 cubre
+  '2026-11-15': { pcvC:'C3', pcvB:['B2','B1'], bcC:null, bcB:[], freeC:['C1','C2'], freeB:['B3','B4'] }, // FDS par0 — C3 cubre
+  '2026-11-16': { pcvC:'C2', pcvB:['B1'], bcC:'C1', bcB:['B4'], freeC:['C3'], freeB:['B2','B3'] },
+  '2026-11-17': { pcvC:'C3', pcvB:['B3'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B1','B2'] },
+  '2026-11-18': { pcvC:'C3', pcvB:['B3'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B1','B2'] },
+  '2026-11-19': { pcvC:'C3', pcvB:['B2'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B1','B3'] },
+  '2026-11-20': { pcvC:'C2', pcvB:['B2','B1'], bcC:'C1', bcB:['B3'], freeC:['C3'], freeB:['B4'] },
+  '2026-11-21': { pcvC:'C2', pcvB:['B2','B1'], bcC:null, bcB:[], freeC:['C1','C3'], freeB:['B3','B4'] }, // FDS par1 — C2 cubre
+  '2026-11-22': { pcvC:'C2', pcvB:['B2','B1'], bcC:null, bcB:[], freeC:['C1','C3'], freeB:['B3','B4'] }, // FDS par1 — C2 cubre
+  '2026-11-23': { pcvC:'C2', pcvB:['B1'], bcC:'C1', bcB:['B4'], freeC:['C3'], freeB:['B2','B3'] },
+  '2026-11-24': { pcvC:'C3', pcvB:['B3'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B1','B2'] },
+  '2026-11-25': { pcvC:'C3', pcvB:['B3'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B1','B2'] },
+  '2026-11-26': { pcvC:'C3', pcvB:['B2'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B1','B3'] },
+  '2026-11-27': { pcvC:'C2', pcvB:['B2','B1'], bcC:'C1', bcB:['B3'], freeC:['C3'], freeB:['B4'] }, // Black Friday
+  '2026-11-28': { pcvC:'C3', pcvB:['B2','B1'], bcC:null, bcB:[], freeC:['C1','C2'], freeB:['B3','B4'] }, // FDS par2 — C3 cubre
+  '2026-11-29': { pcvC:'C3', pcvB:['B2','B1'], bcC:null, bcB:[], freeC:['C1','C2'], freeB:['B3','B4'] }, // FDS par2 — C3 cubre
+  '2026-11-30': { pcvC:'C2', pcvB:['B1'], bcC:'C1', bcB:['B4'], freeC:['C3'], freeB:['B2','B3'] },
+  // DICIEMBRE
+  '2026-12-01': { pcvC:'C3', pcvB:['B3'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B1','B2'] },
+  '2026-12-02': { pcvC:'C3', pcvB:['B3'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B1','B2'] },
+  '2026-12-03': { pcvC:'C3', pcvB:['B2'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B1','B3'] },
+  '2026-12-04': { pcvC:'C2', pcvB:['B2','B1'], bcC:'C1', bcB:['B3'], freeC:['C3'], freeB:['B4'] },
+  '2026-12-05': { pcvC:'C2', pcvB:['B2','B1'], bcC:null, bcB:[], freeC:['C1','C3'], freeB:['B3','B4'] }, // FDS par3 — C2 cubre
+  '2026-12-06': { pcvC:'C2', pcvB:['B2','B1'], bcC:null, bcB:[], freeC:['C1','C3'], freeB:['B3','B4'] }, // FDS par3 — C2 cubre
+  '2026-12-07': { pcvC:'C2', pcvB:['B1'], bcC:'C1', bcB:['B4'], freeC:['C3'], freeB:['B2','B3'] },
+  '2026-12-08': { pcvC:'C3', pcvB:['B3'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B1','B2'] },
+  '2026-12-09': { pcvC:'C3', pcvB:['B3'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B1','B2'] },
+  '2026-12-10': { pcvC:'C3', pcvB:['B2'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B1','B3'] },
+  '2026-12-11': { pcvC:'C2', pcvB:['B2','B1'], bcC:'C1', bcB:['B3'], freeC:['C3'], freeB:['B4'] },
+  '2026-12-12': { pcvC:'C3', pcvB:['B2','B1'], bcC:null, bcB:[], freeC:['C1','C2'], freeB:['B3','B4'] }, // FDS par4 — C3 cubre
+  '2026-12-13': { pcvC:'C3', pcvB:['B2','B1'], bcC:null, bcB:[], freeC:['C1','C2'], freeB:['B3','B4'] }, // FDS par4 — C3 cubre
+  '2026-12-14': { pcvC:'C2', pcvB:['B1'], bcC:'C1', bcB:['B4'], freeC:['C3'], freeB:['B2','B3'] },
+  '2026-12-15': { pcvC:'C3', pcvB:['B3'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B1','B2'] },
+  '2026-12-16': { pcvC:'C3', pcvB:['B3'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B1','B2'] },
+  '2026-12-17': { pcvC:'C3', pcvB:['B2'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B1','B3'] },
+  '2026-12-18': { pcvC:'C2', pcvB:['B2','B1'], bcC:'C1', bcB:['B3'], freeC:['C3'], freeB:['B4'] },
+  '2026-12-19': { pcvC:'C2', pcvB:['B2','B1'], bcC:null, bcB:[], freeC:['C1','C3'], freeB:['B3','B4'] }, // FDS par5 — C2 cubre
+  '2026-12-20': { pcvC:'C2', pcvB:['B2','B1'], bcC:null, bcB:[], freeC:['C1','C3'], freeB:['B3','B4'] }, // FDS par5 — C2 cubre
+  '2026-12-21': { pcvC:'C2', pcvB:['B1'], bcC:'C1', bcB:['B4'], freeC:['C3'], freeB:['B2','B3'] },
+  '2026-12-22': { pcvC:'C3', pcvB:['B3'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B1','B2'] },
+  '2026-12-23': { pcvC:'C3', pcvB:['B3'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B1','B2'] },
+  '2026-12-24': { pcvC:'C3', pcvB:['B2'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B1','B3'] },
+  '2026-12-25': { holiday: true, pcvC:null, pcvB:[], bcC:null, bcB:[], freeC:[], freeB:[] },
+  '2026-12-26': { pcvC:'C3', pcvB:['B2','B1'], bcC:null, bcB:[], freeC:['C1','C2'], freeB:['B3','B4'] }, // FDS par6 — C3 cubre
+  '2026-12-27': { pcvC:'C3', pcvB:['B2','B1'], bcC:null, bcB:[], freeC:['C1','C2'], freeB:['B3','B4'] }, // FDS par6 — C3 cubre
+  '2026-12-28': { pcvC:'C2', pcvB:['B1'], bcC:'C1', bcB:['B4'], freeC:['C3'], freeB:['B2','B3'] },
+  '2026-12-29': { pcvC:'C3', pcvB:['B3'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B1','B2'] },
+  '2026-12-30': { pcvC:'C3', pcvB:['B3'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B1','B2'] },
+  '2026-12-31': { pcvC:'C3', pcvB:['B2'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B1','B3'] },
+  // ENERO 2027
+  '2027-01-01': { pcvC:'C2', pcvB:['B2','B1'], bcC:'C1', bcB:['B3'], freeC:['C3'], freeB:['B4'] },
+  '2027-01-02': { pcvC:'C2', pcvB:['B2','B1'], bcC:null, bcB:[], freeC:['C1','C3'], freeB:['B3','B4'] }, // FDS par7 — C2 cubre
+  '2027-01-03': { pcvC:'C2', pcvB:['B2','B1'], bcC:null, bcB:[], freeC:['C1','C3'], freeB:['B3','B4'] }, // FDS par7 — C2 cubre
+  '2027-01-04': { pcvC:'C2', pcvB:['B1'], bcC:'C1', bcB:['B4'], freeC:['C3'], freeB:['B2','B3'] },
+  '2027-01-05': { pcvC:'C3', pcvB:['B3'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B1','B2'] },
+  '2027-01-06': { pcvC:'C3', pcvB:['B3'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B1','B2'] },
+  '2027-01-07': { pcvC:'C3', pcvB:['B2'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B1','B3'] },
+  '2027-01-08': { pcvC:'C2', pcvB:['B2','B1'], bcC:'C1', bcB:['B3'], freeC:['C3'], freeB:['B4'] },
+  '2027-01-09': { pcvC:'C3', pcvB:['B2','B1'], bcC:null, bcB:[], freeC:['C1','C2'], freeB:['B3','B4'] }, // FDS par8 — C3 cubre
+  '2027-01-10': { pcvC:'C3', pcvB:['B2','B1'], bcC:null, bcB:[], freeC:['C1','C2'], freeB:['B3','B4'] }, // FDS par8 — C3 cubre
+  '2027-01-11': { pcvC:'C2', pcvB:['B1'], bcC:'C1', bcB:['B4'], freeC:['C3'], freeB:['B2','B3'] },
+  '2027-01-12': { pcvC:'C3', pcvB:['B3'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B1','B2'] },
+  '2027-01-13': { pcvC:'C3', pcvB:['B3'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B1','B2'] },
+  '2027-01-14': { pcvC:'C3', pcvB:['B2'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B1','B3'] },
+  '2027-01-15': { pcvC:'C2', pcvB:['B2','B1'], bcC:'C1', bcB:['B3'], freeC:['C3'], freeB:['B4'] },
+  '2027-01-16': { pcvC:'C2', pcvB:['B2','B1'], bcC:null, bcB:[], freeC:['C1','C3'], freeB:['B3','B4'] }, // FDS par9 — C2 cubre
+  '2027-01-17': { pcvC:'C2', pcvB:['B2','B1'], bcC:null, bcB:[], freeC:['C1','C3'], freeB:['B3','B4'] }, // FDS par9 — C2 cubre
+  '2027-01-18': { pcvC:'C2', pcvB:['B1'], bcC:'C1', bcB:['B4'], freeC:['C3'], freeB:['B2','B3'] },
+  '2027-01-19': { pcvC:'C3', pcvB:['B3'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B1','B2'] },
+  '2027-01-20': { pcvC:'C3', pcvB:['B3'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B1','B2'] },
+  '2027-01-21': { pcvC:'C3', pcvB:['B2'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B1','B3'] },
+  '2027-01-22': { pcvC:'C2', pcvB:['B2','B1'], bcC:'C1', bcB:['B3'], freeC:['C3'], freeB:['B4'] },
+  '2027-01-23': { pcvC:'C3', pcvB:['B2','B1'], bcC:null, bcB:[], freeC:['C1','C2'], freeB:['B3','B4'] }, // FDS par10 — C3 cubre
+  '2027-01-24': { pcvC:'C3', pcvB:['B2','B1'], bcC:null, bcB:[], freeC:['C1','C2'], freeB:['B3','B4'] }, // FDS par10 — C3 cubre
+  '2027-01-25': { pcvC:'C2', pcvB:['B1'], bcC:'C1', bcB:['B4'], freeC:['C3'], freeB:['B2','B3'] },
+  '2027-01-26': { pcvC:'C3', pcvB:['B3'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B1','B2'] },
+  '2027-01-27': { pcvC:'C3', pcvB:['B3'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B1','B2'] },
+  '2027-01-28': { pcvC:'C3', pcvB:['B2'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B1','B3'] },
+  '2027-01-29': { pcvC:'C2', pcvB:['B2','B1'], bcC:'C1', bcB:['B3'], freeC:['C3'], freeB:['B4'] },
+  '2027-01-30': { pcvC:'C2', pcvB:['B2','B1'], bcC:null, bcB:[], freeC:['C1','C3'], freeB:['B3','B4'] }, // FDS par11 — C2 cubre
+  '2027-01-31': { pcvC:'C2', pcvB:['B2','B1'], bcC:null, bcB:[], freeC:['C1','C3'], freeB:['B3','B4'] }, // FDS par11 — C2 cubre
+  // FEBRERO 2027
+  '2027-02-01': { pcvC:'C2', pcvB:['B1'], bcC:'C1', bcB:['B4'], freeC:['C3'], freeB:['B2','B3'] },
+  '2027-02-02': { pcvC:'C3', pcvB:['B3'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B1','B2'] },
+  '2027-02-03': { pcvC:'C3', pcvB:['B3'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B1','B2'] },
+  '2027-02-04': { pcvC:'C3', pcvB:['B2'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B1','B3'] },
+  '2027-02-05': { pcvC:'C2', pcvB:['B2','B1'], bcC:'C1', bcB:['B3'], freeC:['C3'], freeB:['B4'] },
+  '2027-02-06': { pcvC:'C3', pcvB:['B2','B1'], bcC:null, bcB:[], freeC:['C1','C2'], freeB:['B3','B4'] }, // FDS par12 — C3 cubre
+  '2027-02-07': { pcvC:'C3', pcvB:['B2','B1'], bcC:null, bcB:[], freeC:['C1','C2'], freeB:['B3','B4'] }, // FDS par12 — C3 cubre
+  '2027-02-08': { pcvC:'C2', pcvB:['B1'], bcC:'C1', bcB:['B4'], freeC:['C3'], freeB:['B2','B3'] },
+  '2027-02-09': { pcvC:'C3', pcvB:['B3'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B1','B2'] },
+  '2027-02-10': { pcvC:'C3', pcvB:['B3'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B1','B2'] },
+  '2027-02-11': { pcvC:'C3', pcvB:['B2'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B1','B3'] },
+  '2027-02-12': { pcvC:'C2', pcvB:['B2','B1'], bcC:'C1', bcB:['B3'], freeC:['C3'], freeB:['B4'] },
+  '2027-02-13': { pcvC:'C2', pcvB:['B2','B1'], bcC:null, bcB:[], freeC:['C1','C3'], freeB:['B3','B4'] }, // FDS par13 — C2 cubre
+  '2027-02-14': { pcvC:'C2', pcvB:['B2','B1'], bcC:null, bcB:[], freeC:['C1','C3'], freeB:['B3','B4'] }, // FDS par13 — C2 cubre
+  '2027-02-15': { pcvC:'C2', pcvB:['B1'], bcC:'C1', bcB:['B4'], freeC:['C3'], freeB:['B2','B3'] },
+  '2027-02-16': { pcvC:'C3', pcvB:['B3'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B1','B2'] },
+  '2027-02-17': { pcvC:'C3', pcvB:['B3'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B1','B2'] },
+  '2027-02-18': { pcvC:'C3', pcvB:['B2'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B1','B3'] },
+  '2027-02-19': { pcvC:'C2', pcvB:['B2','B1'], bcC:'C1', bcB:['B3'], freeC:['C3'], freeB:['B4'] },
+  '2027-02-20': { pcvC:'C3', pcvB:['B2','B1'], bcC:null, bcB:[], freeC:['C1','C2'], freeB:['B3','B4'] }, // FDS par14 — C3 cubre
+  '2027-02-21': { pcvC:'C3', pcvB:['B2','B1'], bcC:null, bcB:[], freeC:['C1','C2'], freeB:['B3','B4'] }, // FDS par14 — C3 cubre
+  '2027-02-22': { pcvC:'C2', pcvB:['B1'], bcC:'C1', bcB:['B4'], freeC:['C3'], freeB:['B2','B3'] },
+  '2027-02-23': { pcvC:'C3', pcvB:['B3'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B1','B2'] },
+  '2027-02-24': { pcvC:'C3', pcvB:['B3'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B1','B2'] },
+  '2027-02-25': { pcvC:'C3', pcvB:['B2'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B1','B3'] },
+  '2027-02-26': { pcvC:'C2', pcvB:['B2','B1'], bcC:'C1', bcB:['B3'], freeC:['C3'], freeB:['B4'] },
+  '2027-02-27': { pcvC:'C2', pcvB:['B2','B1'], bcC:null, bcB:[], freeC:['C1','C3'], freeB:['B3','B4'] }, // FDS par15 — C2 cubre
+  '2027-02-28': { pcvC:'C2', pcvB:['B2','B1'], bcC:null, bcB:[], freeC:['C1','C3'], freeB:['B3','B4'] }, // FDS par15 — C2 cubre
 };
 
 // ═══════════════════════════════════════════════
 // MODIFICACIONES (capa separada)
 // ═══════════════════════════════════════════════
-// v4: B3 (Argenis) reintegrado, ciclos equitativos B1=off0 B2=off1 B3=off2, C2=off0 C3=off2, pcvCArr soportado
-const DATA_VERSION = 'v4';
+// v5: Horario subido Nov13–Feb28, equidad FDS cajeras C2=16 C3=16 libres (pares alternados), SPECIAL_HOURS simplificado
+const DATA_VERSION = 'v5';
 if (localStorage.getItem('wf_data_version') !== DATA_VERSION) {
   localStorage.removeItem('wf_mods');
   localStorage.removeItem('wf_history');
