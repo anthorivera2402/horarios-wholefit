@@ -250,12 +250,12 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
 // ═══════════════════════════════════════════════
 const EMPLOYEES_BASE = {
   C1: { name: 'Dayana',  role: 'Cajera',  color: '#7C3AED' },
-  C2: { name: 'Wendy',   role: 'Cajera',  color: '#BE185D' },
-  C3: { name: 'Nathaly', role: 'Cajera',  color: '#0369A1' },
-  B1: { name: 'Susana',  role: 'Barista', color: '#B45309' },
-  B2: { name: 'Samuel',  role: 'Barista', color: '#065F46' },
-  B3: { name: 'Argenis', role: 'Barista', color: '#7C3AED' },
-  B4: { name: 'Maikol',  role: 'Barista', color: '#C2410C' }
+  C2: { name: 'Wendy',   role: 'Cajera',  color: '#DB2777' },
+  C3: { name: 'Nathaly', role: 'Cajera',  color: '#0284C7' },
+  B1: { name: 'Susana',  role: 'Barista', color: '#D97706' },
+  B2: { name: 'Samuel',  role: 'Barista', color: '#059669' },
+  B3: { name: 'Argenis', role: 'Barista', color: '#DC2626' },
+  B4: { name: 'Maikol',  role: 'Barista', color: '#0F766E' }
 };
 // Nombres editables desde localStorage (solo el nombre, el resto no cambia)
 const customNames = JSON.parse(localStorage.getItem('wf_names') || '{}');
@@ -905,15 +905,16 @@ function renderMonthly(year, month, selEmp) {
   </div>`;
 
   // Legend
+  const legendEmpDots = Object.entries(EMPLOYEES).map(([code, emp]) =>
+    `<span class="legend-item"><span class="cal-dot" style="background:${emp.color};display:inline-block"></span> ${emp.name}</span>`
+  ).join('');
   html += `<div class="legend">
     ${selEmp ? `
-      <span class="legend-item"><span class="cal-dot dot-pcv" style="display:inline-block"></span> PCV</span>
-      <span class="legend-item"><span class="cal-dot dot-bc" style="display:inline-block"></span> BC</span>
+      <span class="legend-item"><span class="cal-dot" style="background:${empColor(selEmp)};display:inline-block"></span> Trabaja</span>
       <span class="legend-item"><span class="cal-dot dot-off" style="display:inline-block"></span> Libre</span>
       <span class="legend-item"><span class="cal-dot dot-conflict" style="display:inline-block"></span> Conflicto</span>
     ` : `
-      <span class="legend-item"><span class="cal-dot" style="background:var(--green);display:inline-block"></span> PCV activo</span>
-      <span class="legend-item"><span class="cal-dot dot-bc" style="display:inline-block"></span> BC activo</span>
+      ${legendEmpDots}
       <span class="legend-item"><span class="cal-dot dot-event" style="display:inline-block"></span> Evento</span>
       <span class="legend-item"><span class="cal-dot dot-conflict" style="display:inline-block"></span> Conflicto</span>
     `}
@@ -947,13 +948,23 @@ function renderMonthly(year, month, selEmp) {
       } else if (selEmp) {
         const st = getEmployeeStatusOnDate(selEmp, ds);
         if (st.status === 'work') {
-          const isBc = sched.bcC === selEmp || (sched.bcB||[]).includes(selEmp);
-          dots += `<div class="cal-dot ${isBc?'dot-bc':'dot-pcv'}"></div>`;
+          const empC = empColor(selEmp);
+          dots += `<div class="cal-dot" style="background:${empC}"></div>`;
         } else if (st.status === 'off') dots += `<div class="cal-dot dot-off"></div>`;
         else if (st.status === 'conflict') dots += `<div class="cal-dot dot-conflict"></div>`;
       } else {
-        if (sched.pcvC || (sched.pcvB||[]).length) dots += `<div class="cal-dot dot-pcv"></div>`;
-        if (sched.bcC || (sched.bcB||[]).length) dots += `<div class="cal-dot dot-bc"></div>`;
+        // Un punto por cada empleado que trabaja ese día, con su color individual
+        const working = [
+          sched.pcvC, sched.bcC,
+          ...(sched.pcvB||[]), ...(sched.bcB||[])
+        ].filter(Boolean);
+        const seen = new Set();
+        working.forEach(code => {
+          if (!seen.has(code)) {
+            seen.add(code);
+            dots += `<div class="cal-dot" style="background:${empColor(code)}"></div>`;
+          }
+        });
         if (SPECIAL_HOURS[ds]?.event) dots += `<div class="cal-dot dot-event"></div>`;
         if ((sched.conflicts||[]).length) dots += `<div class="cal-dot dot-conflict"></div>`;
       }
