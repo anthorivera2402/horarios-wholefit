@@ -1,0 +1,1472 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Wholefit Schedule</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --green: #16A34A;
+  --green-dark: #166534;
+  --green-light: #DCFCE7;
+  --bg: #F8FAFC;
+  --white: #FFFFFF;
+  --text: #0F172A;
+  --text-sec: #64748B;
+  --blue: #2563EB;
+  --blue-light: #DBEAFE;
+  --orange: #F59E0B;
+  --orange-light: #FEF3C7;
+  --red: #DC2626;
+  --red-light: #FEE2E2;
+  --yellow: #EAB308;
+  --yellow-light: #FEF9C3;
+  --border: #E2E8F0;
+  --shadow: 0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.06);
+  --shadow-md: 0 4px 6px rgba(0,0,0,.07), 0 2px 4px rgba(0,0,0,.06);
+  --shadow-lg: 0 10px 15px rgba(0,0,0,.08), 0 4px 6px rgba(0,0,0,.05);
+  --radius: 12px;
+  --radius-sm: 8px;
+  --nav-h: 64px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:var(--nav-h)}
+/* NAV */
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:var(--white);border-top:1px solid var(--border);display:flex;z-index:100;height:var(--nav-h);box-shadow:0 -2px 10px rgba(0,0,0,.06)}
+.nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer;border:none;background:none;color:var(--text-sec);font-size:10px;font-family:inherit;font-weight:500;padding:4px 2px;transition:color .2s}
+.nav-btn svg{width:22px;height:22px;stroke-width:1.8}
+.nav-btn.active{color:var(--green)}
+/* HEADER */
+.top-header{background:var(--white);border-bottom:1px solid var(--border);padding:10px 16px;position:sticky;top:0;z-index:50;box-shadow:var(--shadow)}
+.top-header h1{font-size:17px;font-weight:700;color:var(--green-dark);margin:0}
+.top-header p{font-size:12px;color:var(--text-sec);margin:1px 0 0}
+/* PAGES */
+.page{display:none;padding:12px 14px 16px;max-width:600px;margin:0 auto}
+.page.active{display:block}
+/* CARDS */
+.card{background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px;margin-bottom:12px;border:1px solid var(--border)}
+.card-sm{background:var(--white);border-radius:var(--radius-sm);box-shadow:var(--shadow);padding:12px;margin-bottom:10px;border:1px solid var(--border)}
+/* STATUS CHIPS */
+.chip{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:20px;font-size:11px;font-weight:600}
+.chip-green{background:var(--green-light);color:var(--green-dark)}
+.chip-blue{background:var(--blue-light);color:var(--blue)}
+.chip-orange{background:var(--orange-light);color:#92400E}
+.chip-red{background:var(--red-light);color:var(--red)}
+.chip-yellow{background:var(--yellow-light);color:#713F12}
+.chip-gray{background:#F1F5F9;color:var(--text-sec)}
+/* EMPLOYEE SELECT */
+.emp-selector{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:14px}
+.emp-btn{background:var(--white);border:2px solid var(--border);border-radius:var(--radius-sm);padding:10px 12px;cursor:pointer;text-align:left;transition:all .2s;font-family:inherit}
+.emp-btn:hover{border-color:var(--green);background:var(--green-light)}
+.emp-btn.selected{border-color:var(--green);background:var(--green-light)}
+.emp-btn .emp-name{font-size:14px;font-weight:600;color:var(--text)}
+.emp-btn .emp-role{font-size:11px;color:var(--text-sec);margin-top:2px}
+.emp-btn .emp-avatar{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--white);margin-bottom:6px}
+/* STATUS CARD */
+.status-card{border-radius:var(--radius);padding:20px;margin-bottom:14px;border:1px solid transparent}
+.status-work{background:linear-gradient(135deg,#F0FDF4,#DCFCE7);border-color:#BBF7D0}
+.status-off{background:linear-gradient(135deg,#F0F9FF,#DBEAFE);border-color:#BFDBFE}
+.status-conflict{background:linear-gradient(135deg,#FFF7ED,#FEF3C7);border-color:#FDE68A}
+.status-unknown{background:linear-gradient(135deg,#F8FAFC,#F1F5F9);border-color:var(--border)}
+.status-holiday{background:linear-gradient(135deg,#FFF1F2,#FFE4E6);border-color:#FECDD3}
+.status-title{font-size:20px;font-weight:800;margin-bottom:4px}
+.status-work .status-title{color:var(--green-dark)}
+.status-off .status-title{color:var(--blue)}
+.status-conflict .status-title{color:#92400E}
+.status-unknown .status-title{color:var(--text-sec)}
+.status-holiday .status-title{color:var(--red)}
+.detail-row{display:flex;align-items:flex-start;gap:8px;margin-top:10px;font-size:13px}
+.detail-label{color:var(--text-sec);min-width:68px;flex-shrink:0;font-size:12px;padding-top:1px}
+.detail-value{color:var(--text);font-weight:500}
+/* CALENDAR */
+.cal-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.cal-nav h2{font-size:16px;font-weight:700;text-transform:capitalize}
+.cal-nav button{background:none;border:1px solid var(--border);border-radius:8px;padding:6px 10px;cursor:pointer;font-size:16px;color:var(--text-sec);transition:all .2s}
+.cal-nav button:hover{background:var(--green-light);color:var(--green-dark);border-color:var(--green)}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
+.cal-header{font-size:10px;font-weight:600;color:var(--text-sec);text-align:center;padding:4px 0;text-transform:uppercase}
+.cal-day{min-height:52px;border-radius:8px;padding:4px;cursor:pointer;border:1px solid transparent;transition:all .2s;position:relative;background:var(--white)}
+.cal-day:hover{border-color:var(--green);background:var(--green-light)}
+.cal-day.today{border-color:var(--green);background:var(--green-light)}
+.cal-day.today .cal-num{background:var(--green);color:var(--white);border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center}
+.cal-day.other-month{opacity:.35}
+.cal-day.selected{border-color:var(--blue);background:var(--blue-light)}
+.cal-num{font-size:11px;font-weight:600;text-align:center;margin-bottom:3px;color:var(--text)}
+.cal-dots{display:flex;flex-wrap:wrap;gap:2px;justify-content:center}
+.cal-dot{width:5px;height:5px;border-radius:50%}
+.dot-work{background:var(--green)}
+.dot-pcv{background:var(--green)}
+.dot-bc{background:var(--blue)}
+.dot-off{background:#94A3B8}
+.dot-conflict{background:var(--red)}
+.dot-event{background:var(--orange)}
+.dot-holiday{background:var(--red)}
+.cal-day.empty{background:transparent;border:none;cursor:default}
+/* VIEWS */
+.view-tabs{display:flex;background:var(--white);border:1px solid var(--border);border-radius:var(--radius-sm);padding:3px;margin-bottom:12px;gap:3px}
+.view-tab{flex:1;text-align:center;padding:7px 4px;border-radius:7px;font-size:12px;font-weight:600;cursor:pointer;color:var(--text-sec);transition:all .2s;border:none;background:none;font-family:inherit}
+.view-tab.active{background:var(--green);color:var(--white)}
+/* SECTION HEADERS */
+.section-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:8px;margin-top:4px}
+/* ALERT BANNER */
+.alert{border-radius:var(--radius-sm);padding:10px 12px;margin-bottom:10px;display:flex;gap:8px;align-items:flex-start}
+.alert-icon{font-size:14px;flex-shrink:0;margin-top:1px}
+.alert p{font-size:12px;line-height:1.5}
+.alert strong{display:block;font-size:12px;margin-bottom:2px}
+.alert-red{background:var(--red-light);border:1px solid #FECACA;color:var(--red)}
+.alert-orange{background:var(--orange-light);border:1px solid #FDE68A;color:#92400E}
+.alert-yellow{background:var(--yellow-light);border:1px solid #FEF08A;color:#713F12}
+/* TEAM GRID */
+.team-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.team-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:14px;cursor:pointer;transition:all .2s}
+.team-card:hover{border-color:var(--green);box-shadow:var(--shadow-md)}
+.team-avatar{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:var(--white);margin-bottom:8px}
+.team-name{font-size:14px;font-weight:700}
+.team-role{font-size:11px;color:var(--text-sec);margin-bottom:8px}
+.team-stats{display:flex;gap:6px;flex-wrap:wrap}
+/* WEEKLY */
+.week-day{background:var(--white);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px;margin-bottom:8px}
+.week-day-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.week-day-name{font-size:13px;font-weight:700;text-transform:capitalize}
+.week-day-date{font-size:11px;color:var(--text-sec)}
+/* DAILY */
+.daily-sede{border-radius:var(--radius);padding:14px;margin-bottom:10px;border:1px solid var(--border)}
+.daily-sede.pcv{border-left:4px solid var(--green)}
+.daily-sede.bc{border-left:4px solid var(--blue)}
+.daily-sede-title{font-size:14px;font-weight:700;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.daily-row{display:flex;justify-content:space-between;align-items:center;padding:4px 0;border-bottom:1px solid var(--border);font-size:12px}
+.daily-row:last-child{border-bottom:none}
+.daily-row-label{color:var(--text-sec)}
+.daily-row-value{font-weight:600;color:var(--text);text-align:right}
+/* ADMIN */
+.admin-section{margin-bottom:16px}
+.admin-table{width:100%;border-collapse:collapse;font-size:12px}
+.admin-table th{background:#F8FAFC;padding:8px 10px;text-align:left;font-weight:600;color:var(--text-sec);border-bottom:2px solid var(--border);font-size:11px}
+.admin-table td{padding:8px 10px;border-bottom:1px solid var(--border);vertical-align:middle}
+.admin-table tr:hover td{background:#F8FAFC}
+/* DATE SELECTOR */
+.date-selector{display:flex;gap:8px;align-items:center;margin-bottom:12px;flex-wrap:wrap}
+.date-selector select,.date-selector input{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:7px 10px;font-size:13px;color:var(--text);font-family:inherit;cursor:pointer}
+.btn{display:inline-flex;align-items:center;gap:5px;padding:7px 14px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;border:none;font-family:inherit;transition:all .2s}
+.btn-green{background:var(--green);color:var(--white)}
+.btn-green:hover{background:var(--green-dark)}
+.btn-outline{background:var(--white);border:1px solid var(--border);color:var(--text)}
+.btn-outline:hover{border-color:var(--green);color:var(--green)}
+/* LEGEND */
+.legend{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:12px}
+.legend-item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text-sec)}
+/* SCROLL CONTAINER */
+.scroll-x{overflow-x:auto;-webkit-overflow-scrolling:touch}
+/* FILTERS */
+.filter-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.filter-chip{padding:5px 10px;border-radius:20px;font-size:11px;font-weight:600;cursor:pointer;border:1px solid var(--border);background:var(--white);color:var(--text-sec);transition:all .2s;font-family:inherit}
+.filter-chip.active{background:var(--green);color:var(--white);border-color:var(--green)}
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:200;display:none;align-items:flex-end;justify-content:center}
+.modal-overlay.open{display:flex}
+.modal{background:var(--white);border-radius:16px 16px 0 0;padding:20px;width:100%;max-width:600px;max-height:85vh;overflow-y:auto;animation:slideUp .25s ease}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.modal-handle{width:36px;height:4px;background:var(--border);border-radius:2px;margin:0 auto 16px}
+.modal-title{font-size:17px;font-weight:700;margin-bottom:14px}
+/* SEDE CARDS */
+.sede-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:10px}
+.sede-title{font-size:15px;font-weight:700;margin-bottom:4px}
+.sede-hours{font-size:12px;color:var(--text-sec);margin-bottom:10px}
+.sede-staff{margin-top:8px}
+.staff-row{display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid var(--border);font-size:13px}
+.staff-row:last-child{border-bottom:none}
+.staff-avatar{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:var(--white);flex-shrink:0}
+/* HISTORY */
+.history-entry{background:var(--white);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 12px;margin-bottom:6px}
+.history-entry .he-date{font-size:10px;color:var(--text-sec)}
+.history-entry .he-desc{font-size:12px;font-weight:600;margin-top:2px}
+/* PRINT */
+@media print{.bottom-nav,.modal-overlay{display:none!important}.page{display:block!important}}
+/* RESPONSIVE */
+@media(min-width:600px){.emp-selector{grid-template-columns:repeat(3,1fr)}.team-grid{grid-template-columns:repeat(3,1fr)}}
+/* EMPTY STATE */
+.empty-state{text-align:center;padding:32px 20px;color:var(--text-sec)}
+.empty-state .es-icon{font-size:40px;margin-bottom:10px}
+.empty-state p{font-size:14px}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="top-header">
+  <div style="display:flex;align-items:center;gap:12px">
+    <img src="data:image/png;base64,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" alt="Wholefit" style="height:68px;width:auto;object-fit:contain" />
+    <div>
+      <h1 style="margin:0">Horario de Turnos</h1>
+      <p style="margin:0">Nov 2026 – Feb 2027</p>
+    </div>
+  </div>
+</div>
+
+<!-- PAGES -->
+<div id="page-home" class="page active"></div>
+<div id="page-calendar" class="page"></div>
+<div id="page-team" class="page"></div>
+<div id="page-venues" class="page"></div>
+<div id="page-admin" class="page"></div>
+
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+  <button class="nav-btn active" onclick="navigate('home')" id="nav-home">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    Inicio
+  </button>
+  <button class="nav-btn" onclick="navigate('calendar')" id="nav-calendar">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+    Calendario
+  </button>
+  <button class="nav-btn" onclick="navigate('team')" id="nav-team">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+    Equipo
+  </button>
+  <button class="nav-btn" onclick="navigate('venues')" id="nav-venues">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+    Sedes
+  </button>
+  <button class="nav-btn" onclick="navigate('admin')" id="nav-admin">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93l-1.41 1.41M4.93 4.93l1.41 1.41M12 2v2M12 20v2M2 12h2M20 12h2M19.07 19.07l-1.41-1.41M4.93 19.07l1.41-1.41"/></svg>
+    Admin
+  </button>
+</nav>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal" onclick="closeModal(event)">
+  <div class="modal" id="modal-content">
+    <div class="modal-handle"></div>
+    <div id="modal-body"></div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════
+// DATOS MAESTROS
+// ═══════════════════════════════════════════════
+const EMPLOYEES_BASE = {
+  C1: { name: 'Dayana',  role: 'Cajera',  color: '#7C3AED' },
+  C2: { name: 'Wendy',   role: 'Cajera',  color: '#BE185D' },
+  C3: { name: 'Nathaly', role: 'Cajera',  color: '#0369A1' },
+  B1: { name: 'Susana',  role: 'Barista', color: '#B45309' },
+  B2: { name: 'Samuel',  role: 'Barista', color: '#065F46' },
+  B3: { name: 'Argenis', role: 'Barista', color: '#7C3AED' },
+  B4: { name: 'Maikol',  role: 'Barista', color: '#C2410C' }
+};
+// Nombres editables desde localStorage (solo el nombre, el resto no cambia)
+const customNames = JSON.parse(localStorage.getItem('wf_names') || '{}');
+let EMPLOYEES = Object.fromEntries(
+  Object.entries(EMPLOYEES_BASE).map(([k,v]) => [k, {...v, name: customNames[k] || v.name}])
+);
+
+// Horarios especiales PCV
+const SPECIAL_HOURS = {
+  '2026-11-15': { pcv: '10:00 a.m. – 10:00 p.m.', event: 'Encendido de Navidad', bc: null },
+  '2026-11-27': { pcv: '10:00 a.m. – 10:00 p.m.', event: 'Black Friday', bc: null },
+  '2026-12-04': { pcv: '10:00 a.m. – 10:00 p.m.', bc: null },
+  '2026-12-05': { pcv: '10:00 a.m. – 10:00 p.m.', bc: null },
+  '2026-12-06': { pcv: '10:00 a.m. – 10:00 p.m.', bc: null },
+  '2026-12-11': { pcv: '10:00 a.m. – 10:00 p.m.', bc: null },
+  '2026-12-12': { pcv: '10:00 a.m. – 10:00 p.m.', bc: null },
+  '2026-12-13': { pcv: '10:00 a.m. – 10:00 p.m.', bc: null },
+  '2026-12-18': { pcv: '10:00 a.m. – 10:00 p.m.', bc: null },
+  '2026-12-19': { pcv: '10:00 a.m. – 10:00 p.m.', bc: null },
+  '2026-12-20': { pcv: '10:00 a.m. – 10:00 p.m.', bc: null },
+  '2026-12-21': { pcv: '10:00 a.m. – 10:00 p.m.', bc: null },
+  '2026-12-22': { pcv: '10:00 a.m. – 10:00 p.m.', bc: null },
+  '2026-12-23': { pcv: '10:00 a.m. – 10:00 p.m.', bc: null },
+  '2026-12-24': { pcv: '10:00 a.m. – 5:00 p.m.', bc: 'Horario especial (horas pendientes de confirmación)' },
+  '2026-12-25': { pcv: null, bc: null, holiday: true },
+  '2026-12-31': { pcv: '10:00 a.m. – 5:00 p.m.', bc: 'Horario especial (horas pendientes de confirmación)' }
+};
+
+// Horarios habituales PCV
+function getPCVHours(dateStr) {
+  const d = new Date(dateStr + 'T12:00:00');
+  const dow = d.getDay(); // 0=dom,1=lun,...,6=sab
+  if (SPECIAL_HOURS[dateStr]) {
+    if (SPECIAL_HOURS[dateStr].holiday) return null;
+    return SPECIAL_HOURS[dateStr].pcv;
+  }
+  if (dow >= 5 || dow === 0) return '9:00 a.m. – 8:00 p.m.'; // vie-dom
+  return '9:00 a.m. – 7:00 p.m.'; // lun-jue
+}
+
+function getBCHours(dateStr) {
+  const d = new Date(dateStr + 'T12:00:00');
+  const dow = d.getDay();
+  if (SPECIAL_HOURS[dateStr]) {
+    if (SPECIAL_HOURS[dateStr].holiday) return null;
+    return SPECIAL_HOURS[dateStr].bc;
+  }
+  // BC cerrado sábados desde el 14/11 y siempre domingos
+  if (dow === 0) return null; // domingo
+  if (dow === 6 && dateStr >= '2026-11-14') return null; // sábados desde 14/11
+  if (dow === 6) return null; // sábados anteriores también
+  return '8:00 a.m. – 6:00 p.m.';
+}
+
+// ═══════════════════════════════════════════════
+// BASE DE DATOS — ASIGNACIONES
+// Formato: { pcvC, pcvB[], bcC, bcB[], freeC[], freeB[], conflicts[], notes }
+// ═══════════════════════════════════════════════
+const RAW_SCHEDULE = {
+  // NOVIEMBRE — 1-12 sin asignaciones
+  ...Object.fromEntries(
+    ['2026-11-01','2026-11-02','2026-11-03','2026-11-04','2026-11-05',
+     '2026-11-06','2026-11-07','2026-11-08','2026-11-09','2026-11-10',
+     '2026-11-11','2026-11-12'].map(d => [d, { noData: true }])
+  ),
+  '2026-11-13': { pcvC:'C2', pcvB:['B2','B1'], bcC:'C1', bcB:['B3'], freeC:['C3'], freeB:['B4'] },
+  '2026-11-14': { pcvC:'C2', pcvB:['B2','B1'], bcC:null, bcB:[], freeC:['C1','C3'], freeB:['B3','B4'] }, // sábado — BC cerrado
+  '2026-11-15': { pcvC:'C2', pcvB:['B2','B1'], bcC:null, bcB:[], freeC:['C1','C3'], freeB:['B3','B4'] }, // domingo — Encendido de Navidad
+  '2026-11-16': { pcvC:'C2', pcvB:['B1'], bcC:'C1', bcB:['B4'], freeC:['C3'], freeB:['B2','B3'] },
+  '2026-11-17': { pcvC:'C3', pcvB:['B3'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B1','B2'] },
+  '2026-11-18': { pcvC:'C3', pcvB:['B3'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B1','B2'] },
+  '2026-11-19': { pcvC:'C3', pcvB:['B2'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B1','B3'] },
+  '2026-11-20': { pcvC:'C2', pcvB:['B2','B1'], bcC:'C1', bcB:['B3'], freeC:['C3'], freeB:['B4'] },
+  '2026-11-21': { pcvC:'C2', pcvB:['B2','B1'], bcC:null, bcB:[], freeC:['C1','C3'], freeB:['B3','B4'] },
+  '2026-11-22': { pcvC:'C2', pcvB:['B2','B1'], bcC:null, bcB:[], freeC:['C1','C3'], freeB:['B3','B4'] },
+  '2026-11-23': { pcvC:'C2', pcvB:['B1'], bcC:'C1', bcB:['B4'], freeC:['C3'], freeB:['B2','B3'] },
+  '2026-11-24': { pcvC:'C3', pcvB:['B3'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B1','B2'] },
+  '2026-11-25': { pcvC:'C3', pcvB:['B3'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B1','B2'] },
+  '2026-11-26': { pcvC:'C3', pcvB:['B2'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B1','B3'] },
+  '2026-11-27': { pcvC:'C2', pcvB:['B2','B1'], bcC:'C1', bcB:['B3'], freeC:['C3'], freeB:['B4'] }, // Black Friday
+  '2026-11-28': { pcvC:'C2', pcvB:['B2','B1'], bcC:null, bcB:[], freeC:['C1','C3'], freeB:['B3','B4'] },
+  '2026-11-29': { pcvC:'C2', pcvB:['B2','B1'], bcC:null, bcB:[], freeC:['C1','C3'], freeB:['B3','B4'] },
+  '2026-11-30': { pcvC:'C2', pcvB:['B1'], bcC:'C1', bcB:['B4'], freeC:['C3'], freeB:['B2','B3'] },
+  // DICIEMBRE
+  '2026-12-01': { pcvC:'C3', pcvB:['B3'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B1','B2'] },
+  '2026-12-02': { pcvC:'C3', pcvB:['B3'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B1','B2'] },
+  '2026-12-03': { pcvC:'C3', pcvB:['B2'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B1','B3'] },
+  '2026-12-04': { pcvC:'C2', pcvB:['B2','B1'], bcC:'C1', bcB:['B3'], freeC:['C3'], freeB:['B4'] },
+  '2026-12-05': { pcvC:'C2', pcvB:['B2','B1'], bcC:null, bcB:[], freeC:['C1','C3'], freeB:['B3','B4'] },
+  '2026-12-06': { pcvC:'C2', pcvB:['B2','B1'], bcC:null, bcB:[], freeC:['C1','C3'], freeB:['B3','B4'] },
+  '2026-12-07': { pcvC:'C2', pcvB:['B1'], bcC:'C1', bcB:['B4'], freeC:['C3'], freeB:['B2','B3'] },
+  '2026-12-08': { pcvC:'C3', pcvB:['B3'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B1','B2'] },
+  '2026-12-09': { pcvC:'C3', pcvB:['B3'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B1','B2'] },
+  '2026-12-10': { pcvC:'C3', pcvB:['B2'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B1','B3'] },
+  '2026-12-11': { pcvC:'C2', pcvB:['B2','B1'], bcC:'C1', bcB:['B3'], freeC:['C3'], freeB:['B4'] },
+  '2026-12-12': { pcvC:'C2', pcvB:['B2','B1'], bcC:null, bcB:[], freeC:['C1','C3'], freeB:['B3','B4'] },
+  '2026-12-13': { pcvC:'C2', pcvB:['B2','B1'], bcC:null, bcB:[], freeC:['C1','C3'], freeB:['B3','B4'] },
+  '2026-12-14': { pcvC:'C2', pcvB:['B1'], bcC:'C1', bcB:['B4'], freeC:['C3'], freeB:['B2','B3'] },
+  '2026-12-15': { pcvC:'C3', pcvB:['B3'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B1','B2'] },
+  '2026-12-16': { pcvC:'C3', pcvB:['B3'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B1','B2'] },
+  '2026-12-17': { pcvC:'C3', pcvB:['B2'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B1','B3'] },
+  '2026-12-18': { pcvC:'C2', pcvB:['B2','B1'], bcC:'C1', bcB:['B3'], freeC:['C3'], freeB:['B4'] },
+  '2026-12-19': { pcvC:'C2', pcvB:['B2','B1'], bcC:null, bcB:[], freeC:['C1','C3'], freeB:['B3','B4'] },
+  '2026-12-20': { pcvC:'C2', pcvB:['B2','B1'], bcC:null, bcB:[], freeC:['C1','C3'], freeB:['B3','B4'] },
+  '2026-12-21': { pcvC:'C2', pcvB:['B1'], bcC:'C1', bcB:['B4'], freeC:['C3'], freeB:['B2','B3'] },
+  '2026-12-22': { pcvC:'C3', pcvB:['B3'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B1','B2'] },
+  '2026-12-23': { pcvC:'C3', pcvB:['B3'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B1','B2'] },
+  '2026-12-24': { pcvC:'C3', pcvB:['B2'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B1','B3'] },
+  '2026-12-25': { holiday: true, pcvC:null, pcvB:[], bcC:null, bcB:[], freeC:[], freeB:[] },
+  '2026-12-26': { pcvC:'C2', pcvB:['B2','B1'], bcC:null, bcB:[], freeC:['C1','C3'], freeB:['B3','B4'] },
+  '2026-12-27': { pcvC:'C2', pcvB:['B2','B1'], bcC:null, bcB:[], freeC:['C1','C3'], freeB:['B3','B4'] },
+  '2026-12-28': { pcvC:'C2', pcvB:['B1'], bcC:'C1', bcB:['B4'], freeC:['C3'], freeB:['B2','B3'] },
+  '2026-12-29': { pcvC:'C3', pcvB:['B3'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B1','B2'] },
+  '2026-12-30': { pcvC:'C3', pcvB:['B3'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B1','B2'] },
+  '2026-12-31': { pcvC:'C3', pcvB:['B2'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B1','B3'] },
+  // ENERO 2027
+  '2027-01-01': { pcvC:'C2', pcvB:['B2','B1'], bcC:'C1', bcB:['B3'], freeC:['C3'], freeB:['B4'] },
+  '2027-01-02': { pcvC:'C2', pcvB:['B2','B1'], bcC:null, bcB:[], freeC:['C1','C3'], freeB:['B3','B4'] },
+  '2027-01-03': { pcvC:'C2', pcvB:['B2','B1'], bcC:null, bcB:[], freeC:['C1','C3'], freeB:['B3','B4'] },
+  '2027-01-04': { pcvC:'C2', pcvB:['B1'], bcC:'C1', bcB:['B4'], freeC:['C3'], freeB:['B2','B3'] },
+  '2027-01-05': { pcvC:'C3', pcvB:['B3'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B1','B2'] },
+  '2027-01-06': { pcvC:'C3', pcvB:['B3'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B1','B2'] },
+  '2027-01-07': { pcvC:'C3', pcvB:['B2'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B1','B3'] },
+  '2027-01-08': { pcvC:'C2', pcvB:['B2','B1'], bcC:'C1', bcB:['B3'], freeC:['C3'], freeB:['B4'] },
+  '2027-01-09': { pcvC:'C2', pcvB:['B2','B1'], bcC:null, bcB:[], freeC:['C1','C3'], freeB:['B3','B4'] },
+  '2027-01-10': { pcvC:'C2', pcvB:['B2','B1'], bcC:null, bcB:[], freeC:['C1','C3'], freeB:['B3','B4'] },
+  '2027-01-11': { pcvC:'C2', pcvB:['B1'], bcC:'C1', bcB:['B4'], freeC:['C3'], freeB:['B2','B3'] },
+  '2027-01-12': { pcvC:'C3', pcvB:['B3'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B1','B2'] },
+  '2027-01-13': { pcvC:'C3', pcvB:['B3'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B1','B2'] },
+  '2027-01-14': { pcvC:'C3', pcvB:['B2'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B1','B3'] },
+  '2027-01-15': { pcvC:'C2', pcvB:['B2','B1'], bcC:'C1', bcB:['B3'], freeC:['C3'], freeB:['B4'] },
+  '2027-01-16': { pcvC:'C2', pcvB:['B2','B1'], bcC:null, bcB:[], freeC:['C1','C3'], freeB:['B3','B4'] },
+  '2027-01-17': { pcvC:'C2', pcvB:['B2','B1'], bcC:null, bcB:[], freeC:['C1','C3'], freeB:['B3','B4'] },
+  '2027-01-18': { pcvC:'C2', pcvB:['B1'], bcC:'C1', bcB:['B4'], freeC:['C3'], freeB:['B2','B3'] },
+  '2027-01-19': { pcvC:'C3', pcvB:['B3'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B1','B2'] },
+  '2027-01-20': { pcvC:'C3', pcvB:['B3'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B1','B2'] },
+  '2027-01-21': { pcvC:'C3', pcvB:['B2'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B1','B3'] },
+  '2027-01-22': { pcvC:'C2', pcvB:['B2','B1'], bcC:'C1', bcB:['B3'], freeC:['C3'], freeB:['B4'] },
+  '2027-01-23': { pcvC:'C2', pcvB:['B2','B1'], bcC:null, bcB:[], freeC:['C1','C3'], freeB:['B3','B4'] },
+  '2027-01-24': { pcvC:'C2', pcvB:['B2','B1'], bcC:null, bcB:[], freeC:['C1','C3'], freeB:['B3','B4'] },
+  '2027-01-25': { pcvC:'C2', pcvB:['B1'], bcC:'C1', bcB:['B4'], freeC:['C3'], freeB:['B2','B3'] },
+  '2027-01-26': { pcvC:'C3', pcvB:['B3'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B1','B2'] },
+  '2027-01-27': { pcvC:'C3', pcvB:['B3'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B1','B2'] },
+  '2027-01-28': { pcvC:'C3', pcvB:['B2'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B1','B3'] },
+  '2027-01-29': { pcvC:'C2', pcvB:['B2','B1'], bcC:'C1', bcB:['B3'], freeC:['C3'], freeB:['B4'] },
+  '2027-01-30': { pcvC:'C2', pcvB:['B2','B1'], bcC:null, bcB:[], freeC:['C1','C3'], freeB:['B3','B4'] },
+  '2027-01-31': { pcvC:'C2', pcvB:['B2','B1'], bcC:null, bcB:[], freeC:['C1','C3'], freeB:['B3','B4'] },
+  // FEBRERO 2027
+  '2027-02-01': { pcvC:'C2', pcvB:['B1'], bcC:'C1', bcB:['B4'], freeC:['C3'], freeB:['B2','B3'] },
+  '2027-02-02': { pcvC:'C3', pcvB:['B3'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B1','B2'] },
+  '2027-02-03': { pcvC:'C3', pcvB:['B3'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B1','B2'] },
+  '2027-02-04': { pcvC:'C3', pcvB:['B2'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B1','B3'] },
+  '2027-02-05': { pcvC:'C2', pcvB:['B2','B1'], bcC:'C1', bcB:['B3'], freeC:['C3'], freeB:['B4'] },
+  '2027-02-06': { pcvC:'C2', pcvB:['B2','B1'], bcC:null, bcB:[], freeC:['C1','C3'], freeB:['B3','B4'] },
+  '2027-02-07': { pcvC:'C2', pcvB:['B2','B1'], bcC:null, bcB:[], freeC:['C1','C3'], freeB:['B3','B4'] },
+  '2027-02-08': { pcvC:'C2', pcvB:['B1'], bcC:'C1', bcB:['B4'], freeC:['C3'], freeB:['B2','B3'] },
+  '2027-02-09': { pcvC:'C3', pcvB:['B3'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B1','B2'] },
+  '2027-02-10': { pcvC:'C3', pcvB:['B3'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B1','B2'] },
+  '2027-02-11': { pcvC:'C3', pcvB:['B2'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B1','B3'] },
+  '2027-02-12': { pcvC:'C2', pcvB:['B2','B1'], bcC:'C1', bcB:['B3'], freeC:['C3'], freeB:['B4'] },
+  '2027-02-13': { pcvC:'C2', pcvB:['B2','B1'], bcC:null, bcB:[], freeC:['C1','C3'], freeB:['B3','B4'] },
+  '2027-02-14': { pcvC:'C2', pcvB:['B2','B1'], bcC:null, bcB:[], freeC:['C1','C3'], freeB:['B3','B4'] },
+  '2027-02-15': { pcvC:'C2', pcvB:['B1'], bcC:'C1', bcB:['B4'], freeC:['C3'], freeB:['B2','B3'] },
+  '2027-02-16': { pcvC:'C3', pcvB:['B3'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B1','B2'] },
+  '2027-02-17': { pcvC:'C3', pcvB:['B3'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B1','B2'] },
+  '2027-02-18': { pcvC:'C3', pcvB:['B2'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B1','B3'] },
+  '2027-02-19': { pcvC:'C2', pcvB:['B2','B1'], bcC:'C1', bcB:['B3'], freeC:['C3'], freeB:['B4'] },
+  '2027-02-20': { pcvC:'C2', pcvB:['B2','B1'], bcC:null, bcB:[], freeC:['C1','C3'], freeB:['B3','B4'] },
+  '2027-02-21': { pcvC:'C2', pcvB:['B2','B1'], bcC:null, bcB:[], freeC:['C1','C3'], freeB:['B3','B4'] },
+  '2027-02-22': { pcvC:'C2', pcvB:['B1'], bcC:'C1', bcB:['B4'], freeC:['C3'], freeB:['B2','B3'] },
+  '2027-02-23': { pcvC:'C3', pcvB:['B3'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B1','B2'] },
+  '2027-02-24': { pcvC:'C3', pcvB:['B3'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B1','B2'] },
+  '2027-02-25': { pcvC:'C3', pcvB:['B2'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B1','B3'] },
+  '2027-02-26': { pcvC:'C2', pcvB:['B2','B1'], bcC:'C1', bcB:['B3'], freeC:['C3'], freeB:['B4'] },
+  '2027-02-27': { pcvC:'C2', pcvB:['B2','B1'], bcC:null, bcB:[], freeC:['C1','C3'], freeB:['B3','B4'] },
+  '2027-02-28': { pcvC:'C2', pcvB:['B2','B1'], bcC:null, bcB:[], freeC:['C1','C3'], freeB:['B3','B4'] },
+};
+
+// ═══════════════════════════════════════════════
+// MODIFICACIONES (capa separada)
+// ═══════════════════════════════════════════════
+let modifications = JSON.parse(localStorage.getItem('wf_mods') || '[]');
+let modHistory = JSON.parse(localStorage.getItem('wf_history') || '[]');
+
+function getSchedule(dateStr) {
+  const base = RAW_SCHEDULE[dateStr] || null;
+  const mod = modifications.find(m => m.date === dateStr);
+  if (!base) return null;
+  if (!mod) return {...base};
+  return {...base, ...mod.overrides, _modified: true};
+}
+
+function saveModification(dateStr, overrides, description) {
+  modifications = modifications.filter(m => m.date !== dateStr);
+  modifications.push({ date: dateStr, overrides });
+  modHistory.unshift({
+    date: dateStr,
+    description,
+    timestamp: new Date().toISOString(),
+    overrides
+  });
+  localStorage.setItem('wf_mods', JSON.stringify(modifications));
+  localStorage.setItem('wf_history', JSON.stringify(modHistory.slice(0, 100)));
+}
+
+function resetModifications() {
+  modifications = [];
+  modHistory = [];
+  localStorage.removeItem('wf_mods');
+  localStorage.removeItem('wf_history');
+}
+
+// ═══════════════════════════════════════════════
+// HELPERS
+// ═══════════════════════════════════════════════
+function empName(code) { return EMPLOYEES[code]?.name || code; }
+function empRole(code) { return EMPLOYEES[code]?.role || ''; }
+function empColor(code) { return EMPLOYEES[code]?.color || '#888'; }
+
+function nameList(codes) {
+  if (!codes || codes.length === 0) return '—';
+  return codes.map(c => empName(c)).join(', ');
+}
+
+function isoDate(y, m, d) {
+  return `${y}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+}
+
+function todayISO() {
+  const t = new Date();
+  // Allow browsing Nov/Dec 2026 — but show today as actual today
+  return `${t.getFullYear()}-${String(t.getMonth()+1).padStart(2,'0')}-${String(t.getDate()).padStart(2,'0')}`;
+}
+
+function formatDate(dateStr) {
+  const d = new Date(dateStr + 'T12:00:00');
+  const days = ['domingo','lunes','martes','miércoles','jueves','viernes','sábado'];
+  const months = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+  return `${days[d.getDay()]}, ${d.getDate()} de ${months[d.getMonth()]} de ${d.getFullYear()}`;
+}
+
+function formatDateShort(dateStr) {
+  const d = new Date(dateStr + 'T12:00:00');
+  const days = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+  const months = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+  return `${days[d.getDay()]} ${d.getDate()} ${months[d.getMonth()]}`;
+}
+
+function getEmployeeStatusOnDate(empCode, dateStr) {
+  const sched = getSchedule(dateStr);
+  if (!sched) return { status: 'no-data', label: 'Sin información', sede: null };
+  if (sched.noData) return { status: 'no-data', label: 'Sin planificación registrada', sede: null };
+  if (sched.holiday) return { status: 'holiday', label: 'Día no laborable', sede: null };
+
+  const inPCV = sched.pcvC === empCode || (sched.pcvB || []).includes(empCode);
+  const inBC  = sched.bcC === empCode  || (sched.bcB  || []).includes(empCode);
+  const isFree = (sched.freeC || []).includes(empCode) || (sched.freeB || []).includes(empCode);
+
+  if (inPCV && inBC) return { status: 'conflict', label: 'Doble asignación', sede: 'PCV y BC' };
+  if ((inPCV || inBC) && isFree) return { status: 'conflict', label: 'Trabajo y libre simultáneamente', sede: inPCV ? 'PCV' : 'BC' };
+  if (inPCV) return { status: 'work', label: 'Trabaja hoy', sede: 'Parque Cerro Verde' };
+  if (inBC)  return { status: 'work', label: 'Trabaja hoy', sede: 'Bello Campo' };
+  if (isFree) return { status: 'off', label: 'Día libre registrado', sede: null };
+  return { status: 'no-data', label: 'Sin información confirmada', sede: null };
+}
+
+function getConflicts(dateStr) {
+  const sched = getSchedule(dateStr);
+  const base = sched?.conflicts ? [...sched.conflicts] : [];
+
+  // Detección dinámica: BC cerrado los sábados desde el 14/11
+  if (sched && !sched.noData && !sched.holiday && dateStr >= '2026-11-14') {
+    const d = new Date(dateStr + 'T12:00:00');
+    if (d.getDay() === 6) {
+      const hasBC = sched.bcC || (sched.bcB && sched.bcB.length > 0);
+      const alreadyFlagged = base.some(c => c.type === 'DIA_NO_LABORABLE');
+      if (hasBC && !alreadyFlagged) {
+        base.push({ type:'DIA_NO_LABORABLE', severity:'critical',
+          msg:`BC cerrado los sábados desde el 14/11. Asignación de ${dateStr} en BC es inválida.` });
+      }
+    }
+  }
+
+  // Detección dinámica: Samuel (B2) y Maikol (B4) en la misma sede
+  if (sched && !sched.noData && !sched.holiday) {
+    const pcvB = sched.pcvB || [];
+    const bcB  = sched.bcB  || [];
+    const b2pcv = pcvB.includes('B2'), b4pcv = pcvB.includes('B4');
+    const b2bc  = bcB.includes('B2'),  b4bc  = bcB.includes('B4');
+    const alreadyFlagged = base.some(c => c.type === 'COINCIDENCIA_B2_B4');
+    if (!alreadyFlagged && ((b2pcv && b4pcv) || (b2bc && b4bc))) {
+      const sede = (b2pcv && b4pcv) ? 'PCV' : 'BC';
+      base.push({ type:'COINCIDENCIA_B2_B4', severity:'critical', emp:['B2','B4'],
+        msg:`Samuel (B2) y Maikol (B4) coinciden en ${sede} el ${dateStr}. Según indicación administrativa, no deben coincidir en la misma sede.` });
+    }
+  }
+
+  return base;
+}
+
+function getAllConflicts() {
+  return Object.entries(RAW_SCHEDULE)
+    .filter(([d, s]) => s.conflicts && s.conflicts.length)
+    .map(([d, s]) => ({ date: d, conflicts: s.conflicts }));
+}
+
+// Siguiente jornada
+function nextWorkDay(empCode, fromDate) {
+  const dates = Object.keys(RAW_SCHEDULE).sort();
+  for (const d of dates) {
+    if (d <= fromDate) continue;
+    const st = getEmployeeStatusOnDate(empCode, d);
+    if (st.status === 'work') return d;
+  }
+  return null;
+}
+
+function nextOffDay(empCode, fromDate) {
+  const dates = Object.keys(RAW_SCHEDULE).sort();
+  for (const d of dates) {
+    if (d <= fromDate) continue;
+    const st = getEmployeeStatusOnDate(empCode, d);
+    if (st.status === 'off') return d;
+  }
+  return null;
+}
+
+function countWorkDays(empCode, month) {
+  return Object.keys(RAW_SCHEDULE)
+    .filter(d => d.startsWith(month))
+    .filter(d => {
+      const st = getEmployeeStatusOnDate(empCode, d);
+      return st.status === 'work';
+    }).length;
+}
+
+// ═══════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════
+let state = {
+  currentPage: 'home',
+  selectedEmployee: null,
+  calViewDate: '2026-11-01',
+  calView: 'monthly', // monthly | weekly | daily
+  calSelectedDate: null,
+  teamFilter: 'all' // all | cajera | barista
+};
+
+// Use a "reference today" in Nov 2026 for demo
+const REF_TODAY = '2026-11-18';
+
+// ═══════════════════════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════════════════════
+const ADMIN_PASS = 'Alidaygaby*2026';
+
+function navigate(page) {
+  if (page === 'admin' && !state.adminUnlocked) {
+    showAdminLock();
+    return;
+  }
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('page-' + page).classList.add('active');
+  document.getElementById('nav-' + page).classList.add('active');
+  state.currentPage = page;
+  renderPage(page);
+}
+
+function showAdminLock() {
+  const overlay = document.createElement('div');
+  overlay.id = 'admin-lock-overlay';
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:10000;display:flex;align-items:center;justify-content:center;padding:20px';
+  overlay.innerHTML = `
+    <div style="background:var(--surface);border-radius:16px;padding:28px 24px;width:100%;max-width:320px;text-align:center">
+      <div style="font-size:36px;margin-bottom:8px">🔒</div>
+      <div style="font-size:17px;font-weight:700;margin-bottom:4px">Acceso restringido</div>
+      <div style="font-size:13px;color:var(--text-sec);margin-bottom:18px">Ingresa la contraseña de administrador</div>
+      <input id="admin-pass-input" type="password" placeholder="Contraseña"
+        style="width:100%;border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-size:15px;font-family:inherit;background:var(--surface2);color:var(--text);margin-bottom:8px"
+        onkeydown="if(event.key==='Enter')checkAdminPass()" />
+      <div id="admin-pass-err" style="color:#ef4444;font-size:12px;margin-bottom:8px;min-height:16px"></div>
+      <div style="display:flex;gap:8px">
+        <button onclick="document.getElementById('admin-lock-overlay').remove()"
+          style="flex:1;padding:10px;border:1px solid var(--border);border-radius:8px;background:none;cursor:pointer;font-size:14px;color:var(--text-sec)">Cancelar</button>
+        <button onclick="checkAdminPass()"
+          style="flex:1;padding:10px;border:none;border-radius:8px;background:var(--green);color:#fff;cursor:pointer;font-size:14px;font-weight:600">Entrar</button>
+      </div>
+    </div>`;
+  document.body.appendChild(overlay);
+  setTimeout(() => document.getElementById('admin-pass-input')?.focus(), 100);
+}
+
+function checkAdminPass() {
+  const val = document.getElementById('admin-pass-input')?.value || '';
+  if (val === ADMIN_PASS) {
+    state.adminUnlocked = true;
+    document.getElementById('admin-lock-overlay')?.remove();
+    navigate('admin');
+  } else {
+    document.getElementById('admin-pass-err').textContent = 'Contraseña incorrecta';
+    document.getElementById('admin-pass-input').value = '';
+    document.getElementById('admin-pass-input').focus();
+  }
+}
+
+function renderPage(page) {
+  const p = document.getElementById('page-' + page);
+  if (page === 'home') renderHome(p);
+  else if (page === 'calendar') renderCalendar(p);
+  else if (page === 'team') renderTeam(p);
+  else if (page === 'venues') renderVenues(p);
+  else if (page === 'admin') renderAdmin(p);
+}
+
+// ═══════════════════════════════════════════════
+// PAGE: HOME
+// ═══════════════════════════════════════════════
+function renderHome(container) {
+  const today = REF_TODAY;
+  const selEmp = state.selectedEmployee;
+  const viewDate = state.homeDate || today;
+
+  let html = `
+  <div class="section-title" style="margin-bottom:10px">👤 Seleccionar empleado</div>
+  <div class="emp-selector">`;
+
+  Object.entries(EMPLOYEES).forEach(([code, emp]) => {
+    const sel = selEmp === code ? 'selected' : '';
+    html += `<button class="emp-btn ${sel}" onclick="selectEmployee('${code}')">
+      <div class="emp-avatar" style="background:${emp.color}">${emp.name.substring(0,2).toUpperCase()}</div>
+      <div class="emp-name">${emp.name}</div>
+      <div class="emp-role">${emp.role}</div>
+    </button>`;
+  });
+
+  html += `</div>`;
+
+  // Selector de fecha
+  html += `<div class="date-selector">
+    <button class="btn btn-green" onclick="setHomeDate('${today}')">Hoy</button>
+    <input type="date" id="home-date-input" value="${viewDate}" min="2026-11-01" max="2027-02-28"
+      onchange="setHomeDate(this.value)" style="font-size:13px">
+  </div>`;
+
+  if (selEmp) {
+    const emp = EMPLOYEES[selEmp];
+    const st = getEmployeeStatusOnDate(selEmp, viewDate);
+    const sched = getSchedule(viewDate);
+    const conflicts = sched?.conflicts || [];
+    const special = SPECIAL_HOURS[viewDate];
+
+    // Status card
+    let cardClass = 'status-unknown';
+    let icon = '❓';
+    if (st.status === 'work') { cardClass = 'status-work'; icon = '✅'; }
+    else if (st.status === 'off') { cardClass = 'status-off'; icon = '🌙'; }
+    else if (st.status === 'conflict') { cardClass = 'status-conflict'; icon = '⚠️'; }
+    else if (st.status === 'holiday') { cardClass = 'status-holiday'; icon = '🎄'; }
+    else if (st.status === 'no-data' && sched?.noData) { icon = '📋'; }
+
+    html += `<div class="status-card ${cardClass}">
+      <div style="font-size:13px;color:#64748B;margin-bottom:4px">${formatDate(viewDate)}</div>
+      <div class="status-title">${icon} ${st.label}</div>`;
+
+    if (st.status === 'work' && st.sede) {
+      const hours = st.sede.includes('PCV') || st.sede.includes('Cerro') ? getPCVHours(viewDate) : getBCHours(viewDate);
+      html += `<div class="detail-row"><span class="detail-label">Sede</span><span class="detail-value">${st.sede}</span></div>`;
+      html += `<div class="detail-row"><span class="detail-label">Cargo</span><span class="detail-value">${emp.role}</span></div>`;
+      if (hours) html += `<div class="detail-row"><span class="detail-label">Horario</span><span class="detail-value">${hours}</span></div>`;
+      if (special?.event) html += `<div class="detail-row"><span class="detail-label">Evento</span><span class="detail-value">🎉 ${special.event}</span></div>`;
+
+      // Compañeros
+      if (sched && st.sede.includes('Cerro')) {
+        const comps = [...(sched.pcvB||[]).filter(c=>c!==selEmp), sched.pcvC !== selEmp ? sched.pcvC : null].filter(Boolean);
+        if (comps.length) html += `<div class="detail-row"><span class="detail-label">Compañeros</span><span class="detail-value">${nameList(comps)}</span></div>`;
+      } else if (sched && st.sede.includes('Bello')) {
+        const comps = [...(sched.bcB||[]).filter(c=>c!==selEmp), sched.bcC !== selEmp ? sched.bcC : null].filter(Boolean);
+        if (comps.length) html += `<div class="detail-row"><span class="detail-label">Compañeros</span><span class="detail-value">${nameList(comps)}</span></div>`;
+      }
+    } else if (st.status === 'conflict') {
+      if (conflicts.length) {
+        html += `<div class="detail-row"><span class="detail-label">⚠️ Alerta</span><span class="detail-value" style="color:#DC2626">${conflicts.map(c=>c.msg).join(' ')}</span></div>`;
+      }
+    }
+
+    html += `</div>`;
+
+    // Próximas jornadas
+    const nextWork = nextWorkDay(selEmp, viewDate);
+    const nextOff  = nextOffDay(selEmp, viewDate);
+    html += `<div class="card">
+      <div class="section-title">Próximamente</div>
+      <div class="daily-row" style="margin:4px 0;padding:6px 0">
+        <span class="daily-row-label">Próxima jornada</span>
+        <span class="daily-row-value">${nextWork ? formatDateShort(nextWork) : '—'}</span>
+      </div>
+      <div class="daily-row" style="margin:4px 0;padding:6px 0">
+        <span class="daily-row-label">Próximo descanso</span>
+        <span class="daily-row-value">${nextOff ? formatDateShort(nextOff) : '—'}</span>
+      </div>
+    </div>`;
+
+    // Resumen semanal
+    html += renderWeeklySummaryForEmployee(selEmp, viewDate);
+
+  } else {
+    // Alertas globales
+    const allConflicts = getAllConflicts();
+    if (allConflicts.length) {
+      html += `<div class="section-title">⚠️ Alertas del calendario</div>`;
+      allConflicts.slice(0,4).forEach(({date, conflicts}) => {
+        conflicts.forEach(c => {
+          const cls = c.severity === 'critical' ? 'alert-red' : 'alert-orange';
+          html += `<div class="alert ${cls}"><span class="alert-icon">${c.severity==='critical'?'🔴':'🟡'}</span>
+            <div><strong>${formatDateShort(date)}</strong><p>${c.msg}</p></div></div>`;
+        });
+      });
+      if (allConflicts.length > 4) {
+        html += `<button class="btn btn-outline" onclick="navigate('admin')" style="width:100%;justify-content:center;margin-top:4px">Ver todas las alertas (${allConflicts.reduce((s,a)=>s+a.conflicts.length,0)})</button>`;
+      }
+    }
+
+    // Hoy
+    const todaySched = getSchedule(today);
+    if (todaySched && !todaySched.noData) {
+      html += `<div class="section-title" style="margin-top:14px">📅 ${formatDateShort(today)} — Resumen</div>`;
+      html += renderDayCards(today, false);
+    }
+  }
+
+  container.innerHTML = html;
+}
+
+function setHomeDate(d) {
+  state.homeDate = d;
+  renderPage('home');
+}
+
+function selectEmployee(code) {
+  state.selectedEmployee = state.selectedEmployee === code ? null : code;
+  state.homeDate = state.homeDate || REF_TODAY;
+  renderPage('home');
+}
+
+function renderWeeklySummaryForEmployee(empCode, fromDate) {
+  const d = new Date(fromDate + 'T12:00:00');
+  const dow = d.getDay();
+  const weekStart = new Date(d);
+  weekStart.setDate(d.getDate() - (dow === 0 ? 6 : dow - 1));
+
+  let html = `<div class="section-title">Resumen semanal</div>
+  <div class="card-sm" style="padding:10px">`;
+  const days = ['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'];
+  for (let i = 0; i < 7; i++) {
+    const cur = new Date(weekStart);
+    cur.setDate(weekStart.getDate() + i);
+    const ds = isoDate(cur.getFullYear(), cur.getMonth()+1, cur.getDate());
+    const st = getEmployeeStatusOnDate(empCode, ds);
+    const isToday = ds === fromDate;
+    let dot = '⬜';
+    if (st.status === 'work') dot = '<span style="color:var(--green)">●</span>';
+    else if (st.status === 'off') dot = '<span style="color:#94A3B8">○</span>';
+    else if (st.status === 'conflict') dot = '<span style="color:var(--red)">▲</span>';
+    else if (st.status === 'holiday') dot = '<span style="color:#EF4444">✕</span>';
+
+    html += `<div style="display:flex;align-items:center;justify-content:space-between;padding:4px 6px;border-radius:6px;${isToday?'background:var(--green-light);font-weight:600':''}">
+      <span style="font-size:12px">${days[i]} ${cur.getDate()}</span>
+      <span style="font-size:11px;color:var(--text-sec)">${st.label}</span>
+      <span>${dot}</span>
+    </div>`;
+  }
+  html += `</div>`;
+  return html;
+}
+
+// ═══════════════════════════════════════════════
+// PAGE: CALENDAR
+// ═══════════════════════════════════════════════
+function renderCalendar(container) {
+  const viewDate = state.calViewDate || '2026-11-01';
+  const [year, month] = viewDate.split('-').map(Number);
+  const selEmp = state.selectedEmployee;
+
+  let html = `
+  <div class="view-tabs">
+    <button class="view-tab ${state.calView==='monthly'?'active':''}" onclick="setCalView('monthly')">Mes</button>
+    <button class="view-tab ${state.calView==='weekly'?'active':''}" onclick="setCalView('weekly')">Semana</button>
+    <button class="view-tab ${state.calView==='daily'?'active':''}" onclick="setCalView('daily')">Día</button>
+  </div>`;
+
+  // Employee filter
+  if (selEmp) {
+    const emp = EMPLOYEES[selEmp];
+    html += `<div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+      <div class="emp-avatar" style="background:${emp.color};width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff">${emp.name.substring(0,2).toUpperCase()}</div>
+      <span style="font-size:13px;font-weight:600">${emp.name}</span>
+      <span class="chip chip-green" style="font-size:10px">${emp.role}</span>
+      <button onclick="state.selectedEmployee=null;renderPage('calendar')" style="margin-left:auto;background:none;border:1px solid var(--border);border-radius:6px;padding:3px 8px;font-size:11px;cursor:pointer;color:var(--text-sec)">✕ Todos</button>
+    </div>`;
+  } else {
+    html += `<div style="margin-bottom:10px">
+      <div style="font-size:11px;color:var(--text-sec);margin-bottom:6px">Filtrar por empleado</div>
+      <div style="display:flex;flex-wrap:wrap;gap:5px">`;
+    Object.entries(EMPLOYEES).forEach(([code, emp]) => {
+      html += `<button onclick="state.selectedEmployee='${code}';renderPage('calendar')"
+        style="background:${emp.color}22;border:1px solid ${emp.color}44;border-radius:16px;padding:3px 10px;font-size:11px;font-weight:600;cursor:pointer;color:${emp.color}">
+        ${emp.name}</button>`;
+    });
+    html += `</div></div>`;
+  }
+
+  if (state.calView === 'monthly') html += renderMonthly(year, month, selEmp);
+  else if (state.calView === 'weekly') html += renderWeekly(state.calSelectedDate || REF_TODAY, selEmp);
+  else html += renderDailyView(state.calSelectedDate || REF_TODAY);
+
+  container.innerHTML = html;
+}
+
+function setCalView(v) {
+  state.calView = v;
+  if (!state.calSelectedDate) state.calSelectedDate = REF_TODAY;
+  renderPage('calendar');
+}
+
+function renderMonthly(year, month, selEmp) {
+  const months = ['','Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+  // Months available: Nov 2026 (11), Dec 2026 (12), Jan 2027 (1), Feb 2027 (2)
+  const MONTHS_ORDER = [
+    {y:2026,m:11}, {y:2026,m:12}, {y:2027,m:1}, {y:2027,m:2}
+  ];
+  const curIdx = MONTHS_ORDER.findIndex(x => x.y === year && x.m === month);
+  const prevEntry = curIdx > 0 ? MONTHS_ORDER[curIdx-1] : null;
+  const nextEntry = curIdx < MONTHS_ORDER.length-1 ? MONTHS_ORDER[curIdx+1] : null;
+
+  const html_prev = prevEntry
+    ? `<button onclick="setCalMonth(${prevEntry.y},${prevEntry.m})">‹</button>`
+    : `<button style="visibility:hidden">‹</button>`;
+  const html_next = nextEntry
+    ? `<button onclick="setCalMonth(${nextEntry.y},${nextEntry.m})">›</button>`
+    : `<button style="visibility:hidden">›</button>`;
+
+  let html = `<div class="cal-nav">
+    ${html_prev}
+    <h2>${months[month]} ${year}</h2>
+    ${html_next}
+  </div>`;
+
+  // Legend
+  html += `<div class="legend">
+    ${selEmp ? `
+      <span class="legend-item"><span class="cal-dot dot-pcv" style="display:inline-block"></span> PCV</span>
+      <span class="legend-item"><span class="cal-dot dot-bc" style="display:inline-block"></span> BC</span>
+      <span class="legend-item"><span class="cal-dot dot-off" style="display:inline-block"></span> Libre</span>
+      <span class="legend-item"><span class="cal-dot dot-conflict" style="display:inline-block"></span> Conflicto</span>
+    ` : `
+      <span class="legend-item"><span class="cal-dot" style="background:var(--green);display:inline-block"></span> PCV activo</span>
+      <span class="legend-item"><span class="cal-dot dot-bc" style="display:inline-block"></span> BC activo</span>
+      <span class="legend-item"><span class="cal-dot dot-event" style="display:inline-block"></span> Evento</span>
+      <span class="legend-item"><span class="cal-dot dot-conflict" style="display:inline-block"></span> Conflicto</span>
+    `}
+  </div>`;
+
+  html += `<div class="cal-grid">`;
+  ['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'].forEach(d => {
+    html += `<div class="cal-header">${d}</div>`;
+  });
+
+  const firstDay = new Date(year, month-1, 1).getDay();
+  const startOffset = firstDay === 0 ? 6 : firstDay - 1;
+  const daysInMonth = new Date(year, month, 0).getDate();
+
+  for (let i = 0; i < startOffset; i++) html += `<div class="cal-day empty"></div>`;
+
+  for (let day = 1; day <= daysInMonth; day++) {
+    const ds = isoDate(year, month, day);
+    const isToday = ds === REF_TODAY;
+    const isSel = ds === state.calSelectedDate;
+    const sched = getSchedule(ds);
+
+    let dots = '';
+    let classes = 'cal-day';
+    if (isToday) classes += ' today';
+    if (isSel) classes += ' selected';
+
+    if (sched && !sched.noData) {
+      if (sched.holiday) {
+        dots += `<div class="cal-dot dot-holiday"></div>`;
+      } else if (selEmp) {
+        const st = getEmployeeStatusOnDate(selEmp, ds);
+        if (st.status === 'work') {
+          const isBc = sched.bcC === selEmp || (sched.bcB||[]).includes(selEmp);
+          dots += `<div class="cal-dot ${isBc?'dot-bc':'dot-pcv'}"></div>`;
+        } else if (st.status === 'off') dots += `<div class="cal-dot dot-off"></div>`;
+        else if (st.status === 'conflict') dots += `<div class="cal-dot dot-conflict"></div>`;
+      } else {
+        if (sched.pcvC || (sched.pcvB||[]).length) dots += `<div class="cal-dot dot-pcv"></div>`;
+        if (sched.bcC || (sched.bcB||[]).length) dots += `<div class="cal-dot dot-bc"></div>`;
+        if (SPECIAL_HOURS[ds]?.event) dots += `<div class="cal-dot dot-event"></div>`;
+        if ((sched.conflicts||[]).length) dots += `<div class="cal-dot dot-conflict"></div>`;
+      }
+    }
+
+    html += `<div class="${classes}" onclick="openDayDetail('${ds}')">
+      <div class="cal-num">${day}</div>
+      <div class="cal-dots">${dots}</div>
+    </div>`;
+  }
+
+  html += `</div>`;
+
+  // Show selected day detail below
+  if (state.calSelectedDate) {
+    html += `<div style="margin-top:12px"><div class="section-title">📅 ${formatDate(state.calSelectedDate)}</div>`;
+    html += renderDayCards(state.calSelectedDate, true);
+    html += `</div>`;
+  }
+
+  return html;
+}
+
+function setCalMonth(year, month) {
+  const mm = String(month).padStart(2,'0');
+  state.calViewDate = `${year}-${mm}-01`;
+  renderPage('calendar');
+}
+
+function openDayDetail(dateStr) {
+  state.calSelectedDate = dateStr;
+  if (state.calView === 'monthly') renderPage('calendar');
+  else {
+    state.calView = 'daily';
+    renderPage('calendar');
+  }
+}
+
+function renderWeekly(fromDate, selEmp) {
+  const d = new Date(fromDate + 'T12:00:00');
+  const dow = d.getDay();
+  const weekStart = new Date(d);
+  weekStart.setDate(d.getDate() - (dow === 0 ? 6 : dow - 1));
+
+  const weekEnd = new Date(weekStart);
+  weekEnd.setDate(weekStart.getDate() + 6);
+
+  const fmtShort = (dt) => {
+    const months = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+    return `${dt.getDate()} ${months[dt.getMonth()]}`;
+  };
+
+  let html = `<div class="cal-nav">
+    <button onclick="shiftWeek(-1)">‹</button>
+    <h2 style="font-size:14px">${fmtShort(weekStart)} – ${fmtShort(weekEnd)}</h2>
+    <button onclick="shiftWeek(1)">›</button>
+  </div>`;
+
+  const dayNames = ['Lunes','Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'];
+  for (let i = 0; i < 7; i++) {
+    const cur = new Date(weekStart);
+    cur.setDate(weekStart.getDate() + i);
+    const ds = isoDate(cur.getFullYear(), cur.getMonth()+1, cur.getDate());
+    const sched = getSchedule(ds);
+    const isToday = ds === REF_TODAY;
+    const special = SPECIAL_HOURS[ds];
+
+    html += `<div class="week-day ${isToday?'':''}">
+      <div class="week-day-header">
+        <span class="week-day-name" style="${isToday?'color:var(--green)':''}">${dayNames[i]}</span>
+        <span class="week-day-date">${cur.getDate()}/${cur.getMonth()+1}</span>
+        ${special?.event ? `<span class="chip chip-orange">${special.event}</span>` : ''}
+      </div>`;
+
+    if (!sched || sched.noData) {
+      html += `<div style="font-size:11px;color:var(--text-sec)">Sin planificación registrada</div>`;
+    } else if (sched.holiday) {
+      html += `<div class="chip chip-red">🎄 No laborable</div>`;
+    } else {
+      if (selEmp) {
+        const st = getEmployeeStatusOnDate(selEmp, ds);
+        let badge = '';
+        if (st.status === 'work') badge = `<span class="chip chip-green">${st.sede}</span>`;
+        else if (st.status === 'off') badge = `<span class="chip chip-blue">Libre</span>`;
+        else if (st.status === 'conflict') badge = `<span class="chip chip-red">Conflicto</span>`;
+        else badge = `<span class="chip chip-gray">Sin info</span>`;
+        html += `<div>${badge}</div>`;
+      } else {
+        const pcvHours = getPCVHours(ds);
+        const bcHours = getBCHours(ds);
+        html += `<div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:4px">`;
+        if (sched.pcvC || (sched.pcvB||[]).length) {
+          html += `<div style="font-size:11px"><span style="color:var(--green);font-weight:700">PCV</span> ${pcvHours||'—'}<br>
+            👤 ${nameList([sched.pcvC])} | ${nameList(sched.pcvB||[])}</div>`;
+        }
+        if (sched.bcC || (sched.bcB||[]).length) {
+          html += `<div style="font-size:11px"><span style="color:var(--blue);font-weight:700">BC</span> ${bcHours||'—'}<br>
+            👤 ${nameList([sched.bcC])} | ${nameList(sched.bcB||[])}</div>`;
+        }
+        html += `</div>`;
+      }
+      const conflicts = sched.conflicts || [];
+      if (conflicts.length) {
+        html += `<div class="alert alert-red" style="margin-top:6px;margin-bottom:0"><span class="alert-icon">⚠️</span><p>${conflicts[0].msg}</p></div>`;
+      }
+    }
+    html += `</div>`;
+  }
+  return html;
+}
+
+function shiftWeek(dir) {
+  const d = new Date((state.calSelectedDate || REF_TODAY) + 'T12:00:00');
+  d.setDate(d.getDate() + dir * 7);
+  state.calSelectedDate = isoDate(d.getFullYear(), d.getMonth()+1, d.getDate());
+  renderPage('calendar');
+}
+
+function renderDailyView(dateStr) {
+  const d = new Date(dateStr + 'T12:00:00');
+  let html = `<div class="cal-nav">
+    <button onclick="shiftDay(-1)">‹</button>
+    <h2 style="font-size:14px;text-transform:capitalize">${formatDateShort(dateStr)}</h2>
+    <button onclick="shiftDay(1)">›</button>
+  </div>`;
+  html += renderDayCards(dateStr, true);
+  return html;
+}
+
+function shiftDay(dir) {
+  const d = new Date((state.calSelectedDate || REF_TODAY) + 'T12:00:00');
+  d.setDate(d.getDate() + dir);
+  const ds = isoDate(d.getFullYear(), d.getMonth()+1, d.getDate());
+  if (ds >= '2026-11-01' && ds <= '2027-02-28') {
+    state.calSelectedDate = ds;
+    renderPage('calendar');
+  }
+}
+
+function renderDayCards(dateStr, showConflicts) {
+  const sched = getSchedule(dateStr);
+  if (!sched) return `<div class="card-sm"><p style="color:var(--text-sec);font-size:13px">Sin datos para esta fecha.</p></div>`;
+  if (sched.noData) return `<div class="card-sm"><p style="color:var(--text-sec);font-size:13px">Sin planificación registrada (1-12 noviembre).</p></div>`;
+  if (sched.holiday) return `<div class="card-sm" style="text-align:center;padding:20px"><div style="font-size:32px;margin-bottom:8px">🎄</div><p style="font-weight:600;color:var(--red)">Día no laborable</p></div>`;
+
+  const pcvH = getPCVHours(dateStr);
+  const bcH = getBCHours(dateStr);
+  const special = SPECIAL_HOURS[dateStr];
+
+  let html = '';
+
+  // PCV Card
+  html += `<div class="daily-sede pcv">
+    <div class="daily-sede-title">
+      <span style="background:var(--green);color:#fff;border-radius:6px;padding:2px 7px;font-size:11px">PCV</span>
+      Parque Cerro Verde
+    </div>
+    <div class="daily-row"><span class="daily-row-label">Horario operativo</span><span class="daily-row-value">${pcvH || '—'}</span></div>`;
+  if (special?.event) html += `<div class="daily-row"><span class="daily-row-label">🎉 Evento</span><span class="daily-row-value">${special.event}</span></div>`;
+  html += `<div class="daily-row"><span class="daily-row-label">Cajera</span><span class="daily-row-value">${sched.pcvC ? empName(sched.pcvC) : '—'}</span></div>`;
+  html += `<div class="daily-row"><span class="daily-row-label">Baristas</span><span class="daily-row-value">${nameList(sched.pcvB||[])}</span></div>`;
+  const pcvFree = [...(sched.freeC||[]).filter(c=>c!=='C1'||!sched.bcC), ...(sched.freeB||[])];
+  // show libres PCV from freeB_pcv if available
+  const freePcvB = sched.freeB_pcv || sched.freeB || [];
+  html += `<div class="daily-row"><span class="daily-row-label">Libres registrados</span><span class="daily-row-value">${nameList([...(sched.freeC||[]), ...freePcvB])}</span></div>`;
+  html += `</div>`;
+
+  // BC Card
+  html += `<div class="daily-sede bc">
+    <div class="daily-sede-title">
+      <span style="background:var(--blue);color:#fff;border-radius:6px;padding:2px 7px;font-size:11px">BC</span>
+      Bello Campo
+    </div>
+    <div class="daily-row"><span class="daily-row-label">Horario operativo</span><span class="daily-row-value">${bcH !== null ? (bcH || 'Sin asignación') : 'No opera (fin de semana)'}</span></div>`;
+  if (special?.bc && special.bc !== null) html += `<div class="daily-row"><span class="daily-row-label">ℹ️ Nota</span><span class="daily-row-value">${special.bc}</span></div>`;
+  html += `<div class="daily-row"><span class="daily-row-label">Cajera</span><span class="daily-row-value">${sched.bcC ? empName(sched.bcC) : '—'}</span></div>`;
+  html += `<div class="daily-row"><span class="daily-row-label">Barista</span><span class="daily-row-value">${nameList(sched.bcB||[])}</span></div>`;
+  const freeBcB = sched.freeB_bc || [];
+  if (freeBcB.length) html += `<div class="daily-row"><span class="daily-row-label">Libres (BC)</span><span class="daily-row-value">${nameList(freeBcB)}</span></div>`;
+  html += `</div>`;
+
+  if (showConflicts) {
+    const conflicts = sched.conflicts || [];
+    conflicts.forEach(c => {
+      const cls = c.severity === 'critical' ? 'alert-red' : 'alert-orange';
+      html += `<div class="alert ${cls}"><span class="alert-icon">${c.severity==='critical'?'🔴':'🟡'}</span>
+        <div><strong>Alerta: ${c.type.replace(/_/g,' ')}</strong><p>${c.msg}</p></div></div>`;
+    });
+    if (sched._modified) html += `<div class="alert alert-yellow"><span class="alert-icon">✏️</span><p>Este día tiene modificaciones administrativas.</p></div>`;
+  }
+
+  return html;
+}
+
+// ═══════════════════════════════════════════════
+// PAGE: TEAM
+// ═══════════════════════════════════════════════
+function renderTeam(container) {
+  const filter = state.teamFilter || 'all';
+  const viewDate = REF_TODAY;
+  const curMonth = state.calViewDate?.substring(0,7) || '2026-11';
+
+  let html = `<div class="filter-row">
+    <button class="filter-chip ${filter==='all'?'active':''}" onclick="state.teamFilter='all';renderPage('team')">Todos</button>
+    <button class="filter-chip ${filter==='cajera'?'active':''}" onclick="state.teamFilter='cajera';renderPage('team')">Cajeras</button>
+    <button class="filter-chip ${filter==='barista'?'active':''}" onclick="state.teamFilter='barista';renderPage('team')">Baristas</button>
+  </div>`;
+
+  html += `<div class="team-grid">`;
+  Object.entries(EMPLOYEES).forEach(([code, emp]) => {
+    if (filter === 'cajera' && emp.role !== 'Cajera') return;
+    if (filter === 'barista' && emp.role !== 'Barista') return;
+
+    const st = getEmployeeStatusOnDate(code, viewDate);
+    const workdays = countWorkDays(code, curMonth);
+    const hasConflict = getAllConflicts().some(a => a.conflicts.some(c => c.emp === code));
+    const nextWork = nextWorkDay(code, viewDate);
+
+    let statusBadge = '';
+    if (st.status === 'work') statusBadge = `<span class="chip chip-green" style="font-size:9px">Hoy: ${st.sede?.split(' ')[0]}</span>`;
+    else if (st.status === 'off') statusBadge = `<span class="chip chip-blue" style="font-size:9px">Libre hoy</span>`;
+    else if (st.status === 'conflict') statusBadge = `<span class="chip chip-red" style="font-size:9px">⚠️ Conflicto</span>`;
+    else statusBadge = `<span class="chip chip-gray" style="font-size:9px">Sin info</span>`;
+
+    html += `<div class="team-card" onclick="openEmployeeDetail('${code}')">
+      <div class="team-avatar" style="background:${emp.color}">${emp.name.substring(0,2).toUpperCase()}</div>
+      <div class="team-name">${emp.name}</div>
+      <div class="team-role">${emp.role}</div>
+      <div class="team-stats">
+        ${statusBadge}
+        <span class="chip chip-gray" style="font-size:9px">${workdays} días/${curMonth.includes('11')?'nov':'dic'}</span>
+        ${hasConflict ? `<span class="chip chip-red" style="font-size:9px">⚠️</span>` : ''}
+      </div>
+      <div style="margin-top:8px;font-size:11px;color:var(--text-sec)">
+        Próx. jornada: ${nextWork ? formatDateShort(nextWork) : '—'}
+      </div>
+    </div>`;
+  });
+  html += `</div>`;
+  container.innerHTML = html;
+}
+
+function openEmployeeDetail(code) {
+  state.selectedEmployee = code;
+  state.homeDate = REF_TODAY;
+  navigate('home');
+}
+
+// ═══════════════════════════════════════════════
+// PAGE: VENUES
+// ═══════════════════════════════════════════════
+function renderVenues(container) {
+  const selDate = state.calSelectedDate || REF_TODAY;
+  let html = `
+  <div class="date-selector" style="margin-bottom:12px">
+    <input type="date" value="${selDate}" min="2026-11-01" max="2027-02-28"
+      onchange="state.calSelectedDate=this.value;renderPage('venues')" style="font-size:13px">
+    <button class="btn btn-green" onclick="state.calSelectedDate='${REF_TODAY}';renderPage('venues')">Hoy</button>
+  </div>
+  <div style="font-size:12px;color:var(--text-sec);margin-bottom:12px;text-transform:capitalize">${formatDate(selDate)}</div>`;
+
+  html += renderDayCards(selDate, true);
+
+  // Venues info
+  html += `<div class="section-title" style="margin-top:16px">ℹ️ Información de sedes</div>
+  <div class="card">
+    <div style="font-weight:700;color:var(--green-dark);font-size:14px;margin-bottom:8px">🌳 Parque Cerro Verde</div>
+    <div class="daily-row"><span class="daily-row-label">Lun–Jue</span><span class="daily-row-value">9:00 a.m. – 7:00 p.m.</span></div>
+    <div class="daily-row"><span class="daily-row-label">Vie–Dom</span><span class="daily-row-value">9:00 a.m. – 8:00 p.m.</span></div>
+    <div class="daily-row"><span class="daily-row-label">Navideño</span><span class="daily-row-value">10:00 a.m. – 10:00 p.m.</span></div>
+  </div>
+  <div class="card">
+    <div style="font-weight:700;color:var(--blue);font-size:14px;margin-bottom:8px">🏢 Bello Campo Protein Bar</div>
+    <div class="daily-row"><span class="daily-row-label">Lun–Vie</span><span class="daily-row-value">8:00 a.m. – 6:00 p.m.</span></div>
+    <div class="daily-row"><span class="daily-row-label">Fin de semana</span><span class="daily-row-value">No opera habitualmente</span></div>
+    <div class="daily-row"><span class="daily-row-label">24/12 y 31/12</span><span class="daily-row-value">Horario especial (pendiente)</span></div>
+  </div>`;
+
+  container.innerHTML = html;
+}
+
+// ═══════════════════════════════════════════════
+// PAGE: ADMIN
+// ═══════════════════════════════════════════════
+function renderAdmin(container) {
+  const tab = state.adminTab || 'conflicts';
+  let html = `
+  <div class="alert alert-yellow"><span class="alert-icon">ℹ️</span>
+    <p><strong>Modo demostración local</strong><br>Los cambios se guardan en este dispositivo. No se sincronizan entre dispositivos.</p>
+  </div>
+
+  <div class="view-tabs">
+    <button class="view-tab ${tab==='conflicts'?'active':''}" onclick="state.adminTab='conflicts';renderPage('admin')">Alertas</button>
+    <button class="view-tab ${tab==='schedule'?'active':''}" onclick="state.adminTab='schedule';renderPage('admin')">Horarios</button>
+    <button class="view-tab ${tab==='history'?'active':''}" onclick="state.adminTab='history';renderPage('admin')">Historial</button>
+    <button class="view-tab ${tab==='empleados'?'active':''}" onclick="state.adminTab='empleados';renderPage('admin')">Empleados</button>
+  </div>`;
+
+  if (tab === 'conflicts') html += renderAdminConflicts();
+  else if (tab === 'schedule') html += renderAdminSchedule();
+  else if (tab === 'history') html += renderAdminHistory();
+  else if (tab === 'empleados') html += renderAdminEmpleados();
+
+  container.innerHTML = html;
+}
+
+function renderAdminConflicts() {
+  const allC = getAllConflicts();
+  let html = `<div class="section-title">⚠️ Conflictos detectados (${allC.reduce((s,a)=>s+a.conflicts.length,0)})</div>`;
+
+  if (!allC.length) {
+    html += `<div class="empty-state"><div class="es-icon">✅</div><p>No se detectaron conflictos.</p></div>`;
+    return html;
+  }
+
+  allC.forEach(({date, conflicts}) => {
+    conflicts.forEach(c => {
+      const cls = c.severity === 'critical' ? 'alert-red' : 'alert-orange';
+      const icon = c.severity === 'critical' ? '🔴' : '🟡';
+      html += `<div class="alert ${cls}" style="margin-bottom:8px">
+        <span class="alert-icon">${icon}</span>
+        <div>
+          <strong>${formatDateShort(date)} — ${c.type.replace(/_/g,' ')}</strong>
+          <p>${c.msg}</p>
+          <div style="margin-top:5px">
+            <button class="btn btn-outline" style="font-size:11px;padding:4px 10px" onclick="state.calSelectedDate='${date}';state.calView='daily';navigate('calendar')">Ver en calendario</button>
+          </div>
+        </div>
+      </div>`;
+    });
+  });
+
+  // Special inconsistency note
+  html += `<div class="alert alert-orange" style="margin-top:4px">
+    <span class="alert-icon">📋</span>
+    <div>
+      <strong>Descansos contradictorios: 26 y 27 de diciembre</strong>
+      <p>El PDF original contiene dos listas diferentes de baristas libres según el calendario de cada sede. Los registros se conservan separados (freeB_pcv y freeB_bc). Requiere resolución administrativa antes de comunicar al personal.</p>
+    </div>
+  </div>`;
+
+  return html;
+}
+
+function renderAdminSchedule() {
+  let html = `<div class="section-title">📅 Consultar y modificar asignaciones</div>`;
+
+  const dateList = Object.keys(RAW_SCHEDULE).filter(d => !RAW_SCHEDULE[d].noData).sort();
+
+  html += `<div class="date-selector" style="margin-bottom:10px">
+    <select id="admin-date-sel" onchange="state.adminDate=this.value;renderPage('admin')" style="flex:1">`;
+  dateList.forEach(d => {
+    const sel = d === (state.adminDate || REF_TODAY) ? 'selected' : '';
+    html += `<option value="${d}" ${sel}>${formatDateShort(d)}</option>`;
+  });
+  html += `</select></div>`;
+
+  const selDate = state.adminDate || REF_TODAY;
+  const sched = getSchedule(selDate);
+
+  if (!sched || sched.noData || sched.holiday) {
+    html += `<div class="card-sm"><p style="font-size:13px;color:var(--text-sec)">Sin asignaciones para esta fecha.</p></div>`;
+    return html;
+  }
+
+  html += `<div class="card">
+    <div class="section-title" style="font-size:13px">📌 ${formatDate(selDate)}</div>
+    <table class="admin-table">
+      <thead><tr><th>Campo</th><th>Valor actual</th><th>Fuente</th></tr></thead>
+      <tbody>
+        <tr><td>PCV – Cajera</td><td>${sched.pcvC ? `${empName(sched.pcvC)} (${sched.pcvC})` : '—'}</td><td>${sched._modified?'✏️ Modificado':'Documento'}</td></tr>
+        <tr><td>PCV – Baristas</td><td>${(sched.pcvB||[]).map(c=>`${empName(c)} (${c})`).join(', ')||'—'}</td><td>Documento</td></tr>
+        <tr><td>BC – Cajera</td><td>${sched.bcC ? `${empName(sched.bcC)} (${sched.bcC})` : '—'}</td><td>Documento</td></tr>
+        <tr><td>BC – Barista</td><td>${(sched.bcB||[]).map(c=>`${empName(c)} (${c})`).join(', ')||'—'}</td><td>Documento</td></tr>
+        <tr><td>Libres (C)</td><td>${(sched.freeC||[]).map(c=>empName(c)).join(', ')||'—'}</td><td>Documento</td></tr>
+        <tr><td>Libres (B)</td><td>${(sched.freeB||[]).map(c=>empName(c)).join(', ')||'—'}</td><td>Documento</td></tr>
+      </tbody>
+    </table>
+    <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn btn-green" onclick="openEditModal('${selDate}')">✏️ Añadir observación</button>
+      ${sched._modified ? `<button class="btn btn-outline" style="color:var(--red);border-color:var(--red)" onclick="revertDate('${selDate}')">↩️ Revertir cambios</button>` : ''}
+    </div>
+  </div>`;
+
+  return html;
+}
+
+function renderAdminHistory() {
+  let html = `<div class="section-title">📋 Historial de modificaciones</div>`;
+
+  if (!modHistory.length) {
+    html += `<div class="empty-state"><div class="es-icon">📭</div><p>No hay modificaciones registradas.</p></div>`;
+  } else {
+    modHistory.forEach(h => {
+      html += `<div class="history-entry">
+        <div class="he-date">${new Date(h.timestamp).toLocaleString('es-VE')} · ${formatDateShort(h.date)}</div>
+        <div class="he-desc">${h.description}</div>
+      </div>`;
+    });
+    html += `<button class="btn btn-outline" style="color:var(--red);width:100%;justify-content:center;margin-top:8px" onclick="confirmReset()">🗑️ Limpiar historial y restaurar datos originales</button>`;
+  }
+
+  return html;
+}
+
+function renderAdminEmpleados() {
+  const customNames = JSON.parse(localStorage.getItem('wf_names') || '{}');
+  let html = `<div class="section-title">👤 Gestión de empleados</div>
+  <p style="font-size:13px;color:var(--text-sec);margin-bottom:16px">
+    Cambia el nombre de un empleado (por renuncia u otro motivo) sin afectar el horario rotativo.
+    El código interno permanece igual; solo cambia cómo se muestra el nombre.
+  </p>`;
+
+  Object.entries(EMPLOYEES_BASE).forEach(([code, emp]) => {
+    const current = customNames[code] || emp.name;
+    html += `
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;padding:10px;background:var(--surface2);border-radius:10px">
+      <span style="width:36px;height:36px;border-radius:50%;background:${emp.color};display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:13px;flex-shrink:0">${code}</span>
+      <div style="flex:1">
+        <div style="font-size:11px;color:var(--text-sec)">${emp.role} · Código: ${code}</div>
+        <input id="emp-name-${code}" type="text" value="${current}"
+          style="width:100%;border:1px solid var(--border);border-radius:6px;padding:6px 8px;font-size:14px;font-family:inherit;background:var(--surface);color:var(--text)"
+          placeholder="${emp.name}" />
+        ${customNames[code] ? `<div style="font-size:11px;color:var(--text-sec);margin-top:2px">Original: ${emp.name}</div>` : ''}
+      </div>
+    </div>`;
+  });
+
+  html += `
+  <div style="display:flex;gap:8px;margin-top:12px">
+    <button class="btn btn-green" style="flex:1;justify-content:center" onclick="saveEmployeeNames()">💾 Guardar nombres</button>
+    <button class="btn btn-outline" style="flex:1;justify-content:center;color:var(--red)" onclick="resetEmployeeNames()">↩️ Restaurar originales</button>
+  </div>`;
+
+  return html;
+}
+
+function saveEmployeeNames() {
+  const customNames = {};
+  Object.keys(EMPLOYEES_BASE).forEach(code => {
+    const input = document.getElementById('emp-name-' + code);
+    if (input) {
+      const val = input.value.trim();
+      if (val && val !== EMPLOYEES_BASE[code].name) customNames[code] = val;
+    }
+  });
+  localStorage.setItem('wf_names', JSON.stringify(customNames));
+  // Reload EMPLOYEES with new names
+  Object.entries(EMPLOYEES_BASE).forEach(([k,v]) => {
+    EMPLOYEES[k] = {...v, name: customNames[k] || v.name};
+  });
+  renderPage('admin');
+  // Show brief confirmation
+  setTimeout(() => {
+    const banner = document.createElement('div');
+    banner.style.cssText = 'position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:var(--green);color:#fff;padding:10px 20px;border-radius:20px;font-size:14px;z-index:9999';
+    banner.textContent = '✅ Nombres actualizados';
+    document.body.appendChild(banner);
+    setTimeout(() => banner.remove(), 2500);
+  }, 100);
+}
+
+function resetEmployeeNames() {
+  localStorage.removeItem('wf_names');
+  Object.entries(EMPLOYEES_BASE).forEach(([k,v]) => { EMPLOYEES[k] = {...v}; });
+  renderPage('admin');
+}
+
+function openEditModal(dateStr) {
+  document.getElementById('modal-body').innerHTML = `
+    <div class="modal-title">✏️ Añadir observación — ${formatDateShort(dateStr)}</div>
+    <p style="font-size:13px;color:var(--text-sec);margin-bottom:12px">Las observaciones se guardan como capa adicional. Los datos originales no se eliminan.</p>
+    <textarea id="obs-input" style="width:100%;border:1px solid var(--border);border-radius:8px;padding:10px;font-family:inherit;font-size:13px;min-height:80px;resize:vertical" placeholder="Escribe tu observación aquí..."></textarea>
+    <div style="display:flex;gap:8px;margin-top:12px">
+      <button class="btn btn-green" style="flex:1;justify-content:center" onclick="saveObservation('${dateStr}')">Guardar</button>
+      <button class="btn btn-outline" style="flex:1;justify-content:center" onclick="closeModal()">Cancelar</button>
+    </div>`;
+  document.getElementById('modal').classList.add('open');
+}
+
+function saveObservation(dateStr) {
+  const obs = document.getElementById('obs-input').value.trim();
+  if (!obs) return;
+  saveModification(dateStr, { _observation: obs }, `Observación añadida: "${obs.substring(0,60)}"`);
+  closeModal();
+  renderPage('admin');
+}
+
+function revertDate(dateStr) {
+  modifications = modifications.filter(m => m.date !== dateStr);
+  modHistory.unshift({ date: dateStr, description: 'Revertido a datos originales', timestamp: new Date().toISOString(), overrides: {} });
+  localStorage.setItem('wf_mods', JSON.stringify(modifications));
+  localStorage.setItem('wf_history', JSON.stringify(modHistory.slice(0,100)));
+  renderPage('admin');
+}
+
+function confirmReset() {
+  if (confirm('¿Restaurar todos los datos originales y limpiar el historial de modificaciones?')) {
+    resetModifications();
+    renderPage('admin');
+  }
+}
+
+function closeModal(e) {
+  if (!e || e.target === document.getElementById('modal')) {
+    document.getElementById('modal').classList.remove('open');
+  }
+}
+
+// ═══════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════
+navigate('home');
+</script>
+</body>
+</html>
