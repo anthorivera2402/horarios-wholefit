@@ -499,6 +499,13 @@ const RAW_SCHEDULE = {
 // ═══════════════════════════════════════════════
 // MODIFICACIONES (capa separada)
 // ═══════════════════════════════════════════════
+// v3: B3 eliminado de EMPLOYEES_BASE y SPECIAL_HOURS limpiado
+const DATA_VERSION = 'v3';
+if (localStorage.getItem('wf_data_version') !== DATA_VERSION) {
+  localStorage.removeItem('wf_mods');
+  localStorage.removeItem('wf_history');
+  localStorage.setItem('wf_data_version', DATA_VERSION);
+}
 let modifications = JSON.parse(localStorage.getItem('wf_mods') || '[]');
 let modHistory = JSON.parse(localStorage.getItem('wf_history') || '[]');
 
