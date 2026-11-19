@@ -325,7 +325,6 @@ const EMPLOYEES_BASE = {
   C3: { name: 'Nathaly', role: 'Cajera',  color: '#0284C7' },
   B1: { name: 'Susana',  role: 'Barista', color: '#D97706' },
   B2: { name: 'Samuel',  role: 'Barista', color: '#059669' },
-  B3: { name: 'Argenis', role: 'Barista', color: '#DC2626' },
   B4: { name: 'Maikol',  role: 'Barista', color: '#0F766E' }
 };
 // Nombres editables desde localStorage (solo el nombre, el resto no cambia)
@@ -336,23 +335,23 @@ let EMPLOYEES = Object.fromEntries(
 
 // Horarios especiales PCV
 const SPECIAL_HOURS = {
-  '2026-11-15': { pcvC:'', pcvB:['B1','B4'], bcCArr:[], bcC:null, bcB:[], freeC:[], freeB:['B2','B3'] },
-  '2026-11-27': {  pcv: '10:00 a.m. – 10:00 p.m.', event: 'Black Friday', bc: null, pcvB:['B2'], bcB:[], freeB:['B1','B3','B4'] },
-  '2026-12-04': {  pcv: '10:00 a.m. – 10:00 p.m.', bc: null, pcvB:['B2'], bcB:[], freeB:['B1','B3','B4'] },
-  '2026-12-05': { pcvC:'', pcvB:['B2'], bcCArr:[], bcC:null, bcB:[], freeC:[], freeB:['B1','B3','B4'] },
-  '2026-12-06': { pcvC:'', pcvB:['B1','B2'], bcCArr:[], bcC:null, bcB:[], freeC:[], freeB:['B3','B4'] },
-  '2026-12-11': {  pcv: '10:00 a.m. – 10:00 p.m.', bc: null, pcvB:['B2'], bcB:[], freeB:['B1','B3','B4'] },
-  '2026-12-12': { pcvC:'', pcvB:['B4'], bcCArr:[], bcC:null, bcB:[], freeC:[], freeB:['B1','B2','B3'] },
-  '2026-12-13': { pcvC:'', pcvB:['B1','B4'], bcCArr:[], bcC:null, bcB:[], freeC:[], freeB:['B2','B3'] },
-  '2026-12-18': {  pcv: '10:00 a.m. – 10:00 p.m.', bc: null, pcvB:['B2'], bcB:[], freeB:['B1','B3','B4'] },
-  '2026-12-19': { pcvC:'', pcvB:['B2'], bcCArr:[], bcC:null, bcB:[], freeC:[], freeB:['B1','B3','B4'] },
-  '2026-12-20': { pcvC:'', pcvB:['B1','B2'], bcCArr:[], bcC:null, bcB:[], freeC:[], freeB:['B3','B4'] },
-  '2026-12-21': {  pcv: '10:00 a.m. – 10:00 p.m.', bc: null, pcvB:['B3','B4'], bcB:[], freeB:['B1','B2'] },
-  '2026-12-22': {  pcv: '10:00 a.m. – 10:00 p.m.', bc: null, pcvB:['B2'], bcB:[], freeB:['B1','B3','B4'] },
-  '2026-12-23': {  pcv: '10:00 a.m. – 10:00 p.m.', bc: null, pcvB:['B1'], bcB:[], freeB:['B2','B3','B4'] },
-  '2026-12-24': {  pcv: '10:00 a.m. – 5:00 p.m.', bc: 'Horario especial (horas pendientes de confirmación)', pcvB:['B1'], bcB:['B4'], freeB:['B2','B3'] },
+  '2026-11-15': { pcvC:'', pcvB:['B1','B4'], bcCArr:[], bcC:null, bcB:[], freeC:[], freeB:['B2'] },
+  '2026-11-27': {  pcv: '10:00 a.m. – 10:00 p.m.', event: 'Black Friday', bc: null, pcvB:['B2'], bcB:[], freeB:['B1','B4'] },
+  '2026-12-04': {  pcv: '10:00 a.m. – 10:00 p.m.', bc: null, pcvB:['B2'], bcB:[], freeB:['B1','B4'] },
+  '2026-12-05': { pcvC:'', pcvB:['B2'], bcCArr:[], bcC:null, bcB:[], freeC:[], freeB:['B1','B4'] },
+  '2026-12-06': { pcvC:'', pcvB:['B1','B2'], bcCArr:[], bcC:null, bcB:[], freeC:[], freeB:['B4'] },
+  '2026-12-11': {  pcv: '10:00 a.m. – 10:00 p.m.', bc: null, pcvB:['B2'], bcB:[], freeB:['B1','B4'] },
+  '2026-12-12': { pcvC:'', pcvB:['B4'], bcCArr:[], bcC:null, bcB:[], freeC:[], freeB:['B1','B2'] },
+  '2026-12-13': { pcvC:'', pcvB:['B1','B4'], bcCArr:[], bcC:null, bcB:[], freeC:[], freeB:['B2'] },
+  '2026-12-18': {  pcv: '10:00 a.m. – 10:00 p.m.', bc: null, pcvB:['B2'], bcB:[], freeB:['B1','B4'] },
+  '2026-12-19': { pcvC:'', pcvB:['B2'], bcCArr:[], bcC:null, bcB:[], freeC:[], freeB:['B1','B4'] },
+  '2026-12-20': { pcvC:'', pcvB:['B1','B2'], bcCArr:[], bcC:null, bcB:[], freeC:[], freeB:['B4'] },
+  '2026-12-21': {  pcv: '10:00 a.m. – 10:00 p.m.', bc: null, pcvB:['B4'], bcB:[], freeB:['B1','B2'] },
+  '2026-12-22': {  pcv: '10:00 a.m. – 10:00 p.m.', bc: null, pcvB:['B2'], bcB:[], freeB:['B1','B4'] },
+  '2026-12-23': {  pcv: '10:00 a.m. – 10:00 p.m.', bc: null, pcvB:['B1'], bcB:[], freeB:['B2','B4'] },
+  '2026-12-24': {  pcv: '10:00 a.m. – 5:00 p.m.', bc: 'Horario especial (horas pendientes de confirmación)', pcvB:['B1'], bcB:['B4'], freeB:['B2'] },
   '2026-12-25': { pcv: null, bc: null, holiday: true },
-  '2026-12-31': {  pcv: '10:00 a.m. – 5:00 p.m.', bc: 'Horario especial (horas pendientes de confirmación)', pcvB:['B1'], bcB:['B4'], freeB:['B2','B3'] }
+  '2026-12-31': {  pcv: '10:00 a.m. – 5:00 p.m.', bc: 'Horario especial (horas pendientes de confirmación)', pcvB:['B1'], bcB:['B4'], freeB:['B2'] }
 };
 
 // Horarios habituales PCV
@@ -392,7 +391,7 @@ const RAW_SCHEDULE = {
   '2026-11-16': { pcvC:'C3', pcvB:['B4'], bcCArr:['C1'], bcC:'C1', bcB:['B1','B2','B3'], freeC:['C2'], freeB:[] },
   '2026-11-17': { pcvC:'C2', pcvB:['B1','B2'], bcCArr:['C1'], bcC:'C1', bcB:['B3','B4'], freeC:['C3'], freeB:[] },
   '2026-11-18': { pcvC:'C3', pcvB:['B3'], bcCArr:['C1'], bcC:'C1', bcB:['B1','B2'], freeC:['C2'], freeB:['B4'] },
-  // B1(Argenis) offset=0, B2(Samuel) offset=2, C2(Wendy) offset=1, C3(Nathaly) offset=3. B4(Maikol) no tocado. C1(Dayana) fija BC lun-vie.
+  // B1(Susana) offset=0, B2(Samuel) offset=2, C2(Wendy) offset=1, C3(Nathaly) offset=3. B4(Maikol) no tocado. C1(Dayana) fija BC lun-vie.
   '2026-11-19': { pcvC:'C2', pcvB:['B2'], bcCArr:['C1'], bcC:'C1', bcB:['B1','B4'], freeC:[], freeB:[] },
   '2026-11-20': { pcvC:'C2', pcvB:['B1'], bcCArr:['C1'], bcC:'C1', bcB:['B2'], freeC:['C3'], freeB:['B4'] },
   '2026-11-21': { pcvC:'C2', pcvB:['B1','B4'], bcCArr:[], bcC:null, bcB:[], freeC:['C1','C3'], freeB:['B2'] },
