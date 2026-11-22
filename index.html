@@ -132,7 +132,8 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
 .week-day-name{font-size:15px;font-weight:700;text-transform:capitalize}
 .week-day-date{font-size:13px;color:var(--text-sec)}
 /* EMP-CARDS CALENDAR (semana y mes) */
-.ec-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:6px}
+.ec-grid{display:grid;grid-template-columns:1fr;gap:14px;margin-top:6px}
+.ec-grid-2col{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:6px}
 .ec-card{background:var(--white);border:1px solid var(--border);border-radius:14px;padding:14px;transition:box-shadow .2s}
 .ec-card:hover{box-shadow:var(--shadow-md)}
 .ec-header{display:flex;align-items:center;gap:10px;margin-bottom:12px}
@@ -154,7 +155,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
 .ec-legend{display:flex;gap:10px;margin-bottom:12px;flex-wrap:wrap}
 .ec-legend-item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text-sec);font-weight:600}
 .ec-legend-dot{width:14px;height:14px;border-radius:4px}
-/* Monthly emp grid */
+/* Monthly emp grid — compacto (todos los empleados) */
 .ec-month-days{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-top:4px}
 .ec-month-dow{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-bottom:3px}
 .ec-month-dow-label{font-size:9px;font-weight:700;color:var(--text-sec);text-align:center;padding:2px 0}
@@ -166,6 +167,19 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
 .ec-month-chip.chip-holiday{background:#FEE2E2;color:#991B1B}
 .ec-month-chip.chip-nd{background:#F1F5F9;color:#94A3B8}
 .ec-month-chip.chip-today{box-shadow:0 0 0 2px var(--green)}
+/* Monthly emp grid — GRANDE (un solo empleado, pantalla completa) */
+.ec-month-days-lg{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-top:6px}
+.ec-month-dow-lg{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:4px}
+.ec-month-dow-label-lg{font-size:12px;font-weight:700;color:var(--text-sec);text-align:center;padding:4px 0;text-transform:uppercase}
+.ec-month-chip-lg{height:48px;border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:14px;font-weight:800;cursor:pointer;transition:transform .15s;gap:2px}
+.ec-month-chip-lg:hover{transform:scale(1.05)}
+.ec-month-empty-lg{height:48px}
+.ec-month-chip-lg.chip-bc{background:#DBEAFE;color:#1D4ED8}
+.ec-month-chip-lg.chip-pcv{background:#D1FAE5;color:#065F46}
+.ec-month-chip-lg.chip-libre{background:#FEF9C3;color:#854D0E}
+.ec-month-chip-lg.chip-holiday{background:#FEE2E2;color:#991B1B}
+.ec-month-chip-lg.chip-nd{background:#F1F5F9;color:#94A3B8}
+.ec-month-chip-lg.chip-today{box-shadow:0 0 0 3px var(--green)}
 /* DAILY */
 .daily-sede{border-radius:var(--radius);padding:16px;margin-bottom:12px;border:1px solid var(--border)}
 .daily-sede.pcv{border-left:4px solid var(--green)}
@@ -227,11 +241,12 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
   .cal-num{font-size:12px}
   .cal-header{font-size:10px;padding:4px 0}
   .cal-dot{width:6px;height:6px}
-  .ec-grid{grid-template-columns:1fr}
   .team-grid{grid-template-columns:1fr 1fr}
   .emp-selector{grid-template-columns:1fr 1fr}
   .ec-day-chip{width:28px;height:28px;font-size:9px}
   .ec-day-col{min-width:30px}
+  .ec-month-chip-lg{height:40px;font-size:12px}
+  .ec-month-empty-lg{height:40px}
 }
 /* EMPTY STATE */
 .empty-state{text-align:center;padding:32px 20px;color:var(--text-sec)}
@@ -1023,8 +1038,16 @@ function renderMonthly(year, month, selEmp) {
   </div>`;
 
   const empList = selEmp ? [[selEmp, EMPLOYEES[selEmp]]] : Object.entries(EMPLOYEES);
+  const isLarge = !!selEmp; // modo grande cuando hay 1 empleado seleccionado
 
-  html += `<div class="ec-grid">`;
+  const gridCls = isLarge ? 'ec-grid' : 'ec-grid';
+  const dowCls = isLarge ? 'ec-month-dow-lg' : 'ec-month-dow';
+  const dowLblCls = isLarge ? 'ec-month-dow-label-lg' : 'ec-month-dow-label';
+  const daysCls = isLarge ? 'ec-month-days-lg' : 'ec-month-days';
+  const chipCls = isLarge ? 'ec-month-chip-lg' : 'ec-month-chip';
+  const emptyCls = isLarge ? 'ec-month-empty-lg' : 'ec-month-empty';
+
+  html += `<div class="${gridCls}">`;
   empList.forEach(([code, emp]) => {
     const initials = emp.name.substring(0,2).toUpperCase();
     const isFija = code === 'C1';
@@ -1042,39 +1065,41 @@ function renderMonthly(year, month, selEmp) {
       }
     }
 
+    const badgeSz = isLarge ? '12px' : '9px';
+    const badgePad = isLarge ? '4px 10px' : '2px 6px';
     html += `<div class="ec-card">
       <div class="ec-header">
-        <div class="ec-avatar" style="background:${emp.color}">${initials}</div>
+        <div class="ec-avatar" style="background:${emp.color};${isLarge?'width:52px;height:52px;font-size:18px':''}">${initials}</div>
         <div>
-          <div class="ec-name">${emp.name}</div>
-          <div class="ec-role">${emp.role}${isFija ? ' · fija BC' : ' · rota'}</div>
+          <div class="ec-name" style="${isLarge?'font-size:17px':''}">${emp.name}</div>
+          <div class="ec-role" style="${isLarge?'font-size:13px':''}">${emp.role}${isFija ? ' · fija BC' : ' · rota'}</div>
         </div>
       </div>
-      <div style="display:flex;gap:6px;margin-bottom:8px">
-        <span style="font-size:9px;background:#DBEAFE;color:#1D4ED8;padding:2px 6px;border-radius:6px;font-weight:700">BC ${bcCount}</span>
-        <span style="font-size:9px;background:#D1FAE5;color:#065F46;padding:2px 6px;border-radius:6px;font-weight:700">PCV ${pcvCount}</span>
-        <span style="font-size:9px;background:#FEF9C3;color:#854D0E;padding:2px 6px;border-radius:6px;font-weight:700">L ${libreCount}</span>
+      <div style="display:flex;gap:8px;margin-bottom:${isLarge?'12px':'8px'}">
+        <span style="font-size:${badgeSz};background:#DBEAFE;color:#1D4ED8;padding:${badgePad};border-radius:8px;font-weight:700">BC ${bcCount}</span>
+        <span style="font-size:${badgeSz};background:#D1FAE5;color:#065F46;padding:${badgePad};border-radius:8px;font-weight:700">PCV ${pcvCount}</span>
+        <span style="font-size:${badgeSz};background:#FEF9C3;color:#854D0E;padding:${badgePad};border-radius:8px;font-weight:700">L ${libreCount}</span>
       </div>
-      <div class="ec-month-dow">
-        <div class="ec-month-dow-label">L</div>
-        <div class="ec-month-dow-label">M</div>
-        <div class="ec-month-dow-label">X</div>
-        <div class="ec-month-dow-label">J</div>
-        <div class="ec-month-dow-label">V</div>
-        <div class="ec-month-dow-label">S</div>
-        <div class="ec-month-dow-label">D</div>
+      <div class="${dowCls}">
+        <div class="${dowLblCls}">L</div>
+        <div class="${dowLblCls}">M</div>
+        <div class="${dowLblCls}">X</div>
+        <div class="${dowLblCls}">J</div>
+        <div class="${dowLblCls}">V</div>
+        <div class="${dowLblCls}">S</div>
+        <div class="${dowLblCls}">D</div>
       </div>
-      <div class="ec-month-days">`;
+      <div class="${daysCls}">`;
 
     // Calculate day of week for first of month (0=Mon...6=Sun)
     const firstDow = (new Date(year, month-1, 1).getDay() + 6) % 7; // convert Sun=0 to Mon=0
     for (let pad = 0; pad < firstDow; pad++) {
-      html += `<div class="ec-month-empty"></div>`;
+      html += `<div class="${emptyCls}"></div>`;
     }
     for (let day = 1; day <= daysInMonth; day++) {
       const ds = isoDate(year, month, day);
       const { cls, lbl } = monthDayChip(code, ds);
-      html += `<div class="ec-month-chip ${cls}" onclick="openDayDetail('${ds}')" title="${ds}">${lbl}</div>`;
+      html += `<div class="${chipCls} ${cls}" onclick="openDayDetail('${ds}')" title="${ds}">${lbl}</div>`;
     }
     html += `</div></div>`;
   });
