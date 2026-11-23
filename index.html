@@ -1523,6 +1523,11 @@ function openEmployeeDetail(code) {
 // ═══════════════════════════════════════════════
 function renderVenues(container) {
   const selDate = state.calSelectedDate || REF_TODAY;
+
+  // Calcular día siguiente con datos
+  const allDates = Object.keys(RAW_SCHEDULE).sort();
+  const nextDate = allDates.find(d => d > selDate) || null;
+
   let html = `
   <div class="date-selector" style="margin-bottom:12px">
     <input type="date" value="${selDate}" min="2026-11-01" max="2027-02-28"
@@ -1532,6 +1537,15 @@ function renderVenues(container) {
   <div style="font-size:12px;color:var(--text-sec);margin-bottom:12px;text-transform:capitalize">${formatDate(selDate)}</div>`;
 
   html += renderDayCards(selDate, true);
+
+  // Día siguiente
+  if (nextDate) {
+    const nextSched = getSchedule(nextDate);
+    if (nextSched && !nextSched.noData) {
+      html += `<div class="section-title" style="margin-top:20px">📅 Día siguiente — ${formatDate(nextDate)}</div>`;
+      html += renderDayCards(nextDate, false);
+    }
+  }
 
   // Venues info
   html += `<div class="section-title" style="margin-top:16px">ℹ️ Información de sedes</div>
