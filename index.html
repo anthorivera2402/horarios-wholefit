@@ -435,29 +435,35 @@ const RAW_SCHEDULE = {
   '2026-11-18': { pcvC:'C2', pcvB:['B1','B4'], bcC:'C1', bcB:['B2'], freeC:['C3'], freeB:['B3'] },
   // Nov 19 Jue — PCV: C2 cajera, B4+B3 baristas; BC: C1 cajera, B1 barista; libres C3,B2
   '2026-11-19': { pcvC:'C2', pcvB:['B4','B3'], bcC:'C1', bcB:['B1'], freeC:['C3'], freeB:['B2'] },
-  // Nov 20 Vie — PCV: C2 cajera, B1+B3 baristas; BC: C1 cajera, B4 barista; libres C3,B2
-  '2026-11-20': { pcvC:'C2', pcvB:['B1','B3'], bcC:'C1', bcB:['B4'], freeC:['C3'], freeB:['B2'] },
-  // Nov 21 Sáb — PDF: libres C2,B2+3 | cajera C3 | baristas B1,B2
-  // ⚠️ Conflicto: B2 en libres Y baristas → libres correctos son C2,B3; B2 trabaja con B1
-  '2026-11-21': { pcvC:'C3', pcvB:['B1','B2'], bcC:null, bcB:[], freeC:['C1','C2'], freeB:['B3','B4'] },
-  // Nov 22 Dom — mismo conflicto que Nov 21, misma corrección
-  '2026-11-22': { pcvC:'C3', pcvB:['B1','B2'], bcC:null, bcB:[], freeC:['C1','C2'], freeB:['B3','B4'] },
-  // Nov 23 Lun — PCV: C2 cajera, B1+B2 baristas; BC: C1 cajera, B3 barista; libres C3,B4
+  // Nov 20 Vie — Maikol(B4) libre (mod); PCV: C2 cajera, B1+B3; BC: C1 cajera, B2(Samuel entra por B4); libres C3,B4
+  '2026-11-20': { pcvC:'C2', pcvB:['B1','B3'], bcC:'C1', bcB:['B2'], freeC:['C3'], freeB:['B4'] },
+  // Nov 21 Sáb — Maikol(B4) trabaja PCV (mod); B2 queda libre (B4+B2 no misma sede OK: B4 PCV, B2 libre)
+  '2026-11-21': { pcvC:'C3', pcvB:['B1','B4'], bcC:null, bcB:[], freeC:['C1','C2'], freeB:['B2','B3'] },
+  // Nov 22 Dom — igual que Nov 21
+  '2026-11-22': { pcvC:'C3', pcvB:['B1','B4'], bcC:null, bcB:[], freeC:['C1','C2'], freeB:['B2','B3'] },
+  // Nov 23 Lun — Maikol(B4) libre (ya estaba libre); B2 cubre BC en lugar de B4
   '2026-11-23': { pcvC:'C2', pcvB:['B1','B2'], bcC:'C1', bcB:['B3'], freeC:['C3'], freeB:['B4'] },
-  // Nov 24 Mar — PCV: C2 cajera, B3+B4 baristas; BC: C1 cajera, B2 barista; libres C3,B1
-  '2026-11-24': { pcvC:'C2', pcvB:['B3','B4'], bcC:'C1', bcB:['B2'], freeC:['C3'], freeB:['B1'] },
-  // Nov 25 Mié — PCV: C2 cajera, B1+B4 baristas; BC: C1 cajera, B2 barista; libres C3,B3
+  // Nov 24 Mar — Maikol(B4) libre (mod); B4 sale de PCV; B3(Argenis) igual en PCV; B2(Samuel) igual en BC; B1 libre
+  // PCV: C2, B3; BC: C1, B2; libres C3,B1,B4 (B2+B4: B2 BC, B4 libre ✓; Susana/Argenis sin cambios)
+  '2026-11-24': { pcvC:'C2', pcvB:['B3'], bcC:'C1', bcB:['B2'], freeC:['C3'], freeB:['B1','B4'] },
+  // Nov 25 Mié — Maikol(B4) trabaja PCV ✓; B1(Susana) no cambia → PCV; B2 cubre BC (B3 libre, igual que PDF)
+  // PCV: C2, B1+B4; BC: C1, B2; libres C3,B3 (B2+B4: B4 PCV, B2 BC → sedes distintas ✓)
   '2026-11-25': { pcvC:'C2', pcvB:['B1','B4'], bcC:'C1', bcB:['B2'], freeC:['C3'], freeB:['B3'] },
-  // Nov 26 Jue — PCV: C2 cajera, B1+B3 baristas; BC: C1 cajera, B4 barista; libres C3,B2
+  // Nov 26 Jue — Maikol(B4) trabaja; estaba en BC (barista BC); se mantiene en BC ✓
+  // B3=PCV, B4=BC, B2=libre (B2+B4: B2 libre, B4 BC ✓)
   '2026-11-26': { pcvC:'C2', pcvB:['B1','B3'], bcC:'C1', bcB:['B4'], freeC:['C3'], freeB:['B2'] },
-  // Nov 27 Vie — Black Friday 10AM-10PM; PCV: C3 cajera, B1+B2 baristas; BC: C1 cajera, B3 barista; libres C2,B4
-  '2026-11-27': { pcvC:'C3', pcvB:['B1','B2'], bcC:'C1', bcB:['B3'], freeC:['C2'], freeB:['B4'] },
-  // Nov 28 Sáb — PCV: C3 cajera, B3+B4 baristas; BC cerrado; libres C1,C2,B1,B2
+  // Nov 27 Vie — Black Friday 10AM-10PM; Maikol(B4) trabaja PCV (mod; antes libre)
+  // B1=PCV, B4=PCV, B3=BC, B2=libre (B2+B4: B4 PCV, B2 libre ✓)
+  '2026-11-27': { pcvC:'C3', pcvB:['B1','B4'], bcC:'C1', bcB:['B3'], freeC:['C2'], freeB:['B2'] },
+  // Nov 28 Sáb — Maikol(B4) trabaja PCV (ya estaba) ✓; B2 libre (ya estaba libre) ✓
   '2026-11-28': { pcvC:'C3', pcvB:['B3','B4'], bcC:null, bcB:[], freeC:['C1','C2'], freeB:['B1','B2'] },
-  // Nov 29 Dom — igual que Nov 28
-  '2026-11-29': { pcvC:'C3', pcvB:['B3','B4'], bcC:null, bcB:[], freeC:['C1','C2'], freeB:['B1','B2'] },
-  // Nov 30 Lun — PCV: C3 cajera, B3+B2 baristas; BC: C1 cajera, B4 barista; libres C2,B1
-  '2026-11-30': { pcvC:'C3', pcvB:['B3','B2'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B1'] },
+  // Nov 29 Dom — Maikol(B4) libre (mod; antes en PCV); B2 queda libre también; B3 cubre PCV con quien reste
+  // B3=PCV, B1=libre, B4=libre, B2=libre → PCV necesita 2 baristas; solo B3 disponible en PCV
+  // Samuel(B2) entra a PCV para no dejar puesto vacío (B4 libre, B2 PCV → sedes distintas ✓)
+  '2026-11-29': { pcvC:'C3', pcvB:['B3','B2'], bcC:null, bcB:[], freeC:['C1','C2'], freeB:['B1','B4'] },
+  // Nov 30 Lun — Maikol(B4) libre (mod; antes en BC); B2 cubre BC en su lugar
+  // PCV: C3 cajera, B3 barista; BC: C1 cajera, B2 barista; libres C2,B1,B4 (B2+B4: B2 BC, B4 libre ✓)
+  '2026-11-30': { pcvC:'C3', pcvB:['B3'], bcC:'C1', bcB:['B2'], freeC:['C2'], freeB:['B1','B4'] },
   // === DICIEMBRE (PDF exacto) ===
   // Dic 1 Mar — PCV: C2 cajera, B3+B2 baristas; BC: C1 cajera, B1 barista; libres C3,B4
   '2026-12-01': { pcvC:'C2', pcvB:['B3','B2'], bcC:'C1', bcB:['B1'], freeC:['C3'], freeB:['B4'] },
@@ -590,8 +596,8 @@ const RAW_SCHEDULE = {
 // ═══════════════════════════════════════════════
 // MODIFICACIONES (capa separada)
 // ═══════════════════════════════════════════════
-// v6: Horario exacto del PDF Nov13–Dic31; 4 conflictos corregidos (Nov15 B2+B4, Nov21/22 B2 libre+trabajando, Dic7 B1 libre+trabajando); Ene–Feb permanece igual
-const DATA_VERSION = 'v6';
+// v7: Ajuste manual Maikol(B4) Nov20-30: libre 20,23,24,29,30 / trabaja 21,22,25,26,27,28; Samuel(B2) ajustado en consecuencia; Susana+Argenis sin cambios
+const DATA_VERSION = 'v7';
 if (localStorage.getItem('wf_data_version') !== DATA_VERSION) {
   localStorage.removeItem('wf_mods');
   localStorage.removeItem('wf_history');
