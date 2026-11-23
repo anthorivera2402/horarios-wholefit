@@ -772,8 +772,15 @@ let state = {
   teamFilter: 'all' // all | cajera | barista
 };
 
-// Use a "reference today" in Nov 2026 for demo
-const REF_TODAY = '2026-11-19';
+// Fecha de hoy en tiempo real (zona horaria local del dispositivo)
+function getTodayISO() {
+  const d = new Date();
+  const y = d.getFullYear();
+  const m = String(d.getMonth()+1).padStart(2,'0');
+  const day = String(d.getDate()).padStart(2,'0');
+  return `${y}-${m}-${day}`;
+}
+const REF_TODAY = getTodayISO();
 
 // ═══════════════════════════════════════════════
 // NAVIGATION
@@ -847,20 +854,17 @@ function renderHome(container) {
   const selEmp = state.selectedEmployee;
   const viewDate = state.homeDate || today;
 
+  // Selector compacto desplegable
   let html = `
-  <div class="section-title" style="margin-bottom:10px">👤 Seleccionar empleado</div>
-  <div class="emp-selector">`;
-
+  <div style="margin-bottom:14px">
+    <label style="display:block;font-size:12px;font-weight:600;color:var(--text-sec);margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px">👤 Seleccionar empleado</label>
+    <select onchange="selectEmployee(this.value)" style="width:100%;padding:10px 12px;font-size:15px;font-weight:600;border:2px solid var(--border);border-radius:10px;background:var(--surface);color:var(--text);cursor:pointer;appearance:auto">
+      <option value="">— Elige un empleado —</option>`;
   Object.entries(EMPLOYEES).forEach(([code, emp]) => {
     const sel = selEmp === code ? 'selected' : '';
-    html += `<button class="emp-btn ${sel}" onclick="selectEmployee('${code}')">
-      <div class="emp-avatar" style="background:${emp.color}">${emp.name.substring(0,2).toUpperCase()}</div>
-      <div class="emp-name">${emp.name}</div>
-      <div class="emp-role">${emp.role}</div>
-    </button>`;
+    html += `<option value="${code}" ${sel}>${emp.name} · ${emp.role}</option>`;
   });
-
-  html += `</div>`;
+  html += `</select></div>`;
 
   // Selector de fecha
   html += `<div class="date-selector">
@@ -916,11 +920,17 @@ function renderHome(container) {
     // Próximas jornadas
     const nextWork = nextWorkDay(selEmp, viewDate);
     const nextOff  = nextOffDay(selEmp, viewDate);
+    let nextWorkLabel = '—';
+    if (nextWork) {
+      const nwSt = getEmployeeStatusOnDate(selEmp, nextWork);
+      const sedeTag = nwSt.sede ? ` · <span style="font-size:12px;font-weight:400;color:#64748B">${nwSt.sede.includes('Cerro') ? 'PCV' : 'BC'}</span>` : '';
+      nextWorkLabel = formatDateShort(nextWork) + sedeTag;
+    }
     html += `<div class="card">
       <div class="section-title">Próximamente</div>
       <div class="daily-row" style="margin:4px 0;padding:6px 0">
         <span class="daily-row-label">Próxima jornada</span>
-        <span class="daily-row-value">${nextWork ? formatDateShort(nextWork) : '—'}</span>
+        <span class="daily-row-value">${nextWorkLabel}</span>
       </div>
       <div class="daily-row" style="margin:4px 0;padding:6px 0">
         <span class="daily-row-label">Próximo descanso</span>
@@ -965,7 +975,7 @@ function setHomeDate(d) {
 }
 
 function selectEmployee(code) {
-  state.selectedEmployee = state.selectedEmployee === code ? null : code;
+  state.selectedEmployee = code || null;
   state.homeDate = state.homeDate || REF_TODAY;
   renderPage('home');
 }
