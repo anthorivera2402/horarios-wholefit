@@ -958,11 +958,22 @@ function renderHome(container) {
       }
     }
 
-    // Hoy
-    const todaySched = getSchedule(today);
+    // Día seleccionado (o hoy)
+    const todaySched = getSchedule(viewDate);
     if (todaySched && !todaySched.noData) {
-      html += `<div class="section-title" style="margin-top:14px">📅 ${formatDateShort(today)}</div>`;
-      html += renderDayCards(today, false);
+      html += `<div class="section-title" style="margin-top:14px">📅 ${formatDate(viewDate)}</div>`;
+      html += renderDayCards(viewDate, true);
+    }
+
+    // Día siguiente
+    const allDates = Object.keys(RAW_SCHEDULE).sort();
+    const nextDateHome = allDates.find(d => d > viewDate) || null;
+    if (nextDateHome) {
+      const nextSchedHome = getSchedule(nextDateHome);
+      if (nextSchedHome && !nextSchedHome.noData) {
+        html += `<div class="section-title" style="margin-top:20px">📅 ${formatDate(nextDateHome)}</div>`;
+        html += renderDayCards(nextDateHome, false);
+      }
     }
   }
 
