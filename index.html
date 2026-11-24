@@ -443,86 +443,93 @@ const RAW_SCHEDULE = {
   '2026-11-22': { pcvC:'C3', pcvB:['B1','B4'], bcC:null, bcB:[], freeC:['C1','C2'], freeB:['B2','B3'] },
   // Nov 23 Lun — Maikol(B4) libre (ya estaba libre); B2 cubre BC en lugar de B4
   '2026-11-23': { pcvC:'C2', pcvB:['B1','B2'], bcC:'C1', bcB:['B3'], freeC:['C3'], freeB:['B4'] },
-  // === ROTACIÓN 4x2 UNIFICADA (anclaje Nov 24, 2026) ===
-  // B1(Susana)=pos0 B4(Maikol)=pos4 B3(Argenis)=pos2 C2(Wendy)=pos1 C3(Nathaly)=pos4 B2(Ray)=pos3
-  // Ciclo: [T,T,T,T,L,L] — C2/C3 nunca van a BC — B2+B4 nunca en la misma sede
-  // Nov 24 Mar — libres: C3,B4
-  '2026-11-24': { pcvC:'C2', pcvB:['B1','B3'], bcC:'C1', bcB:['B2'], freeC:['C3'], freeB:['B4'] },
-  // Nov 25 Mié — APERTURA OFICIAL PCV
-  '2026-11-25': { pcvC:'C2', pcvB:['B1','B4','B3','B2'], pcvCExtra:['C3'], bcC:'C1', bcB:[], freeC:[], freeB:[], extra:['B4','C3','B2'], _apertura:true },
-  // Nov 26 Jue — libres: B2,B3
-  '2026-11-26': { pcvC:'C2', pcvB:['B1'], bcC:'C1', bcB:['B4'], freeC:[], freeB:['B2','B3'] },
-  // Nov 27 Vie — libres: C2,B3
-  '2026-11-27': { pcvC:'C3', pcvB:['B2','B1'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B3'] },
-  // Nov 28 Sáb — BC cerrado; libres: C1,C2,B1
-  '2026-11-28': { pcvC:'C3', pcvB:['B2','B3','B4'], bcC:null, bcB:[], freeC:['C1','C2'], freeB:['B1'] },
-  // Nov 29 Dom — BC cerrado; libres: C1,B1
-  '2026-11-29': { pcvC:'C2', pcvB:['B2','B3','B4'], bcC:null, bcB:[], freeC:['C1'], freeB:['B1'] },
-  // Nov 30 Lun — libres: C3,B4
-  '2026-11-30': { pcvC:'C2', pcvB:['B1','B3'], bcC:'C1', bcB:['B2'], freeC:['C3'], freeB:['B4'] },
-  // === DICIEMBRE — Rotación 4x2 unificada ===
-  // Dic 1 Mar — libres: C3,B2,B4
-  '2026-12-01': { pcvC:'C2', pcvB:['B1'], bcC:'C1', bcB:['B3'], freeC:['C3'], freeB:['B2','B4'] },
-  // Dic 2 Mié — libres: B2,B3
-  '2026-12-02': { pcvC:'C2', pcvB:['B1'], bcC:'C1', bcB:['B4'], freeC:[], freeB:['B2','B3'] },
-  // Dic 3 Jue — libres: C2,B3
-  '2026-12-03': { pcvC:'C3', pcvB:['B2','B1'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B3'] },
-  // Dic 4 Vie — libres: C2,B1
-  '2026-12-04': { pcvC:'C3', pcvB:['B2','B3'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B1'] },
-  // Dic 5 Sáb — BC cerrado; libres: C1,B1
-  '2026-12-05': { pcvC:'C2', pcvB:['B2','B3','B4'], bcC:null, bcB:[], freeC:['C1'], freeB:['B1'] },
-  // Dic 6 Dom — BC cerrado; libres: C1,C3,B4
-  '2026-12-06': { pcvC:'C2', pcvB:['B1','B2','B3'], bcC:null, bcB:[], freeC:['C1','C3'], freeB:['B4'] },
-  // Dic 7 Lun — libres: C3,B2,B4
-  '2026-12-07': { pcvC:'C2', pcvB:['B1'], bcC:'C1', bcB:['B3'], freeC:['C3'], freeB:['B2','B4'] },
-  // Dic 8 Mar — libres: B2,B3
-  '2026-12-08': { pcvC:'C2', pcvB:['B1'], bcC:'C1', bcB:['B4'], freeC:[], freeB:['B2','B3'] },
-  // Dic 9 Mié — libres: C2,B3
-  '2026-12-09': { pcvC:'C3', pcvB:['B2','B1'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B3'] },
-  // Dic 10 Jue — libres: C2,B1
-  '2026-12-10': { pcvC:'C3', pcvB:['B2','B3'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B1'] },
-  // Dic 11 Vie — libres: B1
-  '2026-12-11': { pcvC:'C2', pcvB:['B2','B3'], bcC:'C1', bcB:['B4'], freeC:[], freeB:['B1'] },
-  // Dic 12 Sáb — BC cerrado; libres: C1,C3,B4
-  '2026-12-12': { pcvC:'C2', pcvB:['B1','B2','B3'], bcC:null, bcB:[], freeC:['C1','C3'], freeB:['B4'] },
-  // Dic 13 Dom — BC cerrado; libres: C1,C3,B2,B4
-  '2026-12-13': { pcvC:'C2', pcvB:['B1','B3'], bcC:null, bcB:[], freeC:['C1','C3'], freeB:['B2','B4'] },
-  // Dic 14 Lun — libres: B2,B3
-  '2026-12-14': { pcvC:'C2', pcvB:['B1'], bcC:'C1', bcB:['B4'], freeC:[], freeB:['B2','B3'] },
-  // Dic 15 Mar — libres: C2,B3
-  '2026-12-15': { pcvC:'C3', pcvB:['B2','B1'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B3'] },
-  // Dic 16 Mié — libres: C2,B1
-  '2026-12-16': { pcvC:'C3', pcvB:['B2','B3'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B1'] },
-  // Dic 17 Jue — libres: B1
-  '2026-12-17': { pcvC:'C2', pcvB:['B2','B3'], bcC:'C1', bcB:['B4'], freeC:[], freeB:['B1'] },
-  // Dic 18 Vie — libres: C3,B4
-  '2026-12-18': { pcvC:'C2', pcvB:['B1','B3'], bcC:'C1', bcB:['B2'], freeC:['C3'], freeB:['B4'] },
-  // Dic 19 Sáb — BC cerrado; libres: C1,C3,B2,B4
-  '2026-12-19': { pcvC:'C2', pcvB:['B1','B3'], bcC:null, bcB:[], freeC:['C1','C3'], freeB:['B2','B4'] },
-  // Dic 20 Dom — BC cerrado; libres: C1,B2,B3
-  '2026-12-20': { pcvC:'C2', pcvB:['B1','B4'], bcC:null, bcB:[], freeC:['C1'], freeB:['B2','B3'] },
-  // Dic 21 Lun — libres: C2,B3
-  '2026-12-21': { pcvC:'C3', pcvB:['B2','B1'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B3'] },
-  // Dic 22 Mar — libres: C2,B1
-  '2026-12-22': { pcvC:'C3', pcvB:['B2','B3'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B1'] },
-  // Dic 23 Mié — libres: B1
-  '2026-12-23': { pcvC:'C2', pcvB:['B2','B3'], bcC:'C1', bcB:['B4'], freeC:[], freeB:['B1'] },
-  // Dic 24 Jue — libres: C3,B4
-  '2026-12-24': { pcvC:'C2', pcvB:['B1','B3'], bcC:'C1', bcB:['B2'], freeC:['C3'], freeB:['B4'] },
+  // Nov 24 Mar — Maikol(B4) libre (mod); B4 sale de PCV; B3(Argenis) igual en PCV; B2(Samuel) igual en BC; B1 libre
+  // PCV: C2, B3; BC: C1, B2; libres C3,B1,B4 (B2+B4: B2 BC, B4 libre ✓; Susana/Argenis sin cambios)
+  '2026-11-24': { pcvC:'C2', pcvB:['B3'], bcC:'C1', bcB:['B2'], freeC:['C3'], freeB:['B1','B4'] },
+  // Nov 25 Mié — Maikol(B4) trabaja PCV ✓; B1(Susana) no cambia → PCV; B2 cubre BC (B3 libre, igual que PDF)
+  // PCV: C2, B1+B4; BC: C1, B2; libres C3,B3 (B2+B4: B4 PCV, B2 BC → sedes distintas ✓)
+  '2026-11-25': { pcvC:'C2', pcvB:['B1','B4'], bcC:'C1', bcB:['B2'], freeC:['C3'], freeB:['B3'] },
+  // Nov 26 Jue — Maikol(B4) trabaja; estaba en BC (barista BC); se mantiene en BC ✓
+  // B3=PCV, B4=BC, B2=libre (B2+B4: B2 libre, B4 BC ✓)
+  '2026-11-26': { pcvC:'C2', pcvB:['B1','B3'], bcC:'C1', bcB:['B4'], freeC:['C3'], freeB:['B2'] },
+  // Nov 27 Vie — Black Friday 10AM-10PM; Maikol(B4) trabaja PCV (mod; antes libre)
+  // B1=PCV, B4=PCV, B3=BC, B2=libre (B2+B4: B4 PCV, B2 libre ✓)
+  '2026-11-27': { pcvC:'C3', pcvB:['B1','B4'], bcC:'C1', bcB:['B3'], freeC:['C2'], freeB:['B2'] },
+  // Nov 28 Sáb — Maikol(B4) trabaja PCV (ya estaba) ✓; B2 libre (ya estaba libre) ✓
+  '2026-11-28': { pcvC:'C3', pcvB:['B3','B4'], bcC:null, bcB:[], freeC:['C1','C2'], freeB:['B1','B2'] },
+  // Nov 29 Dom — Maikol(B4) libre (mod; antes en PCV); B2 queda libre también; B3 cubre PCV con quien reste
+  // B3=PCV, B1=libre, B4=libre, B2=libre → PCV necesita 2 baristas; solo B3 disponible en PCV
+  // Samuel(B2) entra a PCV para no dejar puesto vacío (B4 libre, B2 PCV → sedes distintas ✓)
+  '2026-11-29': { pcvC:'C3', pcvB:['B3','B2'], bcC:null, bcB:[], freeC:['C1','C2'], freeB:['B1','B4'] },
+  // Nov 30 Lun — Maikol(B4) libre (mod; antes en BC); B2 cubre BC en su lugar
+  // PCV: C3 cajera, B3 barista; BC: C1 cajera, B2 barista; libres C2,B1,B4 (B2+B4: B2 BC, B4 libre ✓)
+  '2026-11-30': { pcvC:'C3', pcvB:['B3'], bcC:'C1', bcB:['B2'], freeC:['C2'], freeB:['B1','B4'] },
+  // === DICIEMBRE (PDF exacto) ===
+  // Dic 1 Mar — PCV: C2 cajera, B3+B2 baristas; BC: C1 cajera, B1 barista; libres C3,B4
+  '2026-12-01': { pcvC:'C2', pcvB:['B3','B2'], bcC:'C1', bcB:['B1'], freeC:['C3'], freeB:['B4'] },
+  // Dic 2 Mié — PCV: C2 cajera, B1+B4 baristas; BC: C1 cajera, B3 barista; libres C3,B2 (PDF: bcB=B3)
+  // Nota PDF BC dice B3=Argenis pero libres dice B3 → BC barista debe ser otro; usamos lo del PDF PCV
+  '2026-12-02': { pcvC:'C2', pcvB:['B1','B4'], bcC:'C1', bcB:['B3'], freeC:['C3'], freeB:['B2'] },
+  // Dic 3 Jue — PCV: C2 cajera, B1+B3 baristas; BC: C1 cajera, B3 barista; libres C3,B2
+  // BC dice B3(Argenis) pero B3 no puede estar en PCV y BC → BC usa B3, PCV B1
+  '2026-12-03': { pcvC:'C2', pcvB:['B1','B3'], bcC:'C1', bcB:['B3'], freeC:['C3'], freeB:['B2','B4'] },
+  // Dic 4 Vie — 10AM-10PM; PCV: C2 cajera, B3+B4 baristas; BC: C1 cajera, B2 barista; libres C3,B1
+  '2026-12-04': { pcvC:'C2', pcvB:['B3','B4'], bcC:'C1', bcB:['B2'], freeC:['C3'], freeB:['B1'] },
+  // Dic 5 Sáb — 10AM-10PM; PCV: C3 cajera, B1+B2 baristas; BC cerrado; libres C1,C2,B3,B4
+  '2026-12-05': { pcvC:'C3', pcvB:['B1','B2'], bcC:null, bcB:[], freeC:['C1','C2'], freeB:['B3','B4'] },
+  // Dic 6 Dom — 10AM-10PM; igual que Dic 5
+  '2026-12-06': { pcvC:'C3', pcvB:['B1','B2'], bcC:null, bcB:[], freeC:['C1','C2'], freeB:['B3','B4'] },
+  // Dic 7 Lun — PCV: C3 cajera, B3+B2 baristas; BC: C1 cajera, B1 barista; libres C2,B4
+  // ⚠️ PDF BC dice libres C2,B1 pero barista BC=B1 → corrección: libres son C2,B4; B1 trabaja en BC
+  '2026-12-07': { pcvC:'C3', pcvB:['B3','B2'], bcC:'C1', bcB:['B1'], freeC:['C2'], freeB:['B4'] },
+  // Dic 8 Mar — PCV: C3 cajera, B3+B4 baristas; BC: C1 cajera, B1 barista; libres C2,B2
+  '2026-12-08': { pcvC:'C3', pcvB:['B3','B4'], bcC:'C1', bcB:['B1'], freeC:['C2'], freeB:['B2'] },
+  // Dic 9 Mié — PCV: C2 cajera, B1+B2 baristas; BC: C1 cajera, B4 barista; libres C3,B3
+  '2026-12-09': { pcvC:'C2', pcvB:['B1','B2'], bcC:'C1', bcB:['B4'], freeC:['C3'], freeB:['B3'] },
+  // Dic 10 Jue — PCV: C2 cajera, B3+B2 baristas; BC: C1 cajera, B4 barista; libres C3,B1
+  '2026-12-10': { pcvC:'C2', pcvB:['B3','B2'], bcC:'C1', bcB:['B4'], freeC:['C3'], freeB:['B1'] },
+  // Dic 11 Vie — 10AM-10PM; PCV: C2 cajera, B3+B1 baristas; BC: C1 cajera, B2 barista; libres C3,B4
+  '2026-12-11': { pcvC:'C2', pcvB:['B3','B1'], bcC:'C1', bcB:['B2'], freeC:['C3'], freeB:['B4'] },
+  // Dic 12 Sáb — 10AM-10PM; PCV: C3 cajera, B3+B4 baristas; BC cerrado; libres C1,C2,B1,B2
+  '2026-12-12': { pcvC:'C3', pcvB:['B3','B4'], bcC:null, bcB:[], freeC:['C1','C2'], freeB:['B1','B2'] },
+  // Dic 13 Dom — 10AM-10PM; PCV: C3 cajera, B1+B4 baristas; BC cerrado; libres C1,C2,B2,B3
+  '2026-12-13': { pcvC:'C3', pcvB:['B1','B4'], bcC:null, bcB:[], freeC:['C1','C2'], freeB:['B2','B3'] },
+  // Dic 14 Lun — PCV: C2 cajera, B1+B2 baristas; BC: C1 cajera, B3 barista; libres C3,B4
+  '2026-12-14': { pcvC:'C2', pcvB:['B1','B2'], bcC:'C1', bcB:['B3'], freeC:['C3'], freeB:['B4'] },
+  // Dic 15 Mar — PCV: C3 cajera, B1+B3 baristas; BC: C1 cajera, B2 barista; libres C2,B4
+  '2026-12-15': { pcvC:'C3', pcvB:['B1','B3'], bcC:'C1', bcB:['B2'], freeC:['C2'], freeB:['B4'] },
+  // Dic 16 Mié — PCV: C3 cajera, B3+B4 baristas; BC: C1 cajera, B2 barista; libres C2,B1
+  '2026-12-16': { pcvC:'C3', pcvB:['B3','B4'], bcC:'C1', bcB:['B2'], freeC:['C2'], freeB:['B1'] },
+  // Dic 17 Jue — PCV: C2 cajera, B2+B4 baristas; BC: C1 cajera, B1 barista; libres C3,B3
+  '2026-12-17': { pcvC:'C2', pcvB:['B2','B4'], bcC:'C1', bcB:['B1'], freeC:['C3'], freeB:['B3'] },
+  // Dic 18 Vie — 10AM-10PM; PCV: C2 cajera, B3+B4 baristas; BC: C1 cajera, B1 barista; libres C3,B2
+  '2026-12-18': { pcvC:'C2', pcvB:['B3','B4'], bcC:'C1', bcB:['B1'], freeC:['C3'], freeB:['B2'] },
+  // Dic 19 Sáb — 10AM-10PM; PCV: C2 cajera, B1+B4 baristas; BC cerrado; libres C1,C3,B2,B3
+  '2026-12-19': { pcvC:'C2', pcvB:['B1','B4'], bcC:null, bcB:[], freeC:['C1','C3'], freeB:['B2','B3'] },
+  // Dic 20 Dom — 10AM-10PM; PCV: C2 cajera, B1+B2 baristas; BC cerrado; libres C1,C3,B3,B4
+  '2026-12-20': { pcvC:'C2', pcvB:['B1','B2'], bcC:null, bcB:[], freeC:['C1','C3'], freeB:['B3','B4'] },
+  // Dic 21 Lun — 10AM-10PM; PCV: C3 cajera, B3+B2 baristas; BC: C1 cajera, B4 barista; libres C2,B1
+  '2026-12-21': { pcvC:'C3', pcvB:['B3','B2'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B1'] },
+  // Dic 22 Mar — 10AM-10PM; PCV: C3 cajera, B3+B2 baristas; BC: C1 cajera, B1 barista; libres C2,B4
+  '2026-12-22': { pcvC:'C3', pcvB:['B3','B2'], bcC:'C1', bcB:['B1'], freeC:['C2'], freeB:['B4'] },
+  // Dic 23 Mié — 10AM-10PM; PCV: C3 cajera, B4+B2 baristas; BC: C1 cajera, B3 barista; libres C2,B1
+  '2026-12-23': { pcvC:'C3', pcvB:['B4','B2'], bcC:'C1', bcB:['B3'], freeC:['C2'], freeB:['B1'] },
+  // Dic 24 Jue — 10AM-5PM; PCV: C3 cajera, B1+B2 baristas; BC: C1 cajera, B4 barista; libres C2,B3
+  '2026-12-24': { pcvC:'C3', pcvB:['B1','B2'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B3'] },
   // Dic 25 Vie — NO LABORABLE
   '2026-12-25': { holiday: true, pcvC:null, pcvB:[], bcC:null, bcB:[], freeC:[], freeB:[] },
-  // Dic 26 Sáb — BC cerrado; libres: C1,B2,B3
-  '2026-12-26': { pcvC:'C2', pcvB:['B1','B4'], bcC:null, bcB:[], freeC:['C1'], freeB:['B2','B3'] },
-  // Dic 27 Dom — BC cerrado; libres: C1,C2,B3
-  '2026-12-27': { pcvC:'C3', pcvB:['B1','B2','B4'], bcC:null, bcB:[], freeC:['C1','C2'], freeB:['B3'] },
-  // Dic 28 Lun — libres: C2,B1
-  '2026-12-28': { pcvC:'C3', pcvB:['B2','B3'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B1'] },
-  // Dic 29 Mar — libres: B1
-  '2026-12-29': { pcvC:'C2', pcvB:['B2','B3'], bcC:'C1', bcB:['B4'], freeC:[], freeB:['B1'] },
-  // Dic 30 Mié — libres: C3,B4
-  '2026-12-30': { pcvC:'C2', pcvB:['B1','B3'], bcC:'C1', bcB:['B2'], freeC:['C3'], freeB:['B4'] },
-  // Dic 31 Jue — libres: C3,B2,B4
-  '2026-12-31': { pcvC:'C2', pcvB:['B1'], bcC:'C1', bcB:['B3'], freeC:['C3'], freeB:['B2','B4'] },
+  // Dic 26 Sáb — PCV: C2 cajera, B2+B3 baristas; BC cerrado; libres C1,C3,B1,B4
+  '2026-12-26': { pcvC:'C2', pcvB:['B2','B3'], bcC:null, bcB:[], freeC:['C1','C3'], freeB:['B1','B4'] },
+  // Dic 27 Dom — PCV: C2 cajera, B3+B4 baristas; BC cerrado; libres C1,C3,B1,B2
+  '2026-12-27': { pcvC:'C2', pcvB:['B3','B4'], bcC:null, bcB:[], freeC:['C1','C3'], freeB:['B1','B2'] },
+  // Dic 28 Lun — PCV: C3 cajera, B1+B2 baristas; BC: C1 cajera, B3 barista; libres C2,B4
+  '2026-12-28': { pcvC:'C3', pcvB:['B1','B2'], bcC:'C1', bcB:['B3'], freeC:['C2'], freeB:['B4'] },
+  // Dic 29 Mar — PCV: C3 cajera, B3+B4 baristas; BC: C1 cajera, B2 barista; libres C2,B1
+  '2026-12-29': { pcvC:'C3', pcvB:['B3','B4'], bcC:'C1', bcB:['B2'], freeC:['C2'], freeB:['B1'] },
+  // Dic 30 Mié — PCV: C2 cajera, B1+B2 baristas; BC: C1 cajera, B4 barista; libres C3,B3
+  '2026-12-30': { pcvC:'C2', pcvB:['B1','B2'], bcC:'C1', bcB:['B4'], freeC:['C3'], freeB:['B3'] },
+  // Dic 31 Jue — 10AM-5PM; PCV: C2 cajera, B3+B4 baristas; BC: C1 cajera, B2 barista; libres C3,B1
+  '2026-12-31': { pcvC:'C2', pcvB:['B3','B4'], bcC:'C1', bcB:['B2'], freeC:['C3'], freeB:['B1'] },
   // ENERO 2027
   '2027-01-01': { pcvC:'C2', pcvB:['B2','B1'], bcC:'C1', bcB:['B3'], freeC:['C3'], freeB:['B4'] },
   '2027-01-02': { pcvC:'C2', pcvB:['B2','B1'], bcC:null, bcB:[], freeC:['C1','C3'], freeB:['B3','B4'] }, // FDS par7 — C2 cubre
@@ -669,17 +676,15 @@ function getEmployeeStatusOnDate(empCode, dateStr) {
   if (sched.noData) return { status: 'no-data', label: 'Sin planificación registrada', sede: null };
   if (sched.holiday) return { status: 'holiday', label: 'Día no laborable', sede: null };
 
-  const inPCV = sched.pcvC === empCode || (sched.pcvCArr || []).includes(empCode) || (sched.pcvB || []).includes(empCode)
-              || (sched.pcvCExtra || []).includes(empCode);
+  const inPCV = sched.pcvC === empCode || (sched.pcvCArr || []).includes(empCode) || (sched.pcvB || []).includes(empCode);
   const bcCArr = sched.bcCArr || (sched.bcC ? [sched.bcC] : []);
   const inBC  = bcCArr.includes(empCode) || (sched.bcB  || []).includes(empCode);
   const isFree = (sched.freeC || []).includes(empCode) || (sched.freeB || []).includes(empCode);
-  const isExtra = (sched.extra || []).includes(empCode);
 
   if (inPCV && inBC) return { status: 'conflict', label: 'Doble asignación', sede: 'PCV y BC' };
   if ((inPCV || inBC) && isFree) return { status: 'conflict', label: 'Trabajo y libre simultáneamente', sede: inPCV ? 'PCV' : 'BC' };
-  if (inPCV) return { status: 'work', label: isExtra ? 'Día libre trabajado (pago extra)' : 'Trabaja hoy', sede: 'Parque Cerro Verde', extra: isExtra };
-  if (inBC)  return { status: 'work', label: isExtra ? 'Día libre trabajado (pago extra)' : 'Trabaja hoy', sede: 'Bello Campo', extra: isExtra };
+  if (inPCV) return { status: 'work', label: 'Trabaja hoy', sede: 'Parque Cerro Verde' };
+  if (inBC)  return { status: 'work', label: 'Trabaja hoy', sede: 'Bello Campo' };
   if (isFree) return { status: 'off', label: 'Día libre registrado', sede: null };
   return { status: 'no-data', label: 'Sin información confirmada', sede: null };
 }
@@ -709,7 +714,7 @@ function getConflicts(dateStr) {
     const b2pcv = pcvB.includes('B2'), b4pcv = pcvB.includes('B4');
     const b2bc  = bcB.includes('B2'),  b4bc  = bcB.includes('B4');
     const alreadyFlagged = base.some(c => c.type === 'COINCIDENCIA_B2_B4');
-    if (!sched._apertura && !alreadyFlagged && ((b2pcv && b4pcv) || (b2bc && b4bc))) {
+    if (!alreadyFlagged && ((b2pcv && b4pcv) || (b2bc && b4bc))) {
       const sede = (b2pcv && b4pcv) ? 'PCV' : 'BC';
       base.push({ type:'COINCIDENCIA_B2_B4', severity:'critical', emp:['B2','B4'],
         msg:`Samuel (B2) y Maikol (B4) coinciden en ${sede} el ${dateStr}. Según indicación administrativa, no deben coincidir en la misma sede.` });
@@ -878,7 +883,7 @@ function renderHome(container) {
     // Status card
     let cardClass = 'status-unknown';
     let icon = '❓';
-    if (st.status === 'work') { cardClass = st.extra ? 'status-conflict' : 'status-work'; icon = st.extra ? '💰' : '✅'; }
+    if (st.status === 'work') { cardClass = 'status-work'; icon = '✅'; }
     else if (st.status === 'off') { cardClass = 'status-off'; icon = '🌙'; }
     else if (st.status === 'conflict') { cardClass = 'status-conflict'; icon = '⚠️'; }
     else if (st.status === 'holiday') { cardClass = 'status-holiday'; icon = '🎄'; }
@@ -1328,16 +1333,14 @@ function shiftDay(dir) {
 }
 
 // Helper global: render una burbuja de empleado (Bubbles & Chips design)
-function empBubble(code, isExtra) {
+function empBubble(code) {
   const emp = EMPLOYEES[code];
   if (!emp) return '';
   const initials = emp.name.substring(0,2).toUpperCase();
   const roleChip = emp.role === 'Cajera'
     ? `<span class="bc-role-chip bc-role-cajera">Cajera</span>`
     : `<span class="bc-role-chip bc-role-barista">Barista</span>`;
-  const badge = isExtra
-    ? `<span class="bc-badge-rota" style="background:#F59E0B;color:#fff">💰 Extra</span>`
-    : code === 'C1'
+  const badge = code === 'C1'
     ? `<span class="bc-badge-fija">Fija</span>`
     : `<span class="bc-badge-rota">Rota</span>`;
   return `<div class="bc-bubble">
@@ -1394,9 +1397,6 @@ function renderDayCards(dateStr, showConflicts) {
     ${statusChip}
   </div>`;
 
-  if (sched._apertura) {
-    html += `<div style="text-align:center;margin-bottom:10px;padding:8px 12px;background:linear-gradient(135deg,#059669,#0284C7);border-radius:10px;font-size:12px;font-weight:700;color:#fff">🎉 APERTURA OFICIAL — Todo el personal presente</div>`;
-  }
   if (special?.event) {
     html += `<div style="text-align:center;margin-bottom:10px;padding:6px;background:#FEF3C7;border-radius:10px;font-size:12px;font-weight:600;color:#92400E">🎉 ${special.event}</div>`;
   }
@@ -1411,22 +1411,15 @@ function renderDayCards(dateStr, showConflicts) {
       <span class="bc-venue-hours">${pcvH || '—'}</span>
     </div>`;
 
-  const extraSet = new Set(sched.extra || []);
   if (sched.pcvC) {
-    html += `<div class="bc-section-label">Cajera</div><div class="bc-bubbles">${empBubble(sched.pcvC, extraSet.has(sched.pcvC))}</div>`;
-  }
-  // pcvCExtra: cajeras extra (libre trabajado) en PCV
-  if ((sched.pcvCExtra||[]).length) {
-    html += `<div class="bc-section-label" style="color:#F59E0B">Cajera extra (libre trabajado)</div><div class="bc-bubbles">`;
-    (sched.pcvCExtra||[]).forEach(c => { html += empBubble(c, true); });
-    html += `</div>`;
+    html += `<div class="bc-section-label">Cajera</div><div class="bc-bubbles">${empBubble(sched.pcvC)}</div>`;
   }
   if ((sched.pcvB||[]).length) {
     html += `<div class="bc-section-label">Baristas</div><div class="bc-bubbles">`;
-    (sched.pcvB||[]).forEach(c => { html += empBubble(c, extraSet.has(c)); });
+    (sched.pcvB||[]).forEach(c => { html += empBubble(c); });
     html += `</div>`;
   }
-  if (!sched.pcvC && !(sched.pcvCExtra||[]).length && !(sched.pcvB||[]).length) {
+  if (!sched.pcvC && !(sched.pcvB||[]).length) {
     html += `<p style="font-size:11px;color:var(--text-sec);margin-top:8px">Sin asignación</p>`;
   }
   html += `</div>`; // end pcv col
@@ -1443,12 +1436,12 @@ function renderDayCards(dateStr, showConflicts) {
   } else {
     if (bcCArrDisp.length) {
       html += `<div class="bc-section-label">Cajera${bcCArrDisp.length>1?'s':''}</div><div class="bc-bubbles">`;
-      bcCArrDisp.forEach(c => { html += empBubble(c, extraSet.has(c)); });
+      bcCArrDisp.forEach(c => { html += empBubble(c); });
       html += `</div>`;
     }
     if ((sched.bcB||[]).length) {
       html += `<div class="bc-section-label">Barista${(sched.bcB||[]).length>1?'s':''}</div><div class="bc-bubbles">`;
-      (sched.bcB||[]).forEach(c => { html += empBubble(c, extraSet.has(c)); });
+      (sched.bcB||[]).forEach(c => { html += empBubble(c); });
       html += `</div>`;
     }
     if (!bcCArrDisp.length && !(sched.bcB||[]).length) {
