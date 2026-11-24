@@ -451,7 +451,7 @@ const RAW_SCHEDULE = {
   '2026-11-25': { pcvC:'C2', pcvB:['B1','B4'], bcC:'C1', bcB:['B2'], freeC:['C3'], freeB:['B3'] },
   // Nov 26 Jue — Maikol(B4) trabaja; estaba en BC (barista BC); se mantiene en BC ✓
   // B3=PCV, B4=BC, B2=libre (B2+B4: B2 libre, B4 BC ✓)
-  '2026-11-26': { pcvC:'C2', pcvB:['B1','B3'], bcC:'C1', bcB:['B4'], freeC:['C3'], freeB:['B2'] },
+  '2026-11-26': { pcvC:'C2', pcvB:['B1','B3'], bcC:'C1', bcB:['B4'], freeC:[], freeB:['B2'] },
   // Nov 27 Vie — Black Friday 10AM-10PM; Maikol(B4) trabaja PCV (mod; antes libre)
   // B1=PCV, B4=PCV, B3=BC, B2=libre (B2+B4: B4 PCV, B2 libre ✓)
   '2026-11-27': { pcvC:'C3', pcvB:['B1','B4'], bcC:'C1', bcB:['B3'], freeC:['C2'], freeB:['B2'] },
@@ -460,19 +460,19 @@ const RAW_SCHEDULE = {
   // Nov 29 Dom — Maikol(B4) libre (mod; antes en PCV); B2 queda libre también; B3 cubre PCV con quien reste
   // B3=PCV, B1=libre, B4=libre, B2=libre → PCV necesita 2 baristas; solo B3 disponible en PCV
   // Samuel(B2) entra a PCV para no dejar puesto vacío (B4 libre, B2 PCV → sedes distintas ✓)
-  '2026-11-29': { pcvC:'C3', pcvB:['B3','B2'], bcC:null, bcB:[], freeC:['C1','C2'], freeB:['B1','B4'] },
+  '2026-11-29': { pcvC:'C3', pcvB:['B3','B2'], bcC:null, bcB:[], freeC:['C1'], freeB:['B1','B4'] },
   // Nov 30 Lun — Maikol(B4) libre (mod; antes en BC); B2 cubre BC en su lugar
   // PCV: C3 cajera, B3 barista; BC: C1 cajera, B2 barista; libres C2,B1,B4 (B2+B4: B2 BC, B4 libre ✓)
-  '2026-11-30': { pcvC:'C3', pcvB:['B3'], bcC:'C1', bcB:['B2'], freeC:['C2'], freeB:['B1','B4'] },
+  '2026-11-30': { pcvC:'C2', pcvB:['B3'], bcC:'C1', bcB:['B2'], freeC:['C3'], freeB:['B1','B4'] },
   // === DICIEMBRE (PDF exacto) ===
   // Dic 1 Mar — PCV: C2 cajera, B3+B2 baristas; BC: C1 cajera, B1 barista; libres C3,B4
   '2026-12-01': { pcvC:'C2', pcvB:['B3','B2'], bcC:'C1', bcB:['B1'], freeC:['C3'], freeB:['B4'] },
   // Dic 2 Mié — PCV: C2 cajera, B1+B4 baristas; BC: C1 cajera, B3 barista; libres C3,B2 (PDF: bcB=B3)
   // Nota PDF BC dice B3=Argenis pero libres dice B3 → BC barista debe ser otro; usamos lo del PDF PCV
-  '2026-12-02': { pcvC:'C2', pcvB:['B1','B4'], bcC:'C1', bcB:['B3'], freeC:['C3'], freeB:['B2'] },
+  '2026-12-02': { pcvC:'C2', pcvB:['B1','B4'], bcC:'C1', bcB:['B3'], freeC:[], freeB:['B2'] },
   // Dic 3 Jue — PCV: C2 cajera, B1+B3 baristas; BC: C1 cajera, B3 barista; libres C3,B2
   // BC dice B3(Argenis) pero B3 no puede estar en PCV y BC → BC usa B3, PCV B1
-  '2026-12-03': { pcvC:'C2', pcvB:['B1','B3'], bcC:'C1', bcB:['B3'], freeC:['C3'], freeB:['B2','B4'] },
+  '2026-12-03': { pcvC:'C3', pcvB:['B1','B3'], bcC:'C1', bcB:['B3'], freeC:['C2'], freeB:['B2','B4'] },
   // Dic 4 Vie — 10AM-10PM; PCV: C2 cajera, B3+B4 baristas; BC: C1 cajera, B2 barista; libres C3,B1
   '2026-12-04': { pcvC:'C2', pcvB:['B3','B4'], bcC:'C1', bcB:['B2'], freeC:['C3'], freeB:['B1'] },
   // Dic 5 Sáb — 10AM-10PM; PCV: C3 cajera, B1+B2 baristas; BC cerrado; libres C1,C2,B3,B4
@@ -481,13 +481,13 @@ const RAW_SCHEDULE = {
   '2026-12-06': { pcvC:'C3', pcvB:['B1','B2'], bcC:null, bcB:[], freeC:['C1','C2'], freeB:['B3','B4'] },
   // Dic 7 Lun — PCV: C3 cajera, B3+B2 baristas; BC: C1 cajera, B1 barista; libres C2,B4
   // ⚠️ PDF BC dice libres C2,B1 pero barista BC=B1 → corrección: libres son C2,B4; B1 trabaja en BC
-  '2026-12-07': { pcvC:'C3', pcvB:['B3','B2'], bcC:'C1', bcB:['B1'], freeC:['C2'], freeB:['B4'] },
+  '2026-12-07': { pcvC:'C2', pcvB:['B3','B2'], bcC:'C1', bcB:['B1'], freeC:['C3'], freeB:['B4'] },
   // Dic 8 Mar — PCV: C3 cajera, B3+B4 baristas; BC: C1 cajera, B1 barista; libres C2,B2
-  '2026-12-08': { pcvC:'C3', pcvB:['B3','B4'], bcC:'C1', bcB:['B1'], freeC:['C2'], freeB:['B2'] },
+  '2026-12-08': { pcvC:'C3', pcvB:['B3','B4'], bcC:'C1', bcB:['B1'], freeC:[], freeB:['B2'] },
   // Dic 9 Mié — PCV: C2 cajera, B1+B2 baristas; BC: C1 cajera, B4 barista; libres C3,B3
-  '2026-12-09': { pcvC:'C2', pcvB:['B1','B2'], bcC:'C1', bcB:['B4'], freeC:['C3'], freeB:['B3'] },
+  '2026-12-09': { pcvC:'C3', pcvB:['B1','B2'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B3'] },
   // Dic 10 Jue — PCV: C2 cajera, B3+B2 baristas; BC: C1 cajera, B4 barista; libres C3,B1
-  '2026-12-10': { pcvC:'C2', pcvB:['B3','B2'], bcC:'C1', bcB:['B4'], freeC:['C3'], freeB:['B1'] },
+  '2026-12-10': { pcvC:'C3', pcvB:['B3','B2'], bcC:'C1', bcB:['B4'], freeC:['C2'], freeB:['B1'] },
   // Dic 11 Vie — 10AM-10PM; PCV: C2 cajera, B3+B1 baristas; BC: C1 cajera, B2 barista; libres C3,B4
   '2026-12-11': { pcvC:'C2', pcvB:['B3','B1'], bcC:'C1', bcB:['B2'], freeC:['C3'], freeB:['B4'] },
   // Dic 12 Sáb — 10AM-10PM; PCV: C3 cajera, B3+B4 baristas; BC cerrado; libres C1,C2,B1,B2
@@ -495,13 +495,13 @@ const RAW_SCHEDULE = {
   // Dic 13 Dom — 10AM-10PM; PCV: C3 cajera, B1+B4 baristas; BC cerrado; libres C1,C2,B2,B3
   '2026-12-13': { pcvC:'C3', pcvB:['B1','B4'], bcC:null, bcB:[], freeC:['C1','C2'], freeB:['B2','B3'] },
   // Dic 14 Lun — PCV: C2 cajera, B1+B2 baristas; BC: C1 cajera, B3 barista; libres C3,B4
-  '2026-12-14': { pcvC:'C2', pcvB:['B1','B2'], bcC:'C1', bcB:['B3'], freeC:['C3'], freeB:['B4'] },
+  '2026-12-14': { pcvC:'C2', pcvB:['B1','B2'], bcC:'C1', bcB:['B3'], freeC:[], freeB:['B4'] },
   // Dic 15 Mar — PCV: C3 cajera, B1+B3 baristas; BC: C1 cajera, B2 barista; libres C2,B4
   '2026-12-15': { pcvC:'C3', pcvB:['B1','B3'], bcC:'C1', bcB:['B2'], freeC:['C2'], freeB:['B4'] },
   // Dic 16 Mié — PCV: C3 cajera, B3+B4 baristas; BC: C1 cajera, B2 barista; libres C2,B1
   '2026-12-16': { pcvC:'C3', pcvB:['B3','B4'], bcC:'C1', bcB:['B2'], freeC:['C2'], freeB:['B1'] },
   // Dic 17 Jue — PCV: C2 cajera, B2+B4 baristas; BC: C1 cajera, B1 barista; libres C3,B3
-  '2026-12-17': { pcvC:'C2', pcvB:['B2','B4'], bcC:'C1', bcB:['B1'], freeC:['C3'], freeB:['B3'] },
+  '2026-12-17': { pcvC:'C2', pcvB:['B2','B4'], bcC:'C1', bcB:['B1'], freeC:[], freeB:['B3'] },
   // Dic 18 Vie — 10AM-10PM; PCV: C2 cajera, B3+B4 baristas; BC: C1 cajera, B1 barista; libres C3,B2
   '2026-12-18': { pcvC:'C2', pcvB:['B3','B4'], bcC:'C1', bcB:['B1'], freeC:['C3'], freeB:['B2'] },
   // Dic 19 Sáb — 10AM-10PM; PCV: C2 cajera, B1+B4 baristas; BC cerrado; libres C1,C3,B2,B3
@@ -519,13 +519,13 @@ const RAW_SCHEDULE = {
   // Dic 25 Vie — NO LABORABLE
   '2026-12-25': { holiday: true, pcvC:null, pcvB:[], bcC:null, bcB:[], freeC:[], freeB:[] },
   // Dic 26 Sáb — PCV: C2 cajera, B2+B3 baristas; BC cerrado; libres C1,C3,B1,B4
-  '2026-12-26': { pcvC:'C2', pcvB:['B2','B3'], bcC:null, bcB:[], freeC:['C1','C3'], freeB:['B1','B4'] },
+  '2026-12-26': { pcvC:'C2', pcvB:['B2','B3'], bcC:null, bcB:[], freeC:['C1'], freeB:['B1','B4'] },
   // Dic 27 Dom — PCV: C2 cajera, B3+B4 baristas; BC cerrado; libres C1,C3,B1,B2
-  '2026-12-27': { pcvC:'C2', pcvB:['B3','B4'], bcC:null, bcB:[], freeC:['C1','C3'], freeB:['B1','B2'] },
+  '2026-12-27': { pcvC:'C3', pcvB:['B3','B4'], bcC:null, bcB:[], freeC:['C1','C2'], freeB:['B1','B2'] },
   // Dic 28 Lun — PCV: C3 cajera, B1+B2 baristas; BC: C1 cajera, B3 barista; libres C2,B4
   '2026-12-28': { pcvC:'C3', pcvB:['B1','B2'], bcC:'C1', bcB:['B3'], freeC:['C2'], freeB:['B4'] },
   // Dic 29 Mar — PCV: C3 cajera, B3+B4 baristas; BC: C1 cajera, B2 barista; libres C2,B1
-  '2026-12-29': { pcvC:'C3', pcvB:['B3','B4'], bcC:'C1', bcB:['B2'], freeC:['C2'], freeB:['B1'] },
+  '2026-12-29': { pcvC:'C3', pcvB:['B3','B4'], bcC:'C1', bcB:['B2'], freeC:[], freeB:['B1'] },
   // Dic 30 Mié — PCV: C2 cajera, B1+B2 baristas; BC: C1 cajera, B4 barista; libres C3,B3
   '2026-12-30': { pcvC:'C2', pcvB:['B1','B2'], bcC:'C1', bcB:['B4'], freeC:['C3'], freeB:['B3'] },
   // Dic 31 Jue — 10AM-5PM; PCV: C2 cajera, B3+B4 baristas; BC: C1 cajera, B2 barista; libres C3,B1
