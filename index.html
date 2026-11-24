@@ -282,6 +282,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
 .bc-role-barista{background:#FEF3C7;color:#92400E}
 .bc-badge-fija{display:inline-block;background:#FEF3C7;color:#92400E;border-radius:8px;font-size:8px;font-weight:700;padding:1px 5px;margin-left:2px;vertical-align:middle}
 .bc-badge-rota{display:inline-block;background:#E0F2FE;color:#0369A1;border-radius:8px;font-size:8px;font-weight:700;padding:1px 5px;margin-left:2px;vertical-align:middle}
+.bc-badge-extra{display:inline-block;background:#FEF3C7;color:#92400E;border-radius:8px;font-size:8px;font-weight:800;padding:1px 5px;margin-left:2px;vertical-align:middle;border:1px solid #F59E0B}
 .bc-rest-section{margin-top:10px;padding-top:10px;border-top:1px solid rgba(0,0,0,.07)}
 .bc-rest-label{font-size:10px;font-weight:600;color:var(--text-sec);text-transform:uppercase;letter-spacing:.3px;margin-bottom:6px}
 .bc-rest-bubbles{display:flex;flex-wrap:wrap;gap:5px}
@@ -364,6 +365,7 @@ let EMPLOYEES = Object.fromEntries(
 // Horarios especiales PCV
 const SPECIAL_HOURS = {
   '2026-11-15': { pcv: '10:00 a.m. – 10:00 p.m.', event: 'Encendido de Navidad', bc: null },
+  '2026-11-25': { pcv: '9:00 a.m. – 7:00 p.m.', event: '🎊 Apertura Oficial PCV', bc: '8:00 a.m. – 6:00 p.m.' },
   '2026-11-27': { pcv: '10:00 a.m. – 10:00 p.m.', event: 'Black Friday', bc: null },
   '2026-12-04': { pcv: '10:00 a.m. – 10:00 p.m.', bc: null },
   '2026-12-05': { pcv: '10:00 a.m. – 10:00 p.m.', bc: null },
@@ -446,11 +448,25 @@ const RAW_SCHEDULE = {
   // Nov 24 Mar — Maikol(B4) libre (mod); B4 sale de PCV; B3(Argenis) igual en PCV; B2(Samuel) igual en BC; B1 libre
   // PCV: C2, B3; BC: C1, B2; libres C3,B1,B4 (B2+B4: B2 BC, B4 libre ✓; Susana/Argenis sin cambios)
   '2026-11-24': { pcvC:'C2', pcvB:['B3'], bcC:'C1', bcB:['B2'], freeC:['C3'], freeB:['B1','B4'] },
-  // Nov 25 Mié — Maikol(B4) trabaja PCV ✓; B1(Susana) no cambia → PCV; B2 cubre BC (B3 libre, igual que PDF)
-  // PCV: C2, B1+B4; BC: C1, B2; libres C3,B3 (B2+B4: B4 PCV, B2 BC → sedes distintas ✓)
-  '2026-11-25': { pcvC:'C2', pcvB:['B1','B4'], bcC:'C1', bcB:['B2'], freeC:['C3'], freeB:['B3'] },
-  // Nov 26 Jue — Maikol(B4) trabaja; estaba en BC (barista BC); se mantiene en BC ✓
-  // B3=PCV, B4=BC, B2=libre (B2+B4: B2 libre, B4 BC ✓)
+  // Nov 25 Mié — 🎉 APERTURA OFICIAL PCV — TODO EL PERSONAL TRABAJA
+  // Normalmente libres: C3(Nathaly), B2(Ray), B3(Argenis) → vienen como DÍAS EXTRA REMUNERADOS
+  // Ray(B2): su 1er día libre de ciclo → extra (cumplirá 2do libre Nov 26 según ciclo regular ✓)
+  // Nathaly(C3): su 2do día libre de ciclo → extra; Argenis(B3): 2do día libre → extra
+  // Wendy(C2) ya tenía turno normal. Susana(B1) y Maikol(B4): día 1 de su nuevo ciclo de trabajo ✓
+  // PCV (apertura): C2 cajera, C3 cajera extra, B1+B4+B3+B2 baristas (B2+B4: B2 PCV, B4 PCV ✓ misma sede ok para apertura)
+  // BC: C1 cajera (Dayana fija lun-vie), sin barista asignado (operación mínima apertura)
+  // extra: empleados en día que era libre → marcado para nómina como pago extra
+  '2026-11-25': {
+    pcvC:'C2', pcvB:['B1','B4','B3','B2'],
+    pcvCExtra:['C3'],
+    bcC:'C1', bcB:[],
+    freeC:[], freeB:[],
+    extra:['C3','B2','B3'],
+    _apertura: true
+  },
+  // Nov 26 Jue — Ray(B2) cumple su 2do día libre de ciclo (1ro fue ayer como extra remunerado)
+  // B1=PCV, B3=PCV, B4=BC, B2=libre ✓ (B2+B4: B2 libre, B4 BC → sedes distintas ✓)
+  // Nathaly(C3) vuelve a su ciclo normal de trabajo; Argenis(B3) también
   '2026-11-26': { pcvC:'C2', pcvB:['B1','B3'], bcC:'C1', bcB:['B4'], freeC:['C3'], freeB:['B2'] },
   // Nov 27 Vie — Black Friday 10AM-10PM; Maikol(B4) trabaja PCV (mod; antes libre)
   // B1=PCV, B4=PCV, B3=BC, B2=libre (B2+B4: B4 PCV, B2 libre ✓)
@@ -676,15 +692,16 @@ function getEmployeeStatusOnDate(empCode, dateStr) {
   if (sched.noData) return { status: 'no-data', label: 'Sin planificación registrada', sede: null };
   if (sched.holiday) return { status: 'holiday', label: 'Día no laborable', sede: null };
 
-  const inPCV = sched.pcvC === empCode || (sched.pcvCArr || []).includes(empCode) || (sched.pcvB || []).includes(empCode);
+  const inPCV = sched.pcvC === empCode || (sched.pcvCArr || []).includes(empCode) || (sched.pcvB || []).includes(empCode) || (sched.pcvCExtra || []).includes(empCode);
   const bcCArr = sched.bcCArr || (sched.bcC ? [sched.bcC] : []);
   const inBC  = bcCArr.includes(empCode) || (sched.bcB  || []).includes(empCode);
   const isFree = (sched.freeC || []).includes(empCode) || (sched.freeB || []).includes(empCode);
 
+  const isExtra = (sched.extra || []).includes(empCode);
   if (inPCV && inBC) return { status: 'conflict', label: 'Doble asignación', sede: 'PCV y BC' };
   if ((inPCV || inBC) && isFree) return { status: 'conflict', label: 'Trabajo y libre simultáneamente', sede: inPCV ? 'PCV' : 'BC' };
-  if (inPCV) return { status: 'work', label: 'Trabaja hoy', sede: 'Parque Cerro Verde' };
-  if (inBC)  return { status: 'work', label: 'Trabaja hoy', sede: 'Bello Campo' };
+  if (inPCV) return { status: 'work', label: isExtra ? 'Día extra remunerado' : 'Trabaja hoy', sede: 'Parque Cerro Verde', extra: isExtra };
+  if (inBC)  return { status: 'work', label: isExtra ? 'Día extra remunerado' : 'Trabaja hoy', sede: 'Bello Campo', extra: isExtra };
   if (isFree) return { status: 'off', label: 'Día libre registrado', sede: null };
   return { status: 'no-data', label: 'Sin información confirmada', sede: null };
 }
@@ -708,7 +725,8 @@ function getConflicts(dateStr) {
   }
 
   // Detección dinámica: Samuel (B2) y Maikol (B4) en la misma sede
-  if (sched && !sched.noData && !sched.holiday) {
+  // Excepción: días de apertura oficial (_apertura) donde todo el personal es convocado
+  if (sched && !sched.noData && !sched.holiday && !sched._apertura) {
     const pcvB = sched.pcvB || [];
     const bcB  = sched.bcB  || [];
     const b2pcv = pcvB.includes('B2'), b4pcv = pcvB.includes('B4');
@@ -717,7 +735,7 @@ function getConflicts(dateStr) {
     if (!alreadyFlagged && ((b2pcv && b4pcv) || (b2bc && b4bc))) {
       const sede = (b2pcv && b4pcv) ? 'PCV' : 'BC';
       base.push({ type:'COINCIDENCIA_B2_B4', severity:'critical', emp:['B2','B4'],
-        msg:`Samuel (B2) y Maikol (B4) coinciden en ${sede} el ${dateStr}. Según indicación administrativa, no deben coincidir en la misma sede.` });
+        msg:`Ray (B2) y Maikol (B4) coinciden en ${sede} el ${dateStr}. Según indicación administrativa, no deben coincidir en la misma sede.` });
     }
   }
 
@@ -883,7 +901,7 @@ function renderHome(container) {
     // Status card
     let cardClass = 'status-unknown';
     let icon = '❓';
-    if (st.status === 'work') { cardClass = 'status-work'; icon = '✅'; }
+    if (st.status === 'work') { cardClass = st.extra ? 'status-conflict' : 'status-work'; icon = st.extra ? '💰' : '✅'; }
     else if (st.status === 'off') { cardClass = 'status-off'; icon = '🌙'; }
     else if (st.status === 'conflict') { cardClass = 'status-conflict'; icon = '⚠️'; }
     else if (st.status === 'holiday') { cardClass = 'status-holiday'; icon = '🎄'; }
@@ -1333,17 +1351,19 @@ function shiftDay(dir) {
 }
 
 // Helper global: render una burbuja de empleado (Bubbles & Chips design)
-function empBubble(code) {
+function empBubble(code, isExtra) {
   const emp = EMPLOYEES[code];
   if (!emp) return '';
   const initials = emp.name.substring(0,2).toUpperCase();
   const roleChip = emp.role === 'Cajera'
     ? `<span class="bc-role-chip bc-role-cajera">Cajera</span>`
     : `<span class="bc-role-chip bc-role-barista">Barista</span>`;
-  const badge = code === 'C1'
+  const badge = isExtra
+    ? `<span class="bc-badge-extra">💰 Extra</span>`
+    : code === 'C1'
     ? `<span class="bc-badge-fija">Fija</span>`
     : `<span class="bc-badge-rota">Rota</span>`;
-  return `<div class="bc-bubble">
+  return `<div class="bc-bubble"${isExtra ? ' style="border:2px solid #F59E0B;border-radius:12px;background:#FFFBEB"' : ''}>
     <div class="bc-avatar" style="background:${emp.color}">${initials}</div>
     <div>
       <div class="bc-bubble-name">${emp.name}${badge}</div>
@@ -1400,6 +1420,12 @@ function renderDayCards(dateStr, showConflicts) {
   if (special?.event) {
     html += `<div style="text-align:center;margin-bottom:10px;padding:6px;background:#FEF3C7;border-radius:10px;font-size:12px;font-weight:600;color:#92400E">🎉 ${special.event}</div>`;
   }
+  if (sched._apertura) {
+    html += `<div style="text-align:center;margin-bottom:10px;padding:8px 12px;background:linear-gradient(135deg,#FDF4FF,#FAE8FF);border:1px solid #E9D5FF;border-radius:10px;font-size:12px;font-weight:700;color:#7C3AED">🎊 APERTURA OFICIAL PARQUE CERRO VERDE — Todo el personal presente</div>`;
+  }
+
+  // Extra set para nómina
+  const extraSet = new Set(sched.extra || []);
 
   // Dos columnas de sedes
   html += `<div class="bc-venues-row">`;
@@ -1411,15 +1437,18 @@ function renderDayCards(dateStr, showConflicts) {
       <span class="bc-venue-hours">${pcvH || '—'}</span>
     </div>`;
 
-  if (sched.pcvC) {
-    html += `<div class="bc-section-label">Cajera</div><div class="bc-bubbles">${empBubble(sched.pcvC)}</div>`;
+  const allPcvC = [sched.pcvC, ...(sched.pcvCExtra||[])].filter(Boolean);
+  if (allPcvC.length) {
+    html += `<div class="bc-section-label">Cajera${allPcvC.length>1?'s':''}</div><div class="bc-bubbles">`;
+    allPcvC.forEach(c => { html += empBubble(c, extraSet.has(c)); });
+    html += `</div>`;
   }
   if ((sched.pcvB||[]).length) {
     html += `<div class="bc-section-label">Baristas</div><div class="bc-bubbles">`;
-    (sched.pcvB||[]).forEach(c => { html += empBubble(c); });
+    (sched.pcvB||[]).forEach(c => { html += empBubble(c, extraSet.has(c)); });
     html += `</div>`;
   }
-  if (!sched.pcvC && !(sched.pcvB||[]).length) {
+  if (!allPcvC.length && !(sched.pcvB||[]).length) {
     html += `<p style="font-size:11px;color:var(--text-sec);margin-top:8px">Sin asignación</p>`;
   }
   html += `</div>`; // end pcv col
@@ -1436,12 +1465,12 @@ function renderDayCards(dateStr, showConflicts) {
   } else {
     if (bcCArrDisp.length) {
       html += `<div class="bc-section-label">Cajera${bcCArrDisp.length>1?'s':''}</div><div class="bc-bubbles">`;
-      bcCArrDisp.forEach(c => { html += empBubble(c); });
+      bcCArrDisp.forEach(c => { html += empBubble(c, extraSet.has(c)); });
       html += `</div>`;
     }
     if ((sched.bcB||[]).length) {
       html += `<div class="bc-section-label">Barista${(sched.bcB||[]).length>1?'s':''}</div><div class="bc-bubbles">`;
-      (sched.bcB||[]).forEach(c => { html += empBubble(c); });
+      (sched.bcB||[]).forEach(c => { html += empBubble(c, extraSet.has(c)); });
       html += `</div>`;
     }
     if (!bcCArrDisp.length && !(sched.bcB||[]).length) {
@@ -1458,6 +1487,14 @@ function renderDayCards(dateStr, showConflicts) {
       <div class="bc-rest-bubbles">`;
     freeAll.forEach(c => { html += restBubble(c); });
     html += `</div></div>`;
+  }
+
+  // ── Nota de nómina: empleados en día extra remunerado ──
+  if ((sched.extra||[]).length) {
+    const extraNames = (sched.extra||[]).map(c => EMPLOYEES[c]?.name || c).join(', ');
+    html += `<div style="margin-top:10px;padding:8px 12px;background:#FFFBEB;border:1px solid #F59E0B;border-radius:10px;font-size:11px;color:#92400E">
+      <strong>💰 Nómina — Día extra remunerado:</strong> ${extraNames}
+    </div>`;
   }
 
   html += `</div>`; // end bc-day-wrap
